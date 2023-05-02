@@ -1,7 +1,52 @@
 import Sidebar from "../includes/sidebar";
 import Header from "../includes/header";
 import Footer from "../includes/footer";
+import Axios from 'axios';
+import React,{useState,useEffect} from "react"
 export default function AddInstitutionUser() {
+
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [mobile, setMobile] = useState('');
+  const [regid, setRegdId] = useState('');
+  const [password, setPassword] = useState('');
+
+
+
+  const [file, setFile] = useState(null);
+
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+  const handleSubmits = async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      await Axios.post("http://localhost:3001/multiuser", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log("Upload successful!");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+
+  
+  const handleSubmit = () => {
+    const data = {firstname,lastname,email,mobile,regid,password};
+    Axios.post('http://localhost:3001/institutionuser', data)
+      .then(res => console.log(res.data))
+      .catch(err => console.error(err));
+  };
   return (
     <>
       <div class="layout-wrapper layout-content-navbar">
@@ -55,10 +100,6 @@ export default function AddInstitutionUser() {
                           <div class="col-md-12">
                             <div class="card">
                               <div class="card-body">
-                                <form
-                                  novalidate=""
-                                  class="forms-sample ng-untouched ng-pristine ng-invalid"
-                                >
                                   <div class="row form-group">
                                     <div class="col-md-4">
                                       <label>Institution</label>
@@ -117,6 +158,8 @@ export default function AddInstitutionUser() {
                                         id="_first_name"
                                         formcontrolname="first_name"
                                         class="form-control ng-untouched ng-pristine ng-invalid"
+                                        onChange={(e) =>setFirstname(e.target.value)}
+
                                       />
                                     </div>
                                     <div class="col-md-6">
@@ -128,6 +171,8 @@ export default function AddInstitutionUser() {
                                         name="_last_name"
                                         id="_last_name"
                                         class="form-control ng-untouched ng-pristine ng-invalid"
+                                        onChange={(e) =>setLastName(e.target.value)}
+
                                       />
                                     </div>
                                   </div>
@@ -141,6 +186,8 @@ export default function AddInstitutionUser() {
                                         placeholder="Email"
                                         formcontrolname="email"
                                         class="form-control ng-untouched ng-pristine ng-invalid"
+                                        onChange={(e) =>setEmail(e.target.value)}
+
                                       />
                                     </div>
                                   </div>
@@ -154,6 +201,8 @@ export default function AddInstitutionUser() {
                                         placeholder="Regd / HallTicket No."
                                         formcontrolname="regd"
                                         class="form-control ng-untouched ng-pristine ng-invalid"
+                                        onChange={(e) =>setRegdId(e.target.value)}
+
                                       />
                                     </div>
                                     <div class="col-md-6">
@@ -165,6 +214,8 @@ export default function AddInstitutionUser() {
                                         id="_mobile"
                                         formcontrolname="mobile"
                                         class="form-control ng-untouched ng-pristine ng-invalid"
+                                        onChange={(e) =>setMobile(e.target.value)}
+
                                       />
                                     </div>
                                   </div>
@@ -178,6 +229,8 @@ export default function AddInstitutionUser() {
                                         placeholder="Password"
                                         formcontrolname="password"
                                         class="form-control ng-untouched ng-pristine ng-invalid"
+                                        onChange={(e) =>setPassword(e.target.value)}
+
                                       />
                                     </div>
                                     <div class="col-md-6">
@@ -200,11 +253,11 @@ export default function AddInstitutionUser() {
                                     <button
                                       type="submit"
                                       class="btn btn-primary mr-2 mb-2 mb-md-0"
+                                      onClick={handleSubmit}
                                     >
                                       Create User
                                     </button>
                                   </div>
-                                </form>
                               </div>
                             </div>
                           </div>
@@ -236,10 +289,6 @@ export default function AddInstitutionUser() {
                                     </button>
                                   </div>
                                 </div>
-                                <form
-                                  novalidate=""
-                                  class="forms-sample ng-untouched ng-pristine ng-invalid"
-                                >
                                   <div class="row form-group">
                                     <div class="col-md-4">
                                       <label>Institution</label>
@@ -331,6 +380,7 @@ export default function AddInstitutionUser() {
                                         id="_userFile"
                                         formcontrolname="user_file"
                                         class="form-control ng-untouched ng-pristine ng-invalid"
+                                        onChange={handleFileChange}
                                       />
                                     </div>
                                   </div>
@@ -338,11 +388,12 @@ export default function AddInstitutionUser() {
                                     <button
                                       type="submit"
                                       class="btn btn-primary mr-2 mb-2 mb-md-0"
+                                      onClick={handleSubmits}
+
                                     >
                                       Create Users
                                     </button>
                                   </div>
-                                </form>
                               </div>
                             </div>
                           </div>
