@@ -89,6 +89,18 @@ export default function Sidebar() {
             </li>
           
         </li>
+        <li class="menu-item">
+          <a class="menu-link menu-toggle">
+            <i class="menu-icon tf-icons bx bx-detail"></i>
+            <div data-i18n="Form Elements">QUESTION BANK</div>
+          </a>
+         
+            <li class="menu-item">
+            <Link class="menu-link " to="/Subjects"> 
+                <div data-i18n="QuestionBank/subjects.js">Subjects</div>
+            </Link>
+            </li>
+        </li>
         <li class="menu-header small text-uppercase">
           <span class="menu-header-text">Vendor Utils</span>
         </li>
