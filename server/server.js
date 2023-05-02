@@ -3,10 +3,12 @@ const express = require("express");
 const mysql = require("mysql");
 const cors = require("cors");
 const Axios = require("axios")
+const multer = require('multer');
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-
+const path = require('path');
+const fs = require('fs');
 const app = express();
 // const connection = mysql.createConnection({
 // 	host     : 'sql984.main-hosting.eu',
@@ -29,14 +31,14 @@ const connection = mysql.createConnection({
 
 });
 
-connection.connect(function(err) {
-    if (err) {
-      console.error('Error connecting to MySQL database: ' + err.stack);
-      return;
-    }
+// connection.connect(function(err) {
+//     if (err) {
+//       console.error('Error connecting to MySQL database: ' + err.stack);
+//       return;
+//     }
   
-    console.log('Database Connected');
-  });
+//     console.log('Database Connected');
+//   });
   
 app.use(express.json());
 app.use(
@@ -60,6 +62,81 @@ app.use(bodyParser.urlencoded({ extended: true }));
 function message(props) {
     console.log(props);
 }
+
+
+// const storage = multer.diskStorage({
+// 	destination: (req, file, cb) => {
+// 		if (file.fieldname === '_logo') {
+// 			cb(null,path.join(__dirname, '/uploads/logos') );
+// 		  } else if (file.fieldname === '_userFile') {
+// 			cb(null, path.join(__dirname, '/uploads/files'));
+// 		  }else {
+// 			cb(new Error('Invalid field name'));
+// 		  }
+// 	},
+// 	filename: (req, file, cb) => {
+// 		console.log(file);
+// 		cb(null, file.originalname+ '-' + Date.now() + path.extname(file.originalname));
+// 	}
+	
+// });
+// const upload = multer({
+// 	dest: 'uploads/' 
+// });
+
+const storage = multer.diskStorage({
+	destination: (req, file, callback) => {
+	  callback(null, "uploads");
+	},
+	filename: (req, file, callback) => {
+	  callback(null,file.originalname+ '-' + Date.now() + path.extname(file.originalname));
+	},
+  });
+  const imageStorage = multer.diskStorage({
+	destination: (req, file, callback) => {
+	  callback(null, "images");
+	},
+	filename: (req, file, callback) => {
+	  callback(null, file.originalname+ '-' + Date.now() + path.extname(file.originalname));
+	},
+  });
+const upload = multer({ storage }).single("file");
+const imageUpload = multer({ storage: imageStorage }).single("image");
+// connection.connect(function(err){
+//   if(err) throw err;
+//   console.log("connected database");
+// });
+
+// Regular expressions for validation
+const nameRegex = /^[a-zA-Z\s]+$/;
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const phoneRegex = /^\d{10}$/;
+const zipRegex = /^\d{5}$/;
+const countryRegex = /^[a-zA-Z\s]+$/;
+const allowedTypes = /jpeg|jpg|png|gif/;
+
+
+// Validation functions
+function validateFullName(fullName) {
+	const trimmedFullName = fullName.trim();
+	return nameRegex.test(trimmedFullName);
+}
+function validateEmail(email) {
+	return emailRegex.test(email);
+}
+function validatePhoneNumber(phoneNumber) {
+	return phoneRegex.test(phoneNumber);
+}
+function validateZipCode(zipCode) {
+  return zipRegex.test(zipCode);
+}
+function validateCountry(country) {
+	return countryRegex.test(country);
+}
+function validateFileType(fileType) {
+	return allowedTypes.test(fileType);
+}
+
 
 
 app.get('/login', (req, res) => {
@@ -96,6 +173,64 @@ app.post('/login',(req, res) =>{
 	
 	
 });
+
+app.post('/multiuser', (req, res) => {
+	upload(req, res, (error) => {
+		if (error) {
+		  console.log(error);
+		  return res.sendStatus(500);
+		}
+	
+		console.log("Upload successful!");
+		res.sendStatus(200);
+	  });
+});
+
+
+app.post('/institutionuser', (req, res) => {
+	const {firstname,lastname,email,mobile,regid,password} = req.body;
+	console.log(req.body,firstname,lastname,email,mobile,regid,password);
+});
+app.post('/institution', (req, res) => {
+	const { institutionName,headofinstitution,primarycontact,primaryemail,secondarycontact,secondaryemail,address,institutioncode,state,city,password} = req.body;
+	console.log(req.body,institutionName,headofinstitution,primarycontact,primaryemail,secondarycontact,secondaryemail,address,institutioncode,state,city,password);
+});
+
+// app.post('/register', upload.single('image'), (req, res) => {
+// 	const { filename } = req.file;
+// 	const fileExtension = path.extname(filename);
+// 	const newName = `${filename}${fileExtension}`;
+// 	const oldPath = `uploads/${filename}`;
+  
+// 	const { name,email,businessname,phone,address,state,city,zip,language } = req.body;
+
+// 	console.log(req.body ,name,email,businessname,phone,address,state,city,zip,language);
+// 	// move the file to the images folder with the new name
+// 	// fs.rename(oldPath, newPath, (err) => {
+// 	//   if (err) {
+// 	// 	console.error(err);
+// 	// 	res.status(500).json({ message: 'Failed to upload image' });
+// 	//   } else {
+// 	// 	console.log(`Image saved as ${newName}`);
+// 	// 	res.json({ message: 'Image uploaded successfully' });
+// 	//   }
+// 	// });
+//   });
+  app.post('/register',(req, res) => {
+
+    imageUpload(req, res, (error) => {
+		if (error) {
+		  console.log(error);
+		  return res.sendStatus(500);
+		}
+		console.log("Upload successful!");
+  
+	const { name,email,businessname,phone,address,state,city,zip,language } = req.body;
+
+	console.log(req.body ,name,email,businessname,phone,address,state,city,zip,language);
+
+	});
+  });
 
 app.listen(3001, () => {
     console.log("running server");
