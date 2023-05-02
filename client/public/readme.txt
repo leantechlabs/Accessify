@@ -1,0 +1,1 @@
+Public directory contains all assets and files
