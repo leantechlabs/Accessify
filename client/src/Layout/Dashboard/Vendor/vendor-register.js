@@ -1,7 +1,49 @@
 import Sidebar from "../../includes/sidebar";
 import Header from "../../includes/header";
 import Footer from "../../includes/footer";
+import Axios from 'axios';
+import React,{useState,useEffect} from "react"
 export default function VendorRegister() {
+  const [logo, setLogo] = useState(null);
+  const [fullname, setFullname] = useState('');
+  const [email, setEmail] = useState('');
+  const [businessname, setBusinessname] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [state, setState] = useState('');
+  const [city, setCity] = useState('');
+  const [zip, setZip] = useState('');
+  const [language, setLanguage] = useState('');
+
+
+  
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      const formData = new FormData();
+      formData.append('image', logo);
+      formData.append('fullname', fullname);
+      formData.append('email', email);
+      formData.append('businessname', businessname);
+      formData.append('phone', phone);
+      formData.append('address', address);
+      formData.append('state', state);
+      formData.append('city', city);
+      formData.append('zip', zip);
+      formData.append('language', language);
+
+
+      
+      try {
+        const response = await Axios.post('http://localhost:3001/register', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
   return (
     <>
      <div class="layout-wrapper layout-content-navbar">
@@ -81,6 +123,8 @@ export default function VendorRegister() {
                           id="_logo"
                           class="account-file-input"
                           accept="image/png, image/jpeg"
+                          onChange={(e) =>setLogo(e.target.files[0])}
+
                         />
                       </label>
                       <p class="text-muted mb-0">
@@ -96,9 +140,9 @@ export default function VendorRegister() {
                         type="text"
                         id="_name"
                         name="_name"
-                        value=""
                         placeholder="Vendor Name"
-                        required="true"
+                        onChange={(e) =>setFullname(e.target.value)}
+
                         autofocus
                       />
                     </div>
@@ -111,8 +155,9 @@ export default function VendorRegister() {
                         type="email"
                         id="_email"
                         name="_email"
-                        value=""
                         placeholder="VendorName@example.com"
+                        onChange={(e) =>setEmail(e.target.value)}
+
                       />
                     </div>
                     <div class="mb-3 col-md-6">
@@ -124,8 +169,9 @@ export default function VendorRegister() {
                         class="form-control"
                         id="_bname"
                         name="_bname"
-                        value=""
                         placeholder="Business Name"
+                        onChange={(e) =>setBusinessname(e.target.value)}
+
                       />
                     </div>
                     <div class="mb-3 col-md-6">
@@ -140,7 +186,8 @@ export default function VendorRegister() {
                           name="_phone"
                           class="form-control"
                           placeholder="9876543210"
-                        />
+                          onChange={(e) =>setPhone(e.target.value)}
+                          />
                       </div>
                     </div>
                     <div class="mb-3 col-md-6">
@@ -153,6 +200,8 @@ export default function VendorRegister() {
                         id="_address"
                         name="_address"
                         placeholder="Address"
+                        onChange={(e) =>setAddress(e.target.value)}
+
                       />
                     </div>
                     <div class="mb-3 col-md-6">
@@ -165,6 +214,8 @@ export default function VendorRegister() {
                         name="_state"
                         class="form-control"
                         placeholder="State Name"
+                        onChange={(e) =>setState(e.target.value)}
+
                       />
                     </div>
                     <div class="mb-3 col-md-6">
@@ -177,6 +228,8 @@ export default function VendorRegister() {
                         name="_city"
                         class="form-control"
                         placeholder="City Name"
+                        onChange={(e) =>setCity(e.target.value)}
+
                       />
                     </div>
                     <div class="mb-3 col-md-6">
@@ -190,6 +243,8 @@ export default function VendorRegister() {
                         name="_zipCode"
                         placeholder="500321"
                         maxlength="6"
+                        onChange={(e) =>setZip(e.target.value)}
+
                       />
                     </div>
                     <div class="mb-3 col-md-6">
@@ -200,6 +255,8 @@ export default function VendorRegister() {
                         id="_language"
                         name="_language"
                         class="select2 form-select"
+                        onChange={(e) =>setLanguage(e.target.value)}
+
                       >
                         <option value="">Select Language</option>
                         <option value="en">English</option>
@@ -207,7 +264,7 @@ export default function VendorRegister() {
                     </div>
                   </div>
                   <div class="mt-2">
-                    <button type="submit" class="btn btn-primary me-2">
+                    <button type="submit" onClick={handleSubmit} class="btn btn-primary me-2">
                       Register Vendor
                     </button>
                     <button type="reset" class="btn btn-outline-secondary">

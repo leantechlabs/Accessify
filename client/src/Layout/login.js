@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 Axios.defaults.withCredentials = true;
 
 export default function Login() {
-  const nav = useNavigate();
+  // const nav = useNavigate();
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [status,SetMyMessage] = useState("");
-
+ // const [name,setName] = useState("");//hook
   
   const login = () => {
 
@@ -46,7 +46,7 @@ export default function Login() {
             data-bs-dismiss="alert"
             aria-label="Close"
           ></button>
-         
+           <input type="text" name="_textdemo" onChange={(e)=>{settext(e.target.value)}}/>
         </div>
       </div>
 
