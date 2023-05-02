@@ -1,7 +1,29 @@
 import Sidebar from "../includes/sidebar";
 import Header from "../includes/header";
 import Footer from "../includes/footer";
+import Axios from 'axios';
+import React,{useState,useEffect} from "react"
 export default function Institution() {
+    const [institutionName, setInstitutionName] = useState('');
+    const [headofinstitution, setHeadOfInstitution] = useState('');
+    const [primaryemail, setPrimaryEmaill] = useState('');
+    const [primarycontact, setPrimaryContact] = useState('');
+    const [secondarycontact, setSecondaryContact] = useState('');
+    const [secondaryemail, setSecondaryEmail] = useState('');
+    const [address, setAddress] = useState('');
+    const [institutioncode, setInstitutionCode] = useState('');
+    const [state, setState] = useState('');
+    const [city, setCity] = useState('');
+    const [password, setPassword] = useState('');
+
+  
+    const handleSubmit = () => {
+      const data = { institutionName,headofinstitution,primarycontact,primaryemail,secondarycontact,secondaryemail,address,institutioncode,state,city,password};
+      Axios.post('http://localhost:3001/institution', data)
+        .then(res => console.log(res.data))
+        .catch(err => console.error(err));
+    };
+
   return (
     <>
       <div class="layout-wrapper layout-content-navbar">
@@ -80,10 +102,11 @@ export default function Institution() {
                                             type="text"
                                             id="_instituteName"
                                             name="_instituteName"
-                                            value=""
                                             required="true"
                                             autofocus
                                             placeholder="Institution Name"
+                                            onChange={(e) =>setInstitutionName(e.target.value)}
+
                                           />
                                         </div>
                                         <div class="mb-3 col-md-12">
@@ -103,10 +126,11 @@ export default function Institution() {
                                             type="text"
                                             id="_headOfInstitute"
                                             name="_headOfInstitute"
-                                            value=""
                                             required="true"
                                             autofocus
                                             placeholder="Head of Institution Name"
+                                            onChange={(e) =>setHeadOfInstitution(e.target.value)}
+
                                           />
                                         </div>
                                         <div class="mb-3 col-md-6">
@@ -126,10 +150,11 @@ export default function Institution() {
                                             type="text"
                                             id="_primaryEmail"
                                             name="_primaryEmail"
-                                            value=""
                                             required="true"
                                             autofocus
                                             placeholder="Primary Email"
+                                            onChange={(e) =>setPrimaryEmaill(e.target.value)}
+
                                           />
                                         </div>
                                         <div class="mb-3 col-md-6">
@@ -146,10 +171,11 @@ export default function Institution() {
                                             type="text"
                                             id="_primaryContact"
                                             name="_primaryContact"
-                                            value=""
                                             required="true"
                                             autofocus
                                             placeholder="Primary Contact"
+                                            onChange={(e) =>setPrimaryContact(e.target.value)}
+
                                           />
                                         </div>
                                         <div class="mb-3 col-md-6">
@@ -169,10 +195,11 @@ export default function Institution() {
                                             type="text"
                                             id="_secondaryEmail"
                                             name="_secondaryEmail"
-                                            value=""
                                             required="true"
                                             autofocus
                                             placeholder="Secondary Email"
+                                            onChange={(e) =>setSecondaryEmail(e.target.value)}
+
                                           />
                                         </div>
                                         <div class="mb-3 col-md-6">
@@ -189,10 +216,11 @@ export default function Institution() {
                                             type="text"
                                             id="_secondaryContact"
                                             name="_secondaryContact"
-                                            value=""
                                             required="true"
                                             autofocus
                                             placeholder="Secondary Contact"
+                                            onChange={(e) =>setSecondaryContact(e.target.value)}
+
                                           />
                                         </div>
                                         <div class="mb-3 col-md-12">
@@ -212,10 +240,11 @@ export default function Institution() {
                                             type="text"
                                             id="_address"
                                             name="_address"
-                                            value=""
                                             required="true"
                                             autofocus
                                             placeholder="Address"
+                                            onChange={(e) =>setAddress(e.target.value)}
+
                                           />
                                         </div>
                                         <div class="mb-3 col-md-6">
@@ -235,10 +264,11 @@ export default function Institution() {
                                             type="text"
                                             id="_city"
                                             name="_city"
-                                            value=""
                                             required="true"
                                             autofocus
                                             placeholder="City"
+                                            onChange={(e) =>setCity(e.target.value)}
+
                                           />
                                         </div>
                                         <div class="mb-3 col-md-6">
@@ -255,10 +285,11 @@ export default function Institution() {
                                             type="text"
                                             id="_state"
                                             name="_state"
-                                            value=""
                                             required="true"
                                             autofocus
                                             placeholder="State"
+                                            onChange={(e) =>setState(e.target.value)}
+
                                           />
                                         </div>
                                         <div class="mb-3 col-md-6">
@@ -278,10 +309,11 @@ export default function Institution() {
                                             type="text"
                                             id="_instituteCode"
                                             name="_instituteCode"
-                                            value=""
                                             required="true"
                                             autofocus
                                             placeholder="Institution Code"
+                                            onChange={(e) =>setInstitutionCode(e.target.value)}
+
                                           />
                                         </div>
                                         <div class="mb-3 col-md-6">
@@ -333,10 +365,11 @@ export default function Institution() {
                                             type="text"
                                             id="_password"
                                             name="_password"
-                                            value=""
                                             required="true"
                                             autofocus
                                             placeholder="Password"
+                                            onChange={(e) =>setPassword(e.target.value)}
+
                                           />
                                         </div>
 
@@ -344,6 +377,7 @@ export default function Institution() {
                                           <button
                                             type="submit"
                                             class="btn btn-primary me-2"
+                                            onClick={handleSubmit}
                                           >
                                             Create
                                           </button>

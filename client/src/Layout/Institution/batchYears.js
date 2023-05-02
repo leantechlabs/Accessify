@@ -20,7 +20,7 @@ export default function BatchYears() {
                   <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title" id="modalCenterTitle">
-                        Create New Batch
+                        Create Batch Year
                       </h5>
                       <button
                         type="button"
@@ -30,8 +30,8 @@ export default function BatchYears() {
                       ></button>
                     </div>
                     <div class="modal-body">
-                      <div class="row">
-                        <div class="col mb-3">
+                    <div class="row g-2">
+                        <div class="col mb-0">
                           <label
                             for="nameWithTitle"
                             class="form-label"
@@ -87,8 +87,18 @@ export default function BatchYears() {
                 </div>
               </div>
               <div class="container-xxl flex-grow-1 container-p-y">
-                <h4 class="fw-bold py-3 mb-4">Filter-Batch Years </h4>
+              <h4 class="fw-bold py-3 mb-4 d-flex justify-content-between align-items-center">
+              <span>Filter - Batch Years</span> 
+              <button type="button" class="btn btn-primary" 
+              data-bs-toggle="modal" 
+              data-bs-target="#modalCenter">
+              + Create Batch Year</button>
+            </h4>
 
+
+
+                
+              
                 <div class="card mb-4">
                   <h5 class="card-header">Select Institution :</h5>
                   <div class="card-body">
@@ -122,10 +132,13 @@ export default function BatchYears() {
                   </div>
                 </div>
               </div>
+
+              
+                
             </div>
-          </div>
         </div>
-      </div>
-    </>
+        </div>
+        </div>
+        </>
   );
 }

@@ -82,6 +82,7 @@ export default function Sidebar() {
                 <div data-i18n="Register Vendor">Users</div>
             </Link>
             </li>
+
             <li class="menu-item">
               <a href="#" class="menu-link">
                 <div data-i18n="Manage Vendor">Manage Institution</div>
