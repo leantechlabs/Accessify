@@ -1,43 +1,46 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Axios from 'axios';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 Axios.defaults.withCredentials = true;
 
 export default function Login() {
-  // const nav = useNavigate();
+  const nav = useNavigate();
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
-  const [status,SetMyMessage] = useState("");
+  const [SetMyMessage] = useState("");
  // const [name,setName] = useState("");//hook
   
   const login = () => {
-
-    if (email != "" && password != "") {
-        if (email.length >=5) {
-            Axios.post("http://localhost:3001/login", {
-                email: email,
-                password: password,
-  
-            }).then((response) => {
-                if (response.data.message == "success") {
-                    nav("/dashboard");
-                }
-                else {
-                   SetMyMessage("Please Check Your Credentials");
-  
-                }
+      if (email !== "" && password !== "") {
+        if (email.length >= 5) {
+          Axios.post("http://localhost:3001/login", {
+            email: email,
+            password: password,
+          })
+            .then((response) => {
+              if (response.data.message === "success") {
+                  nav('./dashboard'); 
+              } else {
+                SetMyMessage("Please Check Your Credentials");
+              }
+            })
+            .catch((error) => {
+              console.error("Error occurred during login request: ", error);
+              SetMyMessage("An error occurred during login.");
             });
         } else {
-           SetMyMessage("Passwords Enter All the feilds");
+          SetMyMessage("Please enter a valid email.");
         }
-    }
+      } else {
+        SetMyMessage("Please enter all the fields.");
+      }
   
   };
 
   return (
    
     <div>
-      <div class="card-body" id="alert-model">
+      {/* <div class="card-body" id="alert-model">
         <div class="alert alert-danger alert-dismissible" role="alert">
           <span></span>
           <button
@@ -48,7 +51,7 @@ export default function Login() {
           ></button>
            <input type="text" name="_textdemo" onChange={(e)=>{settext(e.target.value)}}/>
         </div>
-      </div>
+      </div> */}
 
       <div class="container-xxl">
         <div class="authentication-wrapper authentication-basic container-p-y">
