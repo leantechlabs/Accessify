@@ -53,18 +53,7 @@ export default function VendorRegister() {
             <Header />
             <div class="content-wrapper">
               {/* #contents */}
-              <div class="card-body" id="alert-model">
-        <div class="alert alert-danger alert-dismissible" role="alert">
-          <span></span>
-
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="alert"
-            aria-label="Close"
-          ></button>
-        </div>
-      </div>
+              
 
       <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="fw-bold py-3 mb-4">

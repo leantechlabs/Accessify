@@ -32,20 +32,9 @@ export default function Institution() {
           <div class="layout-page">
             <Header />
             <div class="content-wrapper">
-              <div class="card-body" id="alert-model">
-                <div class="alert alert-danger alert-dismissible" role="alert">
-                  <span></span>
+              
 
-                  <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="alert"
-                    aria-label="Close"
-                  ></button>
-                </div>
-              </div>
-
-              <div class="container-xxl flex-grow-1 container-p-y mx-4 my-4" style={{marginTop:"20%"}}>
+              <div class="container-xxl flex-grow-1 container-p-y">
                 <div class="card">
                   <div class="inline-flexbox">
                     <h5 class="card-header">Institutions</h5>
