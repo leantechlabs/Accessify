@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import Axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 Axios.defaults.withCredentials = true;
 
 export default function Login() {
-  // const nav = useNavigate();
+  const nav = useNavigate();
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [SetMyMessage] = useState("");
  // const [name,setName] = useState("");//hook
   
   const login = () => {
-
-    if (email !== "" && password !== "") {
       if (email !== "" && password !== "") {
         if (email.length >= 5) {
           Axios.post("http://localhost:3001/login", {
@@ -20,7 +19,7 @@ export default function Login() {
           })
             .then((response) => {
               if (response.data.message === "success") {
-                window.location.href = "/dashboard";
+                  nav('./dashboard'); 
               } else {
                 SetMyMessage("Please Check Your Credentials");
               }
@@ -34,7 +33,7 @@ export default function Login() {
         }
       } else {
         SetMyMessage("Please enter all the fields.");
-      }}
+      }
   
   };
 
