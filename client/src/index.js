@@ -10,6 +10,7 @@ import BatchYears from './Layout/Institution/batchYears';
 import InstitutionUsers from './Layout/Institution/users';
 import AddInstitutionUser from './Layout/Institution/add-institution-users';
 import Batches from './Layout/Institution/batch'
+import Subjects from './Layout/QuestionBank/subjects';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
          <Route path="/institution-users" element={<InstitutionUsers/>} />
          <Route path="/add-institution-users" element={<AddInstitutionUser/>} />
          <Route path="/batch" element={<Batches/>} />
+         <Route path="/subjects" element={<Subjects/>}/>
         </Route>
       </Routes>
     </BrowserRouter>
