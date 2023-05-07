@@ -4,16 +4,22 @@ import Footer from "../includes/footer";
 import Axios from 'axios';
 import React,{useState,useEffect} from "react"
 export default function AddInstitutionUser() {
-
+  const [Institution, setInstitution] = useState('');
+  const [BatchYear, setBatchYear] = useState('');
+  const [Batch, setBatch] = useState('');
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [mobile, setMobile] = useState('');
   const [regid, setRegdId] = useState('');
   const [password, setPassword] = useState('');
+  const [AccessPeriod, setAccessPeriod] = useState('');
 
 
-
+  const [multiInstitution, setmultiInstitution] = useState('');
+  const [multiBatchYear, setmultiBatchYear] = useState('');
+  const [multiBatch, setmultiBatch] = useState('');
+  const [multiAccessPeriod, setmultiAccessPeriod] = useState('');
   const [file, setFile] = useState(null);
 
   const handleFileChange = (event) => {
@@ -23,6 +29,10 @@ export default function AddInstitutionUser() {
     event.preventDefault();
 
     const formData = new FormData();
+    formData.append("multiInstitution",multiInstitution);
+    formData.append("multiBatchYear",multiBatchYear);
+    formData.append("multiBatch",multiBatch);
+    formData.append("multiAccessPeriod",multiAccessPeriod);
     formData.append("file", file);
 
     try {
@@ -39,10 +49,9 @@ export default function AddInstitutionUser() {
   };
 
 
-
   
   const handleSubmit = () => {
-    const data = {firstname,lastname,email,mobile,regid,password};
+    const data = {firstname,lastname,email,mobile,regid,password,Institution,BatchYear,Batch,AccessPeriod};
     Axios.post('http://localhost:3001/institutionuser', data)
       .then(res => console.log(res.data))
       .catch(err => console.error(err));
@@ -108,17 +117,19 @@ export default function AddInstitutionUser() {
                                         id="_institute"
                                         formcontrolname="institute"
                                         class="form-select default-input ng-untouched ng-pristine ng-invalid"
+                                        onChange={(e) =>setInstitution(e.target.value)}
+
                                       >
                                         <option value="" selected="">
                                           --Select Institution --
                                         </option>
-                                        <option value="l81aqgxq">
+                                        <option>
                                           Coign_Practise
                                         </option>
-                                        <option value="l8omwowz">
+                                        <option>
                                           AITS_2023
                                         </option>
-                                        <option value="l8sopzic">VNR</option>
+                                        <option >VNR</option>
                                       </select>
                                     </div>
                                     <div class="col-md-4">
@@ -128,9 +139,14 @@ export default function AddInstitutionUser() {
                                         id="_batch_year"
                                         formcontrolname="batch_year"
                                         class="form-select default-input ng-untouched ng-pristine ng-invalid"
+                                        onChange={(e) =>setBatchYear(e.target.value)}
+
                                       >
                                         <option value="" selected="">
                                           --Select Batch Year--
+                                        </option>
+                                        <option>
+                                          Coign_Practise
                                         </option>
                                       </select>
                                     </div>
@@ -141,9 +157,14 @@ export default function AddInstitutionUser() {
                                         id="_batch"
                                         formcontrolname="batch"
                                         class="form-select default-input ng-untouched ng-pristine ng-invalid"
+                                        onChange={(e) =>setBatch(e.target.value)}
+
                                       >
                                         <option value="" selected="">
                                           --Select Batch --
+                                        </option>
+                                        <option>
+                                          Coign_Practise
                                         </option>
                                       </select>
                                     </div>
@@ -240,6 +261,8 @@ export default function AddInstitutionUser() {
                                         id="_access_period"
                                         formcontrolname="access_period"
                                         class="form-select default-input ng-untouched ng-pristine ng-invalid"
+                                        onChange={(e) =>setAccessPeriod(e.target.value)}
+
                                       >
                                         <option value="" selected="">
                                           --Select Access Period --
@@ -297,20 +320,21 @@ export default function AddInstitutionUser() {
                                         id="_institute"
                                         formcontrolname="institute"
                                         class="form-select default-input ng-untouched ng-pristine ng-invalid"
-                                      >
+                                        onChange={(e) =>setmultiInstitution(e.target.value)}
+
+                                     >
                                         <option
-                                          value=""
                                           selected=""
                                           disabled=""
                                         >
                                           -- Select Institution --
                                         </option>
-                                        <option value="">Coign_Practise</option>
-                                        <option value="">VIEW_2024_POs</option>
-                                        <option value="">GPCET</option>
-                                        <option value="">AITS_2023 POs</option>
-                                        <option value="">VNR</option>
-                                        <option value="">AITS_KADAPA</option>
+                                        <option >Coign_Practise</option>
+                                        <option >VIEW_2024_POs</option>
+                                        <option >GPCET</option>
+                                        <option >AITS_2023 POs</option>
+                                        <option >VNR</option>
+                                        <option >AITS_KADAPA</option>
                                       </select>
                                     </div>
                                     <div class="col-md-4">
@@ -320,9 +344,10 @@ export default function AddInstitutionUser() {
                                         id="_batch_year"
                                         formcontrolname="batch_year"
                                         class="form-select default-input ng-untouched ng-pristine ng-invalid"
+                                        onChange={(e) =>setmultiBatchYear(e.target.value)}
+
                                       >
                                         <option
-                                          value=""
                                           selected=""
                                           disabled=""
                                         >
@@ -337,9 +362,10 @@ export default function AddInstitutionUser() {
                                         id="_batch"
                                         formcontrolname="batch"
                                         class="form-select default-input ng-untouched ng-pristine ng-invalid"
+                                        onChange={(e) =>setmultiBatch(e.target.value)}
+
                                       >
                                         <option
-                                          value=""
                                           selected=""
                                           disabled=""
                                         >
@@ -356,16 +382,17 @@ export default function AddInstitutionUser() {
                                         id="_access_period"
                                         formcontrolname="access_period"
                                         class="form-select default-input ng-untouched ng-pristine ng-invalid"
+                                        onChange={(e) =>setmultiAccessPeriod(e.target.value)}
+
                                       >
                                         <option
-                                          value=""
                                           selected=""
                                           disabled=""
                                         >
                                           -- Select Access Period --
                                         </option>
-                                        <option value="3 Days">3 Days</option>
-                                        <option value="15 Days">15 Days</option>
+                                        <option >3 Days</option>
+                                        <option >15 Days</option>
                                       </select>
                                     </div>
                                     <div class="col-md-6">

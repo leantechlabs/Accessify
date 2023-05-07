@@ -15,10 +15,11 @@ export default function Institution() {
     const [state, setState] = useState('');
     const [city, setCity] = useState('');
     const [password, setPassword] = useState('');
+    const [InstitutionType, setInstitutionType] = useState('');
 
   
     const handleSubmit = () => {
-      const data = { institutionName,headofinstitution,primarycontact,primaryemail,secondarycontact,secondaryemail,address,institutioncode,state,city,password};
+      const data = { institutionName,headofinstitution,primarycontact,primaryemail,secondarycontact,secondaryemail,address,institutioncode,state,city,password,InstitutionType};
       Axios.post('http://localhost:3001/institution', data)
         .then(res => console.log(res.data))
         .catch(err => console.error(err));
@@ -318,6 +319,7 @@ export default function Institution() {
                                             class="form-select"
                                             id="instituteType"
                                             aria-label="Default select example"
+                                            onChange={(e) =>setInstitutionType(e.target.value)}
                                           >
                                             <option selected>
                                               --Institution Type--
