@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Redirect, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from './Layout/login';
 import Dashboard from './Layout/Dashboard/dashboard'
 import VendorRegister from './Layout/Dashboard/Vendor/vendor-register';
@@ -11,6 +11,13 @@ import InstitutionUsers from './Layout/Institution/users';
 import AddInstitutionUser from './Layout/Institution/add-institution-users';
 import Batches from './Layout/Institution/batch'
 import Subjects from './Layout/QuestionBank/subjects';
+
+import Register from './Layout/register';
+
+import PCreate from './Layout/QuestionBank/pacreate';
+import Pview from './Layout/QuestionBank/pview';
+import Chapters from './Layout/QuestionBank/chapters';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 function App() {
@@ -20,6 +27,7 @@ function App() {
       <Routes>
         <Route>
           {/* All routes or redirects*/}
+          <Route path="/register" element={<Register />} />
          <Route index element={<Login />} />
          <Route path="/dashboard" element={<Dashboard/>} />
          <Route path="/vendor-register" element={<VendorRegister/>} />
@@ -30,6 +38,9 @@ function App() {
          <Route path="/add-institution-users" element={<AddInstitutionUser/>} />
          <Route path="/batch" element={<Batches/>} />
          <Route path="/subjects" element={<Subjects/>}/>
+         <Route path="/pcreate" element={<PCreate/>}/>
+         <Route path="/pview" element={<Pview/>}/>
+         <Route path="/chapters" element={<Chapters/>}/>
         </Route>
       </Routes>
     </BrowserRouter>
