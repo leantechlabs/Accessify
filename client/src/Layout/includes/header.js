@@ -1,10 +1,14 @@
-import { Outlet, Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 export default function Header() {
-  const nav = useNavigate();
-  function logout() {
-    nav("/");
-  }
+  const navigate = useNavigate()
+    const handleDelete = () => {
+    axios.get('http://localhost:3001/logout')
+    .then(res => {
+        navigate('/')
+    }).catch(err=> console.log(err));
+}
 
   return (
     <>
@@ -87,7 +91,7 @@ export default function Header() {
                         type="button"
                         value="Logout"
                         class=" mybtn primary-bg"
-                        onClick={() => logout()}
+                        onClick={handleDelete}
                       />
                       
                     </span>
