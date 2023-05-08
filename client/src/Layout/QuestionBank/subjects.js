@@ -1,5 +1,8 @@
 import Sidebar from "../includes/sidebar";
 import Header from "../includes/header";
+
+
+
 export default function Subjects() {
     return (
         <>
@@ -12,6 +15,7 @@ export default function Subjects() {
                             <div  className="page-content mt-4">
                                 <div  contentanimate>
                                     <router-outlet  />
+                                   
                                         <div  className="row justify-content-center">
                                             <div  className="col-md-11 stretch-card">
                                                 <div  className="card">
@@ -637,6 +641,7 @@ export default function Subjects() {
                     </div>
                 </div>
             </div>
+           
         </>
     );
 }
