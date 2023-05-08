@@ -1,45 +1,24 @@
+import express from 'express'
+import mysql from 'mysql'
+import cors from 'cors'
+import multer from 'multer'
+import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
+import path from 'path'
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt'
 
-const express = require("express");
-const mysql = require("mysql");
-const cors = require("cors");
-const Axios = require("axios")
-const multer = require('multer');
-const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
-const session = require("express-session");
-const path = require('path');
-const fs = require('fs');
 const app = express();
-// const connection = mysql.createConnection({
-// 	host     : 'sql984.main-hosting.eu',
-// 	user     : 'u734900206_accessify',
-// 	password : 'Accessify@123',
-// 	database : 'u734900206_accessify',
-// 	reconnect: true,
-// 	wait_timeout: 3600,
-// 	connectTimeout: 200000 // set timeout to 2 min
 
-// });
-const connection = mysql.createConnection({
-	host     : 'sql.freedb.tech',
-	user     : 'freedb_accessify',
-	password : 'C!x2yZZzpzYgMaj',
-	database : 'freedb_accessify',
-	reconnect: true,
-	wait_timeout: 3600,
-	connectTimeout: 200000 // set timeout to 2 mins
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'accesify'
+})
 
-});
+const salt = 10;  //hashing password length
 
-// connection.connect(function(err) {
-//     if (err) {
-//       console.error('Error connecting to MySQL database: ' + err.stack);
-//       return;
-//     }
-  
-//     console.log('Database Connected');
-//   });
-  
 app.use(express.json());
 app.use(
     cors({
@@ -64,25 +43,6 @@ function message(props) {
 }
 
 
-// const storage = multer.diskStorage({
-// 	destination: (req, file, cb) => {
-// 		if (file.fieldname === '_logo') {
-// 			cb(null,path.join(__dirname, '/uploads/logos') );
-// 		  } else if (file.fieldname === '_userFile') {
-// 			cb(null, path.join(__dirname, '/uploads/files'));
-// 		  }else {
-// 			cb(new Error('Invalid field name'));
-// 		  }
-// 	},
-// 	filename: (req, file, cb) => {
-// 		console.log(file);
-// 		cb(null, file.originalname+ '-' + Date.now() + path.extname(file.originalname));
-// 	}
-	
-// });
-// const upload = multer({
-// 	dest: 'uploads/' 
-// });
 
 const storage = multer.diskStorage({
 	destination: (req, file, callback) => {
@@ -138,40 +98,71 @@ function validateFileType(fileType) {
 }
 
 
+const verifyUser = (req,res,next)=>{
+    const token = req.cookies.token;
+    if(!token){
+        return res.json({Error:"You are not Authenticated"})
+    }else{
+        jwt.verify(token, "jwt-secret-key", (err, decoded)=>{
+            if(err){
+                return res.json({Error:"Token is not matched"})
+            }else{
+                req.name = decoded.name;
+                next();
+            }
+        })
+    }
+}
+
+app.get('/',verifyUser,(req,res)=>{
+    return res.json({Status: "Success", name:req.name});
+})
+
+
+app.post('/register', (req,res)=>{
+    const sql = "INSERT INTO users (`name`,`email`,`password`) VALUES (?)";
+    bcrypt.hash(req.body.password.toString(), salt, (err, hash)=>{
+        if(err) return res.json({Error:"Error for hashing password"})
+        const values = [
+            req.body.name,
+            req.body.email,
+            hash
+        ]
+        db.query(sql, [values], (err,result)=>{
+            if(err) return res.json({Error: "Inserting data error"});
+            return res.json({Status: "Success"});
+        })
+    })
+    
+})
+
+
 
 app.get('/login', (req, res) => {
     res.send('This has CORS enabled ')
 })
 
+
 app.post('/login',(req, res) =>{
-	let email = req.body._email;
-	let password = req.body._password;
-	console.log(req.body);
-		connection.query('SELECT * FROM role_user WHERE _email = ? AND _password = ?', [email, password],
-		 (error, results, fields)=>{
-
-			if (error){ console.log(error);}
-			else{
-			if (results.length > 0) {
-			
-                res.send({message:'success'});
-			} else {
-				res.send({message:'success'});
-                console.log(results);
-
-			}		
-			}
-  			// close the connection
-  			connection.end((error) => {
-    		if (error) {
-      			console.error('MySQL end error', error);
-   			 } else {
-      		console.log('MySQL connection closed');
-    		}
-  			});
-			});
-	
-	
+	const sql = "SELECT * FROM users WHERE email = ? ";
+    db.query(sql,[req.body.email],(err,data)=>{
+        if(err) return res.json({Error: "Login error in server"});
+        if(data.length > 0){
+            bcrypt.compare(req.body.password.toString(), data[0].password,(err,response)=>{
+                if(err) return res.json({Error: "Password compare error"});
+                if(response){
+                    const name =data[0].name;
+                    const token = jwt.sign({name}, "jwt-secret-key", {expiresIn: '1d'});
+                    res.cookie('token', token);
+                    return res.json({Status: "Success"});
+                }else{
+                    return res.json({Error: "Wrong password"});
+                }
+            })
+        }else{
+            return res.json({Error:"No email exist"});
+        }
+    })
 });
 
 app.post('/multiuser', (req, res) => {
@@ -232,6 +223,13 @@ app.post('/institution', (req, res) => {
 	});
   });
 
+
+  app.get('/logout',(req,res) =>{
+    res.clearCookie('token');
+    return res.json({Status: "Success"})
+	
+})
+
 app.listen(3001, () => {
-    console.log("running server");
+    console.log("running server port 3001");
 });
