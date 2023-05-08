@@ -28,7 +28,7 @@ export default function Subjects() {
                                         tabIndex={-1}
                                         style={{ display: 'none' }}
                                         aria-hidden="true"
-                                    >
+                                     >
                                         <div className="modal-dialog" role="document">
                                             <div className="modal-content">
                                                 <div className="modal-header">
@@ -94,7 +94,7 @@ export default function Subjects() {
                                             </div>
                                         </div>
                                     </div>
-                                </div>;
+                                </div>
                                 <div className="table-responsive text-nowrap">
                                     <table className="table table-hover">
                                         <thead>

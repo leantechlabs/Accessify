@@ -101,6 +101,11 @@ export default function Sidebar() {
                 <div data-i18n="QuestionBank/subjects.js">Subjects</div>
             </Link>
             </li>
+            <li class="menu-item">
+            <Link class="menu-link " to="/chapters"> 
+                <div data-i18n="QuestionBank/chapters.js">Chapters</div>
+            </Link>
+            </li>
         </li>
         <li class="menu-header small text-uppercase">
           <span class="menu-header-text">Vendor Utils</span>
