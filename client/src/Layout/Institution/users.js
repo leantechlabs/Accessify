@@ -2,7 +2,21 @@ import Sidebar from "../includes/sidebar";
 import Header from "../includes/header";
 import Footer from "../includes/footer";
 import { Link } from "react-router-dom";
+import Axios from 'axios';
+import React,{useState,useEffect} from "react"
 export default function InstitutionUsers() {
+
+  const[Institution,setInstitution]=useState("");
+  const[Batchyear,setBatchyear]=useState("");
+  const[Batch,setBatch]=useState("");
+
+
+  const handleSubmit = () => {
+    const data = { Institution,Batchyear,Batch};
+    Axios.post('http://localhost:3001/users', data)
+      .then(res => console.log(res.data))
+      .catch(err => console.error(err));
+  };
   return (
     <>
       <div class="layout-wrapper layout-content-navbar">
@@ -32,22 +46,21 @@ export default function InstitutionUsers() {
                               </Link>
                             </div>
                           </div>
-                          <form
-                            action=""
-                            class="row ng-untouched ng-pristine ng-invalid"
-                          >
+
                             <div class="col-md form-group">
                               <select
                                 formcontrolname="institute"
                                 name="_institution"
                                 id="_institution"
                                 class="form-select default-input ng-untouched ng-pristine ng-invalid"
-                              >
+                                onChange={(e)=>setInstitution(e.target.value)}
+
+                             >
                                 <option value="" selected="">
                                   -- Select Institution --
                                 </option>
-                                <option value="">Coign_Practise</option>
-                                <option value="">VIEW_2024_POs</option>
+                                <option >Coign_Practise</option>
+                                <option >VIEW_2024_POs</option>
                               </select>
                               <small>
                                 <strong>Select Institution</strong>
@@ -59,6 +72,8 @@ export default function InstitutionUsers() {
                                 name="_batch_year"
                                 id="_batch_year"
                                 class="form-select default-input ng-untouched ng-pristine ng-invalid"
+                                onChange={(e)=>setBatchyear(e.target.value)}
+
                               >
                                 <option value="" selected="">
                                   -- Select Batch Year --
@@ -74,6 +89,8 @@ export default function InstitutionUsers() {
                                 name="_batch"
                                 id="_batch"
                                 class="form-select default-input ng-untouched ng-pristine ng-valid"
+                                onChange={(e)=>setBatch(e.target.value)}
+
                               >
                                 <option value="">-- Select Batch --</option>
                               </select>
@@ -85,11 +102,12 @@ export default function InstitutionUsers() {
                               <button
                                 type="submit"
                                 class="btn btn-primary mx-2"
+                                onClick={handleSubmit}
+
                               >
                                 Go
                               </button>
                             </div>
-                          </form>
                         </div>
                       </div>
                     </div>
