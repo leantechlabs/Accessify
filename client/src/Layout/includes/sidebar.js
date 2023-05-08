@@ -122,6 +122,7 @@ export default function Sidebar() {
             </Link>
             </li>
 
+<<<<<<< HEAD
         </li>
         <li class="menu-item">
           <a class="menu-link menu-toggle">
@@ -139,6 +140,8 @@ export default function Sidebar() {
                 <div data-i18n="Assessments/assessments.js">Assessments</div>
             </Link>
             </li>
+=======
+>>>>>>> c6287d6db6426f0a6d7635a051dd85182bae53dd
         </li>
         <li class="menu-header small text-uppercase">
           <span class="menu-header-text">Vendor Utils</span>

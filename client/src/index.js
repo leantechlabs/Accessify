@@ -18,8 +18,12 @@ import PCreate from './Layout/QuestionBank/pacreate';
 import Pview from './Layout/QuestionBank/pview';
 import Chapters from './Layout/QuestionBank/chapters';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import Catergories from './Layout/Assessments/catergories';
 import Assessments from './Layout/Assessments/assessments';
+=======
+
+>>>>>>> c6287d6db6426f0a6d7635a051dd85182bae53dd
 =======
 
 >>>>>>> c6287d6db6426f0a6d7635a051dd85182bae53dd
