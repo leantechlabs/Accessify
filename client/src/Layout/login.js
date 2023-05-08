@@ -6,8 +6,9 @@ axios.defaults.withCredentials = true;
 export default function Login() {
   const [values, setValues] = useState({
     email:'',
-    password:''
+    password:'',
   });
+  const [error, setError] = useState('');
 
   const navigate = useNavigate()
   axios.defaults.withCredentials = true;
@@ -18,7 +19,7 @@ export default function Login() {
         if(res.data.Status === "Success"){
             navigate('/dashboard')
         }else{
-            alert(res.data.Error);
+            setError(res.data.Error);
         }
     })
     .then(err => console.log(err));
@@ -109,6 +110,7 @@ export default function Login() {
                       Sign in
                     </button>
                   </div>
+                  {error && <div className="alert alert-danger">{error}</div>}
                 </form>
               </div>
             </div>
