@@ -11,6 +11,7 @@ import InstitutionUsers from './Layout/Institution/users';
 import AddInstitutionUser from './Layout/Institution/add-institution-users';
 import Batches from './Layout/Institution/batch'
 import Subjects from './Layout/QuestionBank/subjects';
+import Register from './Layout/register';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
       <Routes>
         <Route>
           {/* All routes or redirects*/}
+          <Route path="/register" element={<Register />} />
          <Route index element={<Login />} />
          <Route path="/dashboard" element={<Dashboard/>} />
          <Route path="/vendor-register" element={<VendorRegister/>} />

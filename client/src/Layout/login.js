@@ -1,57 +1,32 @@
 import React, { useState } from "react";
-import Axios from 'axios';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-Axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true;
 
 export default function Login() {
-  const nav = useNavigate();
-  const [email, setemail] = useState("");
-  const [password, setpassword] = useState("");
-  const [SetMyMessage] = useState("");
- // const [name,setName] = useState("");//hook
-  
-  const login = () => {
-      if (email !== "" && password !== "") {
-        if (email.length >= 5) {
-          Axios.post("http://localhost:3001/login", {
-            email: email,
-            password: password,
-          })
-            .then((response) => {
-              if (response.data.message === "success") {
-                  nav('./dashboard'); 
-              } else {
-                SetMyMessage("Please Check Your Credentials");
-              }
-            })
-            .catch((error) => {
-              console.error("Error occurred during login request: ", error);
-              SetMyMessage("An error occurred during login.");
-            });
-        } else {
-          SetMyMessage("Please enter a valid email.");
+  const [values, setValues] = useState({
+    email:'',
+    password:''
+  });
+
+  const navigate = useNavigate()
+  axios.defaults.withCredentials = true;
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    axios.post('http://localhost:3001/login', values)
+    .then(res => {
+        if(res.data.Status === "Success"){
+            navigate('/dashboard')
+        }else{
+            alert(res.data.Error);
         }
-      } else {
-        SetMyMessage("Please enter all the fields.");
-      }
-  
-  };
+    })
+    .then(err => console.log(err));
+}
 
   return (
    
     <div>
-      {/* <div class="card-body" id="alert-model">
-        <div class="alert alert-danger alert-dismissible" role="alert">
-          <span></span>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="alert"
-            aria-label="Close"
-          ></button>
-           <input type="text" name="_textdemo" onChange={(e)=>{settext(e.target.value)}}/>
-        </div>
-      </div> */}
 
       <div class="container-xxl">
         <div class="authentication-wrapper authentication-basic container-p-y">
@@ -69,12 +44,12 @@ export default function Login() {
                 <h4 class="mb-2">Welcome to Accessify! 👋</h4>
                 <p class="mb-4">Please sign-in to your account</p>
 
-                {/* <form
+                <form
                   id="formAuthentication"
                   class="mb-3"
                   action="/"
-                  method="POST"
-                > */}
+                  onSubmit={handleSubmit}
+                >
                   <div class="mb-3">
                     <label  class="form-label">
                       Email or Username
@@ -85,8 +60,7 @@ export default function Login() {
                       id="_email"
                       name="_email"
                       placeholder="Enter your email or username"
-                      onChange={(e) => setemail(e.target.value)}
-                     //onCanPlay={(e)=>setName(e.target.value)}
+                      onChange={e=>setValues({...values, email:e.target.value})}
                     />
                   </div>
                   <div class="mb-3 form-password-toggle">
@@ -106,7 +80,7 @@ export default function Login() {
                         name="_password"
                         placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                         aria-describedby="password"
-                        onChange={(e) => setpassword(e.target.value)}
+                        onChange={e=>setValues({...values, password:e.target.value})}
                       />
                       <span class="input-group-text cursor-pointer">
                         <i class="bx bx-hide"></i>
@@ -131,12 +105,11 @@ export default function Login() {
                       class="btn btn-primary d-grid w-100"
                       type="submit"
                       name="_submit"
-                      onClick={() => login()}
                     >
                       Sign in
                     </button>
                   </div>
-                {/* </form> */}
+                </form>
               </div>
             </div>
           </div>
