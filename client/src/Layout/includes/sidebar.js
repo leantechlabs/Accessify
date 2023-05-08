@@ -100,12 +100,26 @@ export default function Sidebar() {
             <Link class="menu-link " to="/Subjects"> 
                 <div data-i18n="QuestionBank/subjects.js">Subjects</div>
             </Link>
+
+         </li>
+         <li class="menu-item">
+            <Link class="menu-link " to="/PCreate"> 
+                <div data-i18n="QuestionBank/pcreate.js">Paragraph MCQ Create</div>
+            </Link>
+           </li>
+           <li class="menu-item">
+            <Link class="menu-link " to="/Pview"> 
+                <div data-i18n="QuestionBank/pview.js">Paragraph MCQ View</div>
+            </Link>
+           </li>
+
             </li>
             <li class="menu-item">
             <Link class="menu-link " to="/chapters"> 
                 <div data-i18n="QuestionBank/chapters.js">Chapters</div>
             </Link>
             </li>
+
         </li>
         <li class="menu-header small text-uppercase">
           <span class="menu-header-text">Vendor Utils</span>

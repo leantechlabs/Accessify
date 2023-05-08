@@ -11,6 +11,8 @@ import InstitutionUsers from './Layout/Institution/users';
 import AddInstitutionUser from './Layout/Institution/add-institution-users';
 import Batches from './Layout/Institution/batch'
 import Subjects from './Layout/QuestionBank/subjects';
+import PCreate from './Layout/QuestionBank/pacreate';
+import Pview from './Layout/QuestionBank/pview';
 import Chapters from './Layout/QuestionBank/chapters';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -31,6 +33,8 @@ function App() {
          <Route path="/add-institution-users" element={<AddInstitutionUser/>} />
          <Route path="/batch" element={<Batches/>} />
          <Route path="/subjects" element={<Subjects/>}/>
+         <Route path="/pcreate" element={<PCreate/>}/>
+         <Route path="/pview" element={<Pview/>}/>
          <Route path="/chapters" element={<Chapters/>}/>
         </Route>
       </Routes>
