@@ -2,21 +2,7 @@ import Sidebar from "../includes/sidebar";
 import Header from "../includes/header";
 import Footer from "../includes/footer";
 import { Link } from "react-router-dom";
-import Axios from 'axios';
-import React,{useState,useEffect} from "react"
-export default function InstitutionUsers() {
-
-  const[Institution,setInstitution]=useState("");
-  const[Batchyear,setBatchyear]=useState("");
-  const[Batch,setBatch]=useState("");
-
-
-  const handleSubmit = () => {
-    const data = { Institution,Batchyear,Batch};
-    Axios.post('http://localhost:3001/users', data)
-      .then(res => console.log(res.data))
-      .catch(err => console.error(err));
-  };
+export default function Pview() {
   return (
     <>
       <div class="layout-wrapper layout-content-navbar">
@@ -34,80 +20,86 @@ export default function InstitutionUsers() {
                           <div class="row">
                             <div class="col-md-6">
                               <h6>
-                                <strong>Filter Users:</strong>
+                                <strong>Filter Paragraph Questions:</strong>
                               </h6>
                             </div>
-                            <div class="col-md-6 float-right">
-                              <Link
-                                class="btn btn-dark float-right"
-                               to="/add-institution-users"
-                              >
-                                + Create Users
-                              </Link>
-                            </div>
                           </div>
-
+                          <form
+                            action=""
+                            class="row ng-untouched ng-pristine ng-invalid"
+                          >
                             <div class="col-md form-group">
                               <select
-                                formcontrolname="institute"
-                                name="_institution"
-                                id="_institution"
+                                formcontrolname="subject"
+                                name="_subject"
+                                id="_subject"
                                 class="form-select default-input ng-untouched ng-pristine ng-invalid"
-                                onChange={(e)=>setInstitution(e.target.value)}
-
-                             >
-                                <option value="" selected="">
-                                  -- Select Institution --
-                                </option>
-                                <option >Coign_Practise</option>
-                                <option >VIEW_2024_POs</option>
-                              </select>
-                              <small>
-                                <strong>Select Institution</strong>
-                              </small>
-                            </div>
-                            <div class="col-md form-group">
-                              <select
-                                formcontrolname="batch_year"
-                                name="_batch_year"
-                                id="_batch_year"
-                                class="form-select default-input ng-untouched ng-pristine ng-invalid"
-                                onChange={(e)=>setBatchyear(e.target.value)}
-
                               >
                                 <option value="" selected="">
-                                  -- Select Batch Year --
+                                  -- Select Subject --
                                 </option>
+                                <option value="">Maths</option>
+                                <option value="">Aplitude</option>
                               </select>
                               <small>
-                                <strong>Select Batch Year</strong>
+                                <strong>Select Subject</strong>
                               </small>
                             </div>
                             <div class="col-md form-group">
                               <select
-                                formcontrolname="batch"
-                                name="_batch"
-                                id="_batch"
+                                formcontrolname="selectchapter"
+                                name="selectchapter"
+                                id="selectchapter"
+                                class="form-select default-input ng-untouched ng-pristine ng-invalid"
+                              >
+                                <option value="" selected="">
+                                  -- Select-Chapter --
+                                </option>
+                              </select>
+                              <small>
+                                <strong>Select Chapter</strong>
+                              </small>
+                            </div>
+                            <div class="col-md form-group">
+                              <select
+                                formcontrolname="difficulty"
+                                name="_difficulty"
+                                id="_difficulty"
                                 class="form-select default-input ng-untouched ng-pristine ng-valid"
-                                onChange={(e)=>setBatch(e.target.value)}
-
                               >
-                                <option value="">-- Select Batch --</option>
+                                <option value="">-- Select Difficulty --</option>
+                                <option value="">Easy</option>
+                                <option value="">Medium</option>
+                                <option value="">Hard</option>
                               </select>
                               <small>
-                                <strong>Select Batch</strong>
+                                <strong>Select Difficulty</strong>
+                              </small>
+                            </div>
+                            <div class="col-md form-group">
+                            <input class="form-control" 
+                            type="text" id="_name" 
+                            name="_name" placeholder="Reference Name">
+
+                            </input>
+                              <small>
+                                <strong>Reference</strong>
                               </small>
                             </div>
                             <div class="col-md form-group">
                               <button
                                 type="submit"
                                 class="btn btn-primary mx-2"
-                                onClick={handleSubmit}
-
                               >
-                                Go
+                                Go 
                               </button>
+                              &nbsp;&nbsp;
+                              <button  
+                              type="button" 
+                              className="btn btn-outline-danger mx-2">
+                               Clear Filter </button>
                             </div>
+                          </form>
                         </div>
                       </div>
                     </div>
@@ -116,6 +108,11 @@ export default function InstitutionUsers() {
                     <div class="col-md-11 stretch-card">
                       <div class="card row">
                         <div class="card-body">
+                        <div class="col-md-6">
+                              <h6>
+                                <strong>Paragraph Questions:</strong>
+                              </h6>
+                            </div>
                           <table
                             datatable=""
                             class="table table-bordered row-border hover"
@@ -126,38 +123,36 @@ export default function InstitutionUsers() {
                             >
                               <tr>
                                 <th name="_sno" id="_sno">
-                                  S.No
+                                  S.NO
                                 </th>
-                                <th name="_name" id="_name">
-                                  Name
+                                <th name="_name" id="_id">
+                                  ID
                                 </th>
-                                <th name="_email" id="_email">
-                                  Email
+                                <th name="_email" id="_module">
+                                  MODULE
                                 </th>
-                                <th name="_regd" id="_regd">
-                                  Regd
+                                <th name="_regd" id="_chapter">
+                                  CHAPTER
                                 </th>
-                                <th name="_mobile" id="_mobile">
-                                  Mobile
+                                <th name="_mobile" id="_paragraph">
+                                  PARAGRAPH
                                 </th>
-                                <th name="_status" id="_status">
-                                  Status
+                                <th name="_status" id="_difficult">
+                                  DIFFICULTY
+                                </th>
+
+                                <th name="_status" id="_reference">
+                                  REFERENCE
+                                </th>
+                                <th name="_status" id="_question">
+                                  QUESTION#
                                 </th>
                                 <th name="_actions" id="_actions">
                                   Actions
                                 </th>
                               </tr>
                             </thead>
-                            <tbody class="text-center">
-                              <td>1</td>
-                              <td>Ravi</td>
-                              <td>test@gmail.com</td>
-                              <td>1453</td>
-                              <td>98654310</td>
-                              <td>Active</td>
-                              <td>Hello</td>
-                            </tbody>
-                            <tbody class="text-center"></tbody>
+                            
                           </table>
                         </div>
                       </div>

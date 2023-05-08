@@ -1,13 +1,27 @@
 import Sidebar from "../includes/sidebar"
 import Header  from "../includes/header"
 import Footer from "../includes/footer"
-import { useState } from "react";
+import Axios from 'axios';
+import React,{useState,useEffect} from "react"
 export default function Batches(){
   const[Institution,setInstitution]=useState("");
-  const[SetInstitution,setSelectinstitution]=useState("");
+  const[SelectInstitution,setSelectinstitution]=useState("");
   const[Batchyear,setBatchyear]=useState("");
   const[Batchname,setBatchname]=useState("");
 
+
+  const handleSubmit = () => {
+    const data = { Institution,Batchyear,Batchname};
+    Axios.post('http://localhost:3001/batch', data)
+      .then(res => console.log(res.data))
+      .catch(err => console.error(err));
+  };
+  const handleSubmits = () => {
+    const data = { SelectInstitution};
+    Axios.post('http://localhost:3001/batches', data)
+      .then(res => console.log(res.data))
+      .catch(err => console.error(err));
+  };
 
     return(
         <>
@@ -43,7 +57,6 @@ export default function Batches(){
                             for="nameWithTitle"
                             id="institution"
                             class="form-label"
-                            onChange={(e)=>setInstitution(e.target.value)}
                             required
                           >
                             Institution
@@ -53,6 +66,8 @@ export default function Batches(){
                             
                             name="institution"
                             class="form-control default-input ng-pristine ng-valid ng-touched"
+                            onChange={(e)=>setInstitution(e.target.value)}
+
                           >
                             <option value="" selected="" disabled="">
                               -- Select Institution --
@@ -71,7 +86,7 @@ export default function Batches(){
                            for="Batch-Year" 
                            class="form-label" 
                            id="batchyear"
-                           onChange={(e)=>setBatchyear(e.target.value)}>
+                           >
                             Batch-Year
                             <span class="text-danger"> *</span>
                           </label>
@@ -79,6 +94,7 @@ export default function Batches(){
                           
                             name="BatchYear"
                             class="form-control"
+                            onChange={(e)=>setBatchyear(e.target.value)}
                           >
                             <option value="" selected="" disabled="">
                               -- Select Batch Year --
@@ -95,7 +111,7 @@ export default function Batches(){
                           <label for="Batch-Year" 
                            class="form-label" 
                            id="batchhname"
-                           onChange={(e)=>setBatchname(e.target.value)}>
+                          >
                             Batch-Name
                             <span class="text-danger"> *</span>
                           </label>
@@ -104,6 +120,8 @@ export default function Batches(){
                             id="Batch-name"
                             class="form-control"
                             placeholder="Enter Your Batch Name"
+                            onChange={(e)=>setBatchname(e.target.value)}
+
                           />
                         </div>
                       </div>
@@ -116,7 +134,9 @@ export default function Batches(){
                       >
                         Close
                       </button>
-                      <button type="button" class="btn btn-primary" id="Createbatch">
+                      <button type="button" class="btn btn-primary" id="Createbatch"
+                       onClick={handleSubmit}
+                       >
                         Create
                       </button>
                     </div>
@@ -140,7 +160,7 @@ export default function Batches(){
                           name="institution"
                           class="form-control default-input ng-pristine ng-valid ng-touched"
                           onChange={(e)=>setSelectinstitution(e.target.value)}
-                        >
+                          >
                           <option value="" selected="" disabled="">
                             -- Select Institution --
                           </option>
@@ -156,6 +176,7 @@ export default function Batches(){
                           _ngcontent-qfm-c181=""
                           type="button"
                           class="btn btn-primary mx-2"
+                          onClick={handleSubmits}
                         >
                           Go
                         </button>

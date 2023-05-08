@@ -8,6 +8,16 @@ import path from 'path'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 
+const express = require("express");
+const mysql = require("mysql");
+const cors = require("cors");
+const Axios = require("axios")
+const multer = require('multer');
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
+const path = require('path');
+
 const app = express();
 
 const db = mysql.createConnection({
@@ -43,6 +53,25 @@ function message(props) {
 }
 
 
+// const storage = multer.diskStorage({
+// 	destination: (req, file, cb) => {
+// 		if (file.fieldname === '_logo') {
+// 			cb(null,path.join(__dirname, '/uploads/logos') );
+// 		  } else if (file.fieldname === '_userFile') {
+// 			cb(null, path.join(__dirname, '/uploads/files'));
+// 		  }else {
+// 			cb(new Error('Invalid field name'));
+// 		  }
+// 	},
+// 	filename: (req, file, cb) => {
+// 		console.log(file);
+// 		cb(null, file.originalname+ '-' + Date.now() + path.extname(file.originalname));
+// 	}
+	
+// });
+// const upload = multer({
+// 	dest: 'uploads/' 
+// });
 
 const storage = multer.diskStorage({
 	destination: (req, file, callback) => {
@@ -172,20 +201,46 @@ app.post('/multiuser', (req, res) => {
 		  return res.sendStatus(500);
 		}
 	
-		console.log("Upload successful!");
+		console.log("Upload successful!",req.body);
 		res.sendStatus(200);
 	  });
 });
 
 
+app.post('/users', (req, res) => {
+	const { Institution,Batchyear,Batch} = req.body;
+	console.log(req.body,Institution,Batchyear,Batch);
+
+});
 app.post('/institutionuser', (req, res) => {
-	const {firstname,lastname,email,mobile,regid,password} = req.body;
-	console.log(req.body,firstname,lastname,email,mobile,regid,password);
+	const {firstname,lastname,email,mobile,regid,password,Institution,BatchYear,Batch,AccessPeriod} = req.body;
+	console.log(req.body,firstname,lastname,email,mobile,regid,password,Institution,BatchYear,Batch,AccessPeriod);
 });
 app.post('/institution', (req, res) => {
-	const { institutionName,headofinstitution,primarycontact,primaryemail,secondarycontact,secondaryemail,address,institutioncode,state,city,password} = req.body;
-	console.log(req.body,institutionName,headofinstitution,primarycontact,primaryemail,secondarycontact,secondaryemail,address,institutioncode,state,city,password);
+	const { institutionName,headofinstitution,primarycontact,primaryemail,secondarycontact,secondaryemail,address,institutioncode,state,city,password,InstitutionType} = req.body;
+	console.log(req.body,institutionName,headofinstitution,primarycontact,primaryemail,secondarycontact,secondaryemail,address,institutioncode,state,city,password,InstitutionType);
 });
+
+app.post('/batch', (req, res) => {
+	const { Institution,Batchyear,Batchname} = req.body;
+	console.log(req.body,Institution,Batchyear,Batchname);
+});
+
+app.post('/createBatchyears', (req, res) => {
+	const { createInstitution,createBatchyear} = req.body;
+	console.log(req.body,createInstitution,createBatchyear);
+
+});app.post('/Batchyears', (req, res) => {
+	const { Institution} = req.body;
+	console.log(req.body,Institution);
+
+});
+
+app.post('/batches', (req, res) => {
+	const { SelectInstitution} = req.body;
+	console.log(req.body,SelectInstitution);
+});
+
 
 // app.post('/register', upload.single('image'), (req, res) => {
 // 	const { filename } = req.file;
