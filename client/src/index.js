@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Redirect, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from './Layout/login';
 import Dashboard from './Layout/Dashboard/dashboard'
 import VendorRegister from './Layout/Dashboard/Vendor/vendor-register';
@@ -13,6 +13,7 @@ import Batches from './Layout/Institution/batch'
 import Subjects from './Layout/QuestionBank/subjects';
 import PCreate from './Layout/QuestionBank/pacreate';
 import Pview from './Layout/QuestionBank/pview';
+import Chapters from './Layout/QuestionBank/chapters';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
          <Route path="/subjects" element={<Subjects/>}/>
          <Route path="/pcreate" element={<PCreate/>}/>
          <Route path="/pview" element={<Pview/>}/>
+         <Route path="/chapters" element={<Chapters/>}/>
         </Route>
       </Routes>
     </BrowserRouter>
