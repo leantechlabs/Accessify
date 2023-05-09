@@ -6,7 +6,6 @@ import React,{useState, useEffect} from "react"
 import {  useNavigate } from 'react-router-dom';
 
 export default function Institution() {
-  
   const [values, setValues] = useState({
       institutionName:'',
       headOfInstitution:'',
@@ -46,9 +45,6 @@ export default function Institution() {
       })
       .catch((err) => console.log(err));
   };
-
-  
-
 
   return (
     <>
@@ -347,8 +343,12 @@ export default function Institution() {
                                             className="form-select"
                                             id="instituteType"
                                             aria-label="Default select example"
+<<<<<<< HEAD
                                             defaultValue="selected"
                                             onChange={e=>setValues({...values, instituteType:e.target.value})}
+=======
+                                            onChange={(e) =>setInstitutionType(e.target.value)}
+>>>>>>> origin/main
                                           >
                                             <option value="selected">
                                               --Institution Type--

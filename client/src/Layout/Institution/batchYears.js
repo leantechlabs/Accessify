@@ -1,7 +1,29 @@
 import Sidebar from "../includes/sidebar";
 import Header from "../includes/header";
 import Footer from "../includes/footer";
+import Axios from 'axios';
+import React,{useState,useEffect} from "react"
 export default function BatchYears() {
+  const[Institution,setInstitution]=useState("");
+
+  const[createInstitution,setcreateInstitution]=useState("");
+  const[createBatchyear,setcreateBatchyear]=useState("");
+
+
+  const handleSubmit = () => {
+    const data = { createInstitution,createBatchyear};
+    Axios.post('http://localhost:3001/createBatchyears', data)
+      .then(res => console.log(res.data))
+      .catch(err => console.error(err));
+  };
+
+
+  const handleSubmits = () => {
+    const data = { Institution};
+    Axios.post('http://localhost:3001/Batchyears', data)
+      .then(res => console.log(res.data))
+      .catch(err => console.error(err));
+  };
   return (
     <>
       <div class="layout-wrapper layout-content-navbar">
@@ -44,6 +66,8 @@ export default function BatchYears() {
                             _ngcontent-qfm-c181=""
                             name="institution"
                             class="form-control default-input ng-pristine ng-valid ng-touched"
+                            onChange={(e)=>setcreateInstitution(e.target.value)}
+
                           >
                             <option value="" selected="" disabled="">
                               -- Select Institution --
@@ -67,6 +91,8 @@ export default function BatchYears() {
                             id="Batch-year"
                             class="form-control"
                             placeholder="Enter Your Batch Year"
+                            onChange={(e)=>setcreateBatchyear(e.target.value)}
+
                           />
                         </div>
                       </div>
@@ -79,7 +105,8 @@ export default function BatchYears() {
                       >
                         Close
                       </button>
-                      <button type="button" class="btn btn-primary">
+                      <button type="button" class="btn btn-primary" onClick={handleSubmit}
+>
                         Create
                       </button>
                     </div>
@@ -108,6 +135,8 @@ export default function BatchYears() {
                           _ngcontent-qfm-c181=""
                           name="institution"
                           class="form-control default-input ng-pristine ng-valid ng-touched"
+                          onChange={(e)=>setInstitution(e.target.value)}
+
                         >
                           <option value="" selected="" disabled="">
                             -- Select Institution --
@@ -124,6 +153,8 @@ export default function BatchYears() {
                           _ngcontent-qfm-c181=""
                           type="button"
                           class="btn btn-primary mx-2"
+                          onClick={handleSubmits}
+s
                         >
                           Go
                         </button>

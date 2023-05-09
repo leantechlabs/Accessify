@@ -8,6 +8,16 @@ import path from 'path'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 
+const express = require("express");
+const mysql = require("mysql");
+const cors = require("cors");
+const Axios = require("axios")
+const multer = require('multer');
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
+const path = require('path');
+
 const app = express();
 
 const db = mysql.createConnection({
@@ -43,6 +53,25 @@ function message(props) {
 }
 
 
+// const storage = multer.diskStorage({
+// 	destination: (req, file, cb) => {
+// 		if (file.fieldname === '_logo') {
+// 			cb(null,path.join(__dirname, '/uploads/logos') );
+// 		  } else if (file.fieldname === '_userFile') {
+// 			cb(null, path.join(__dirname, '/uploads/files'));
+// 		  }else {
+// 			cb(new Error('Invalid field name'));
+// 		  }
+// 	},
+// 	filename: (req, file, cb) => {
+// 		console.log(file);
+// 		cb(null, file.originalname+ '-' + Date.now() + path.extname(file.originalname));
+// 	}
+	
+// });
+// const upload = multer({
+// 	dest: 'uploads/' 
+// });
 
 const storage = multer.diskStorage({
 	destination: (req, file, callback) => {
@@ -172,14 +201,14 @@ app.post('/multiuser', (req, res) => {
 		  return res.sendStatus(500);
 		}
 	
-		console.log("Upload successful!");
+		console.log("Upload successful!",req.body);
 		res.sendStatus(200);
 	  });
 });
 
 app.post('/institutionuser', (req, res) => {
-	const {firstname,lastname,email,mobile,regid,password} = req.body;
-	console.log(req.body,firstname,lastname,email,mobile,regid,password);
+	const {firstname,lastname,email,mobile,regid,password,Institution,BatchYear,Batch,AccessPeriod} = req.body;
+	console.log(req.body,firstname,lastname,email,mobile,regid,password,Institution,BatchYear,Batch,AccessPeriod);
 });
 
 app.get('/institution', (req, res) => {
