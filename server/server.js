@@ -120,7 +120,7 @@ app.get('/',verifyUser,(req,res)=>{
 
 
 app.post('/register', (req,res)=>{
-    const sql = "INSERT INTO users (`name`,`email`,`password`) VALUES (?)";
+    const sql = "INSERT INTO users (`name`,`email`,`password`) VALUES (?)"; 
     bcrypt.hash(req.body.password.toString(), salt, (err, hash)=>{
         if(err) return res.json({Error:"Error for hashing password"})
         const values = [
@@ -177,52 +177,68 @@ app.post('/multiuser', (req, res) => {
 	  });
 });
 
-
 app.post('/institutionuser', (req, res) => {
 	const {firstname,lastname,email,mobile,regid,password} = req.body;
 	console.log(req.body,firstname,lastname,email,mobile,regid,password);
 });
+
+app.get('/institution', (req, res) => {
+    const { institutionName, headOfInstitution, primaryEmail, primaryContact, secondaryEmail, secondaryContact, address, city, state, institutionCode, institutionType, password } = req.body;
+    console.log(req.body); // log the request body to the console
+    // process the data and send a response    
+  });
+
 app.post('/institution', (req, res) => {
-	const { institutionName,headofinstitution,primarycontact,primaryemail,secondarycontact,secondaryemail,address,institutioncode,state,city,password} = req.body;
-	console.log(req.body,institutionName,headofinstitution,primarycontact,primaryemail,secondarycontact,secondaryemail,address,institutioncode,state,city,password);
+    
+    const sql = "INSERT INTO institutions (`institutionName`,`headOfInstitution`,`primaryEmail`,`primaryContact`,`secondaryEmail`,`secondaryContact`,`address`,`city`,`state`,`instituteCode`,`instituteType`,`password`) VALUES (?)";  
+    bcrypt.hash(req.body.password.toString(), salt, (err, hash)=>{
+        if(err) return res.json({Error:"Error for hashing password"})
+        const values = [
+            req.body.institutionName,
+            req.body.headOfInstitution,
+            req.body.primaryEmail,
+            req.body.primaryContact,
+            req.body.secondaryEmail,
+            req.body.secondaryContact,
+            req.body.address,
+            req.body.city,
+            req.body.state,
+            req.body.instituteCode,
+            req.body.instituteType,  
+            hash
+        ]
+        db.query(sql, [values], (err,result)=>{
+            if(err) return res.json({Error: "Inserting data error"});
+            return res.json({Status: "Success"});
+        })
+    })
 });
 
-// app.post('/register', upload.single('image'), (req, res) => {
-// 	const { filename } = req.file;
-// 	const fileExtension = path.extname(filename);
-// 	const newName = `${filename}${fileExtension}`;
-// 	const oldPath = `uploads/${filename}`;
+
+//   app.post('/register',(req, res) => {
+
+//     imageUpload(req, res, (error) => {
+// 		if (error) {
+// 		  console.log(error);
+// 		  return res.sendStatus(500);
+// 		}
+// 		console.log("Upload successful!");
   
 // 	const { name,email,businessname,phone,address,state,city,zip,language } = req.body;
 
 // 	console.log(req.body ,name,email,businessname,phone,address,state,city,zip,language);
-// 	// move the file to the images folder with the new name
-// 	// fs.rename(oldPath, newPath, (err) => {
-// 	//   if (err) {
-// 	// 	console.error(err);
-// 	// 	res.status(500).json({ message: 'Failed to upload image' });
-// 	//   } else {
-// 	// 	console.log(`Image saved as ${newName}`);
-// 	// 	res.json({ message: 'Image uploaded successfully' });
-// 	//   }
-// 	// });
+
+// 	});
 //   });
-  app.post('/register',(req, res) => {
 
-    imageUpload(req, res, (error) => {
-		if (error) {
-		  console.log(error);
-		  return res.sendStatus(500);
-		}
-		console.log("Upload successful!");
-  
-	const { name,email,businessname,phone,address,state,city,zip,language } = req.body;
 
-	console.log(req.body ,name,email,businessname,phone,address,state,city,zip,language);
-
-	});
-  });
-
+app.get('/institutions',(req,res) =>{
+    const sql="SELECT * FROM institutions";
+    db.query(sql,(err,result)=>{
+        if(err) return res.json({Message: "Error inside server"});
+        return res.json(result)
+    })
+})
 
   app.get('/logout',(req,res) =>{
     res.clearCookie('token');

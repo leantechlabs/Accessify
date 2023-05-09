@@ -22,21 +22,20 @@ function App() {
         <Route>
           {/* All routes or redirects*/}
           <Route path="/register" element={<Register />} />
-         <Route index element={<Login />} />
-         <Route path="/dashboard" element={<Dashboard/>} />
-         <Route path="/vendor-register" element={<VendorRegister/>} />
-         <Route path="/manage-vendor" element={<ManageVendor/>} />
-         <Route path="/institution" element={<Institution/>} />
-         <Route path="/batch-years" element={<BatchYears/>} />
-         <Route path="/institution-users" element={<InstitutionUsers/>} />
-         <Route path="/add-institution-users" element={<AddInstitutionUser/>} />
-         <Route path="/batch" element={<Batches/>} />
-         <Route path="/subjects" element={<Subjects/>}/>
+          <Route index element={<Login />} />
+          <Route path="/dashboard" element={<Dashboard/>} />
+          <Route path="/vendor-register" element={<VendorRegister/>} />
+          <Route path="/manage-vendor" element={<ManageVendor/>} />
+          <Route path="/institution" element={<Institution/>} />
+          <Route path="/batch-years" element={<BatchYears/>} />
+          <Route path="/institution-users" element={<InstitutionUsers/>} />
+          <Route path="/add-institution-users" element={<AddInstitutionUser/>} />
+          <Route path="/batch" element={<Batches/>} />
+          <Route path="/subjects" element={<Subjects/>}/>
         </Route>
       </Routes>
     </BrowserRouter>
-   
-   </>
+    </>
   );
 }
 
