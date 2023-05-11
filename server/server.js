@@ -8,15 +8,10 @@ import path from 'path'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 
-const express = require("express");
-const mysql = require("mysql");
-const cors = require("cors");
-const Axios = require("axios")
-const multer = require('multer');
-const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
-const session = require("express-session");
-const path = require('path');
+
+
+import Axios  from "axios";
+import session from "express-session";
 
 const app = express();
 
@@ -24,7 +19,7 @@ const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'accesify'
+    database: 'accessify'
 })
 
 const salt = 10;  //hashing password length
@@ -173,6 +168,7 @@ app.get('/login', (req, res) => {
 
 
 app.post('/login',(req, res) =>{
+
 	const sql = "SELECT * FROM users WHERE email = ? ";
     db.query(sql,[req.body.email],(err,data)=>{
         if(err) return res.json({Error: "Login error in server"});
