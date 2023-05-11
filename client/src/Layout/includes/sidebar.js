@@ -88,8 +88,6 @@ export default function Sidebar() {
                 <div data-i18n="Manage Vendor">Manage Institution</div>
               </a>
             </li>
-          
-        </li>
         <li class="menu-item">
           <a class="menu-link menu-toggle">
             <i class="menu-icon tf-icons bx bx-detail"></i>
@@ -110,6 +108,16 @@ export default function Sidebar() {
            <li class="menu-item">
             <Link class="menu-link " to="/Pview"> 
                 <div data-i18n="QuestionBank/pview.js">Paragraph MCQ View</div>
+            </Link>
+           </li>
+           <li class="menu-item">
+            <Link class="menu-link " to="/Createcodingques"> 
+                <div data-i18n="QuestionBank/createcodingques.js">Create Coding Questions</div>
+            </Link>
+           </li>
+           <li class="menu-item">
+            <Link class="menu-link " to="/Viewcodingques"> 
+                <div data-i18n="QuestionBank/viewcodingques.js">View Coding Questions</div>
             </Link>
            </li>
 
