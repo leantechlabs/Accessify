@@ -11,22 +11,16 @@ import InstitutionUsers from './Layout/Institution/users';
 import AddInstitutionUser from './Layout/Institution/add-institution-users';
 import Batches from './Layout/Institution/batch'
 import Subjects from './Layout/QuestionBank/subjects';
-
 import Register from './Layout/register';
-
 import PCreate from './Layout/QuestionBank/pacreate';
 import Pview from './Layout/QuestionBank/pview';
+import Createcodingques from './Layout/QuestionBank/createcodingques';
+import Viewcodingques from './Layout/QuestionBank/viewcodingques';
 import Chapters from './Layout/QuestionBank/chapters';
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 import Catergories from './Layout/Assessments/catergories';
 import Assessments from './Layout/Assessments/assessments';
-=======
 
->>>>>>> c6287d6db6426f0a6d7635a051dd85182bae53dd
-=======
-
->>>>>>> c6287d6db6426f0a6d7635a051dd85182bae53dd
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 function App() {
@@ -49,9 +43,13 @@ function App() {
          <Route path="/subjects" element={<Subjects/>}/>
          <Route path="/pcreate" element={<PCreate/>}/>
          <Route path="/pview" element={<Pview/>}/>
+         <Route path="/createcodingques" element={<Createcodingques/>}/>
+         <Route path="/viewcodingques" element={<Viewcodingques/>}/>
          <Route path="/chapters" element={<Chapters/>}/>
+
          <Route path="/catergories" element={<Catergories/>}/>
          <Route path="/assessments" element={<Assessments/>}/>
+
         </Route>
       </Routes>
     </BrowserRouter>
