@@ -18,6 +18,9 @@ import Createcodingques from './Layout/QuestionBank/createcodingques';
 import Viewcodingques from './Layout/QuestionBank/viewcodingques';
 import Chapters from './Layout/QuestionBank/chapters';
 
+import Catergories from './Layout/Assessments/catergories';
+import Assessments from './Layout/Assessments/assessments';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 function App() {
@@ -43,7 +46,10 @@ function App() {
          <Route path="/createcodingques" element={<Createcodingques/>}/>
          <Route path="/viewcodingques" element={<Viewcodingques/>}/>
          <Route path="/chapters" element={<Chapters/>}/>
-         
+
+         <Route path="/catergories" element={<Catergories/>}/>
+         <Route path="/assessments" element={<Assessments/>}/>
+
         </Route>
       </Routes>
     </BrowserRouter>

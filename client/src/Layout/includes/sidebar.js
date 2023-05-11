@@ -1,3 +1,5 @@
+/* eslint-disable no-script-url */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { Outlet, Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 export default function Sidebar() {
@@ -128,6 +130,26 @@ export default function Sidebar() {
             </Link>
             </li>
 
+<<<<<<< HEAD
+        </li>
+        <li class="menu-item">
+          <a class="menu-link menu-toggle">
+            <i class="menu-icon tf-icons bx bx-detail"></i>
+            <div data-i18n="Form Elements">ASSESSMENTS</div>
+          </a>
+         
+            <li class="menu-item">
+            <Link class="menu-link " to="/catergories"> 
+                <div data-i18n="Assessments/catergories.js">Categories</div>
+            </Link>
+            </li>
+            <li class="menu-item">
+            <Link class="menu-link " to="/assessments"> 
+                <div data-i18n="Assessments/assessments.js">Assessments</div>
+            </Link>
+            </li>
+=======
+>>>>>>> c6287d6db6426f0a6d7635a051dd85182bae53dd
         </li>
         <li class="menu-header small text-uppercase">
           <span class="menu-header-text">Vendor Utils</span>
