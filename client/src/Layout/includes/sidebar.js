@@ -120,7 +120,6 @@ export default function Sidebar() {
             </Link>
             </li>
 
-        </li>
         <li class="menu-header small text-uppercase">
           <span class="menu-header-text">Vendor Utils</span>
         </li>
