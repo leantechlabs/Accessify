@@ -1,3 +1,5 @@
+/* eslint-disable no-script-url */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { Outlet, Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 export default function Sidebar() {
@@ -26,7 +28,7 @@ export default function Sidebar() {
       <div class="menu-inner-shadow"></div>
 
       <ul class="menu-inner py-1">
-        {/* <!-- Dashboard --> */}
+     
         <li class="menu-item active">
         <Link class="menu-link menu-toggle" to="/dashboard"> 
             <i class="menu-icon tf-icons bx bx-home-circle"></i>
@@ -88,8 +90,6 @@ export default function Sidebar() {
                 <div data-i18n="Manage Vendor">Manage Institution</div>
               </a>
             </li>
-          
-        </li>
         <li class="menu-item">
           <a class="menu-link menu-toggle">
             <i class="menu-icon tf-icons bx bx-detail"></i>
@@ -112,6 +112,16 @@ export default function Sidebar() {
                 <div data-i18n="QuestionBank/pview.js">Paragraph MCQ View</div>
             </Link>
            </li>
+           <li class="menu-item">
+            <Link class="menu-link " to="/Createcodingques"> 
+                <div data-i18n="QuestionBank/createcodingques.js">Create Coding Questions</div>
+            </Link>
+           </li>
+           <li class="menu-item">
+            <Link class="menu-link " to="/Viewcodingques"> 
+                <div data-i18n="QuestionBank/viewcodingques.js">View Coding Questions</div>
+            </Link>
+           </li>
 
             </li>
             <li class="menu-item">
@@ -120,6 +130,28 @@ export default function Sidebar() {
             </Link>
             </li>
 
+<<<<<<< HEAD
+=======
+
+        </li>
+        <li class="menu-item">
+          <a class="menu-link menu-toggle">
+            <i class="menu-icon tf-icons bx bx-detail"></i>
+            <div data-i18n="Form Elements">ASSESSMENTS</div>
+          </a>
+         
+            <li class="menu-item">
+            <Link class="menu-link " to="/catergories"> 
+                <div data-i18n="Assessments/catergories.js">Categories</div>
+            </Link>
+            </li>
+            <li class="menu-item">
+            <Link class="menu-link " to="/assessments"> 
+                <div data-i18n="Assessments/assessments.js">Assessments</div>
+            </Link>
+            </li>
+        </li>
+>>>>>>> 44b267ec6cd3d3efeff9767c203668b0792decc2
         <li class="menu-header small text-uppercase">
           <span class="menu-header-text">Vendor Utils</span>
         </li>
