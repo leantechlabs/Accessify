@@ -9,12 +9,8 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 
 
-<<<<<<< HEAD
-=======
-
 import Axios  from "axios";
 import session from "express-session";
->>>>>>> 44b267ec6cd3d3efeff9767c203668b0792decc2
 
 const app = express();
 

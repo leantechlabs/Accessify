@@ -130,8 +130,7 @@ export default function Sidebar() {
             </Link>
             </li>
 
-<<<<<<< HEAD
-=======
+
 
         </li>
         <li class="menu-item">
@@ -151,7 +150,6 @@ export default function Sidebar() {
             </Link>
             </li>
         </li>
->>>>>>> 44b267ec6cd3d3efeff9767c203668b0792decc2
         <li class="menu-header small text-uppercase">
           <span class="menu-header-text">Vendor Utils</span>
         </li>
