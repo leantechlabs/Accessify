@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import urls from "../CorsUrls";
 axios.defaults.withCredentials = true;
 
 export default function Login() {
@@ -14,7 +15,7 @@ export default function Login() {
   axios.defaults.withCredentials = true;
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios.post('http://localhost:3001/login', values)
+    axios.post(urls['login'], values)
     .then(res => {
         if(res.data.Status === "Success"){
             navigate('/dashboard')
