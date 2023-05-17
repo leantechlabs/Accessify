@@ -9,9 +9,12 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 
 
+<<<<<<< HEAD
+=======
 
 import Axios  from "axios";
 import session from "express-session";
+>>>>>>> 44b267ec6cd3d3efeff9767c203668b0792decc2
 
 const app = express();
 
@@ -68,24 +71,29 @@ function message(props) {
 // 	dest: 'uploads/' 
 // });
 
-const storage = multer.diskStorage({
-	destination: (req, file, callback) => {
-	  callback(null, "uploads");
-	},
-	filename: (req, file, callback) => {
-	  callback(null,file.originalname+ '-' + Date.now() + path.extname(file.originalname));
-	},
-  });
-  const imageStorage = multer.diskStorage({
-	destination: (req, file, callback) => {
-	  callback(null, "images");
-	},
-	filename: (req, file, callback) => {
-	  callback(null, file.originalname+ '-' + Date.now() + path.extname(file.originalname));
-	},
-  });
-const upload = multer({ storage }).single("file");
-const imageUpload = multer({ storage: imageStorage }).single("image");
+// const storage = multer.diskStorage({
+// 	destination: (req, file, callback) => {
+// 	  callback(null, "uploads");
+// 	},
+// 	filename: (req, file, callback) => {
+// 	  callback(null,file.originalname+ '-' + Date.now() + path.extname(file.originalname));
+// 	},
+//   });
+//   const imageStorage = multer.diskStorage({
+// 	destination: (req, file, callback) => {
+// 	  callback(null, "images");
+// 	},
+// 	filename: (req, file, callback) => {
+// 	  callback(null, file.originalname+ '-' + Date.now() + path.extname(file.originalname));
+// 	},
+//   });
+// const upload = multer({ storage }).single("file");
+// const imageUpload = multer({ storage: imageStorage }).single("image");
+
+
+const upload = multer({ dest: "uploads/" });
+const imageupload = multer({ dest: "images/" });
+
 // connection.connect(function(err){
 //   if(err) throw err;
 //   console.log("connected database");
@@ -190,27 +198,106 @@ app.post('/login',(req, res) =>{
     })
 });
 
-app.post('/multiuser', (req, res) => {
-	upload(req, res, (error) => {
-		if (error) {
-		  console.log(error);
-		  return res.sendStatus(500);
-		}
-	
-		console.log("Upload successful!",req.body);
-		res.sendStatus(200);
-	  });
+// app.post('/multiuser', (req, res) => {
+//     const sql = `INSERT INTO multi_user (Institution, BatchYear, Batch, AccessPeriod, file) VALUES (?, ?, ?, ?, ?)`;  
+// console.log(req.body);
+//     const { Institution, BatchYear, Batch, AccessPeriod } = req.body;
+//     console.log("h");
+//     const { filename } = req.file.filename;
+//     console.log("h");
+
+//     const queryValues = [Institution, BatchYear, Batch, AccessPeriod, filename];
+//     // const values = [
+//     //     req.body.Institution,
+//     //     req.body.BatchYear,
+//     //     req.body.Batch,
+//     //     req.body.AccessPeriod,
+//     //     req.file
+//     // ]
+// 	upload(req, res, (error) => {
+// 		if (error) {
+// 		  console.log(error);   
+// 		  return res.sendStatus(500);
+// 		}
+//         console.log("h",req.body,Institution,BatchYear,Batch,AccessPeriod,filename,path);
+//       db.query(sql, queryValues, (err,result)=>{
+//         if(err) {
+//             return res.json({Error: "Inserting data error"});
+//         }else {
+//             console.log("Upload successful!",req.body,req.file);
+//             return res.json({Status: "Success"});
+//         }
+//     });
+// });
+
+// });
+
+
+app.post("/multiuser", upload.single("file"), (req, res) => {
+    const { Institution, BatchYear, Batch, AccessPeriod } = req.body;
+    const filename = req.file.originalname;
+    const sql = `INSERT INTO multi_user (Institution, BatchYear, Batch, AccessPeriod, file) VALUES (?, ?, ?, ?, ?)`;
+    const queryValues = [Institution, BatchYear, Batch, AccessPeriod, filename];
+    console.log(queryValues);
+    db.query(sql, queryValues, (err, result) => {
+      if (err) {
+        console.log("h",err);
+        return res.status(500).json({ error: "Inserting data error" });
+      } else {
+        console.log("Upload successful!", req.body, req.file);
+        return res.status(200).json({ status: "Success" });
+
+      }
+    });
+  });
+
+
+app.get('/users/:institution/:batchYear/:batch', (req, res) => {    
+    const { institution, batchYear, batch } = req.params;
+
+    let sql = "SELECT * FROM users";
+    console.log("h");
+    if (institution) {
+    const sql = `SELECT * FROM users WHERE institution = ? AND batchYear = ? AND batch = ?`;
+    const values = [institution, batchYear, batch];
+      }
+      db.query(sql, values, (err, result) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send("Internal Server Error");
+        } else {
+          res.json(result);
+          console.log(result);
+        }
+      });
 });
+app.post('/institution-single-user', (req, res) => {
+    const sql = "INSERT INTO `single-user` (`Institution`,`BatchYear`,`Batch`,`firstname`,`lastname`,`email`,`regid`,`mobile`,`password`,`AccessPeriod`) VALUES (?)";  
 
-
-app.post('/users', (req, res) => {
-	const { Institution,Batchyear,Batch} = req.body;
-	console.log(req.body,Institution,Batchyear,Batch);
-
-});
-app.post('/institutionuser', (req, res) => {
-	const {firstname,lastname,email,mobile,regid,password,Institution,BatchYear,Batch,AccessPeriod} = req.body;
-	console.log(req.body,firstname,lastname,email,mobile,regid,password,Institution,BatchYear,Batch,AccessPeriod);
+    bcrypt.hash(req.body.password.toString(), salt, (err, hash)=>{
+        if(err) return res.json({Error:"Error for hashing password"})
+    const values = [
+        req.body.Institution,
+        req.body.BatchYear,
+        req.body.Batch,
+        req.body.firstname,
+        req.body.lastname,
+        req.body.email,
+        req.body.regid,
+        req.body.mobile,
+        hash,
+        req.body.AccessPeriod
+    ]	
+    console.log(req.body,);
+    db.query(sql, [values], (err,result)=>{
+        if(err){ 
+            console.log(err);
+            return res.json({Error: "Inserting data error"});
+    }else{
+        return res.json({Status: "Success"});
+    }
+    })
+})
 });
 app.post('/institution', (req, res) => {
 	const { institutionName,headofinstitution,primarycontact,primaryemail,secondarycontact,secondaryemail,address,institutioncode,state,city,password,InstitutionType} = req.body;
@@ -218,24 +305,129 @@ app.post('/institution', (req, res) => {
 });
 
 app.post('/batch', (req, res) => {
-	const { Institution,Batchyear,Batchname} = req.body;
-	console.log(req.body,Institution,Batchyear,Batchname);
+    const sql = "INSERT INTO batch (`institution`,`BatchYear`,`Batchname`) VALUES (?)";  
+
+    const values = [
+        req.body.institution,
+        req.body.BatchYear,
+        req.body.Batchname,
+    ]	
+    console.log(req.body);
+    db.query(sql, [values], (err,result)=>{
+        if(err){ 
+            console.log(err);
+            return res.json({Error: "Inserting data error"});
+    }else{
+        return res.json({Status: "Success"});
+    }
+    })
 });
 
-app.post('/createBatchyears', (req, res) => {
-	const { createInstitution,createBatchyear} = req.body;
-	console.log(req.body,createInstitution,createBatchyear);
+app.post('/createBatchyears', (req, res) => {    
+    const sql = "INSERT INTO Batchyears (`createinstitution`,`createBatchyear`) VALUES (?)";  
 
-});app.post('/Batchyears', (req, res) => {
-	const { Institution} = req.body;
-	console.log(req.body,Institution);
+const values = [
+    req.body.createInstitution,
+    req.body.createBatchyear
+]	
+console.log(req.body,req.body.createInstitution,req.body.createBatchyear);
+db.query(sql, [values], (err,result)=>{
+    if(err) return res.json({Error: "Inserting data error"});
+    return res.json({Status: "Success"});
+})
 
 });
 
-app.post('/batches', (req, res) => {
-	const { SelectInstitution} = req.body;
-	console.log(req.body,SelectInstitution);
-});
+
+app.get('/batchyears/:selectInstitution?', (req, res) => {
+    const { selectInstitution } = req.params;
+    let sql = "SELECT * FROM Batchyears";
+    console.log("h");
+
+    if (selectInstitution) {
+      sql += ` WHERE createinstitution = '${selectInstitution}'`;
+      console.log("hh");
+
+    }
+  
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send("Internal Server Error");
+      } else {
+        res.json(result);
+      }
+    });
+  });
+  
+// app.get('/batchyearshh', (req, res) => {
+
+//     let sql = "SELECT * FROM Batchyears";
+//     console.log("h");
+
+//     if (req.params.selectInstitution) {
+//         const selectedInstitution = req.params.selectInstitution;
+//         sql = `SELECT * FROM batch WHERE institution = '${selectedInstitution}'`;
+//         console.log("hh");
+
+//       }
+    
+    
+//       db.query(sql, (err, result) => {
+//         if (err) {
+//             console.log("hhh");
+
+//           console.log(err);
+//           res.status(500).send("Internal Server Error");
+//         } else {
+//           res.json(result);
+//           console.log("hhhh");
+
+//         }
+//       });
+//     });
+
+// app.get('/batchs',(req,res) =>{
+//     const sql="SELECT * FROM batch";
+//     db.query(sql,(err,result)=>{
+//         if(err) console.log("l",err);
+
+//         res.json(result);
+//         });
+// });
+
+app.get('/batchs/:selectInstitution?', (req, res) => {
+    const { selectInstitution } = req.params;
+    let sql = "SELECT * FROM batch";
+    console.log("h");
+
+    if (selectInstitution) {
+      sql += ` WHERE institution = '${selectInstitution}'`;
+      console.log("hh");
+
+    }
+  
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send("Internal Server Error");
+      } else {
+        res.json(result);
+      }
+    });
+  });
+
+// app.get('/batchs/:selectInstitution', (req, res) => {
+//     const selectedInstitution = req.params.selectInstitution;
+
+//   const sql = `SELECT * FROM batch WHERE institution = '${selectedInstitution}'`;
+
+//   db.query(sql, (err, result) => {
+//     if (err) console.log(err);
+
+//     res.send(result);
+//   });
+// });
 
 
 // app.post('/register', upload.single('image'), (req, res) => {

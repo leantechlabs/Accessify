@@ -2,21 +2,46 @@ import Sidebar from "../includes/sidebar";
 import Header from "../includes/header";
 import Footer from "../includes/footer";
 import { Link } from "react-router-dom";
-import Axios from 'axios';
+import axios from 'axios';
 import React,{useState,useEffect} from "react"
+import {  useNavigate } from 'react-router-dom';
+
 export default function InstitutionUsers() {
 
-  const[Institution,setInstitution]=useState("");
-  const[Batchyear,setBatchyear]=useState("");
-  const[Batch,setBatch]=useState("");
+  const [values, setValues] = useState({
+    institution:'',
+    BatchYear:'',
+    Batch:''
+
+}); 
+
+const [data, setData] = useState([])
+useEffect(()=>{
+  axios.get('http://localhost:3000/users')
+  .then(res => setData(res.data))
+  .catch(err => console.log(err));
+},[])
 
 
-  const handleSubmit = () => {
-    const data = { Institution,Batchyear,Batch};
-    Axios.post('http://localhost:3001/users', data)
-      .then(res => console.log(res.data))
-      .catch(err => console.error(err));
-  };
+const navigate = useNavigate()
+const handleSubmit = (e) => {
+  e.preventDefault();
+  console.log(values);
+  const { institution, batchYear, batch } = values;
+  axios.get('http://localhost:3001/users/${institution}/${batchYear}/${batch}')
+    .then((res) => {
+      if (res.data.Status === 'Success') {
+        navigate('/users')
+
+      } else {
+        alert('Error');
+      }
+    })
+    .catch((err) => console.log(err));
+};
+
+
+
   return (
     <>
       <div class="layout-wrapper layout-content-navbar">
@@ -53,7 +78,7 @@ export default function InstitutionUsers() {
                                 name="_institution"
                                 id="_institution"
                                 class="form-select default-input ng-untouched ng-pristine ng-invalid"
-                                onChange={(e)=>setInstitution(e.target.value)}
+                                onChange={(e)=>setValues({...values, institution:e.target.value})}
 
                              >
                                 <option value="" selected="">
@@ -72,7 +97,7 @@ export default function InstitutionUsers() {
                                 name="_batch_year"
                                 id="_batch_year"
                                 class="form-select default-input ng-untouched ng-pristine ng-invalid"
-                                onChange={(e)=>setBatchyear(e.target.value)}
+                                onChange={(e)=>setValues({...values, BatchYear:e.target.value})}
 
                               >
                                 <option value="" selected="">
@@ -89,7 +114,7 @@ export default function InstitutionUsers() {
                                 name="_batch"
                                 id="_batch"
                                 class="form-select default-input ng-untouched ng-pristine ng-valid"
-                                onChange={(e)=>setBatch(e.target.value)}
+                                onChange={(e)=>setValues({...values, Batch:e.target.value})}
 
                               >
                                 <option value="">-- Select Batch --</option>
