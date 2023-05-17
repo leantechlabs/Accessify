@@ -3,9 +3,37 @@ import Header from "../includes/header";
 import Footer from "../includes/footer";
 import axios from 'axios';
 import React,{useState, useEffect} from "react"
-import {  useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Institution() {
+
+  const [data, setData] = useState([])
+  useEffect(()=>{
+    axios.get('http://localhost:3001/institutions')
+    .then(res => setData(res.data))
+    .catch(err => console.log(err));
+    generateSerialNumber()
+},[])
+
+function generateSerialNumber() {
+  const characters = "0123456789";
+  let result = "";
+  for (let i = 0; i < 10; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+}
+
+const handleDelete = (id) =>{
+  axios.delete('http://localhost:3001/delete/'+id)
+  .then(res => {
+      window.location.reload(true); 
+  })
+  .catch(err => console.log(err))
+}
+
+
+
   const [values, setValues] = useState({
       institutionName:'',
       headOfInstitution:'',
@@ -21,13 +49,7 @@ export default function Institution() {
       password:'',
   }); 
 
-  const [data, setData] = useState([])
-  useEffect(()=>{
-    axios.get('http://localhost:8081/')
-    .then(res => setData(res.data))
-    .catch(err => console.log(err));
-},[])
-
+  
   const navigate = useNavigate()
 
 
@@ -37,14 +59,17 @@ export default function Institution() {
     axios.post('http://localhost:3001/institution', values)
       .then((res) => {
         if (res.data.Status === 'Success') {
-              navigate('/institution')
-              
+          navigate('/institution') 
+          window.location.reload()
         } else {
           alert('Error');
         }
       })
       .catch((err) => console.log(err));
   };
+
+
+
 
   return (
     <>
@@ -340,16 +365,11 @@ export default function Institution() {
                                             </b>
                                           </label>
                                           <select
-                                            className="form-select"
+                                              
                                             id="instituteType"
                                             aria-label="Default select example"
-<<<<<<< HEAD
                                             defaultValue="selected"
-                                            onChange={e=>setValues({...values, instituteType:e.target.value})}
-=======
-                                            onChange={(e) =>setInstitutionType(e.target.value)}
->>>>>>> origin/main
-                                          >
+                                            onChange={e=>setValues({...values, instituteType:e.target.value})}>
                                             <option value="selected">
                                               --Institution Type--
                                             </option>
@@ -394,7 +414,7 @@ export default function Institution() {
                                         </div>
 
                                         <div className="mt-2">
-                                          <button 
+                                          <button
                                             type="submit"
                                             className="btn btn-primary me-2">
                                             Create
@@ -445,11 +465,19 @@ export default function Institution() {
                             <tbody className="table-border-bottom-0">
                                   {data.map((institutions, index)=>{
                                       return <tr key={index}>
+                                          <td>{index + 1}</td>
+                                          <td>{institutions.institutionName}</td>
+                                          <td>{institutions.primaryEmail}</td>
+                                          <td>{institutions.headOfInstitution}</td>
                                           <td></td>
-                                          <td>{institutions.Name}</td>
-                                          <td>{institutions.Email}</td>
-                                          
+                                          <td >{institutions.instituteCode}</td>  
+                                          <td>
+                                            <Link to={`/read/${institutions.institutionName}`} className='btn btn-sm btn-info'>Read</Link>
+                                            <Link to={`/edit/${institutions.institutionName}`} className='btn btn-sm btn-primary mx-2'>Edit</Link>
+                                            <button onClick={ () => handleDelete(institutions.institutionName)} className='btn btn-sm btn-danger'>Delete</button>
+                                        </td>
                                       </tr>
+
                                     })}
                                         
                             </tbody>

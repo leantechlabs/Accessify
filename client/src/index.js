@@ -11,9 +11,8 @@ import InstitutionUsers from './Layout/Institution/users';
 import AddInstitutionUser from './Layout/Institution/add-institution-users';
 import Batches from './Layout/Institution/batch'
 import Subjects from './Layout/QuestionBank/subjects';
-
+import ReadInstitute from './Layout/Institution/operationsInstitute/readInstitute';
 import Register from './Layout/register';
-
 import PCreate from './Layout/QuestionBank/pacreate';
 import Pview from './Layout/QuestionBank/pview';
 import Chapters from './Layout/QuestionBank/chapters';
@@ -33,6 +32,7 @@ function App() {
           <Route path="/vendor-register" element={<VendorRegister/>} />
           <Route path="/manage-vendor" element={<ManageVendor/>} />
           <Route path="/institution" element={<Institution/>} />
+          <Route path="/read/:institutionName" element={<ReadInstitute/>} />
           <Route path="/batch-years" element={<BatchYears/>} />
           <Route path="/institution-users" element={<InstitutionUsers/>} />
           <Route path="/add-institution-users" element={<AddInstitutionUser/>} />

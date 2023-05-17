@@ -1,29 +1,81 @@
 import Sidebar from "../includes/sidebar";
 import Header from "../includes/header";
 import Footer from "../includes/footer";
-import Axios from 'axios';
+import axios from 'axios';
 import React,{useState,useEffect} from "react"
+import { useNavigate } from 'react-router-dom';
+
+
+
 export default function BatchYears() {
-  const[Institution,setInstitution]=useState("");
+  const [options, setOptions] = useState([]);
+  const [values, setValues] = useState({
+    institutionName:'',
+    year:''
+}); 
 
-  const[createInstitution,setcreateInstitution]=useState("");
-  const[createBatchyear,setcreateBatchyear]=useState("");
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get('http://localhost:3001/createInstitutions');
+        setOptions(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchData();
+  }, []);
 
+  const [error, setError] = useState('');
+  const navigate = useNavigate()
 
-  const handleSubmit = () => {
-    const data = { createInstitution,createBatchyear};
-    Axios.post('http://localhost:3001/createBatchyears', data)
-      .then(res => console.log(res.data))
-      .catch(err => console.error(err));
+  // const handleClick = (e) => {
+  //   e.preventDefault();
+    
+  //   console.log(values);
+  //   axios.post('http://localhost:3001/batchYear', values)
+  //     .then((res) => {
+  //       if (res.data.Status === 'Success') {
+  //         navigate('/batch-years') 
+  //         window.location.reload()
+  //       } else {
+  //         setError(res.data.Error);
+  //       }
+  //     })
+  //     .catch((err) => console.log(err));
+  // }
+  const handleClick = async () => {
+    // Perform form validation
+    const validationErrors = {};
+    if (!values.institutionName) {
+      validationErrors.institutionName = 'Institution is required';
+    }
+    if (!values.year) {
+      validationErrors.year = 'Batch-Year is required';
+    }
+
+    // If there are validation errors, set the errors state and stop form submission
+    if (Object.keys(validationErrors).length > 0) {
+      setError(validationErrors);
+      return;
+    }
+
+    // Clear any previous errors
+    setError({});
+
+    try {
+      await axios.post('http://localhost:3001/batchYear', values);
+      console.log('Record created successfully');
+      // Reset the form values
+      setValues({
+        institutionName: '',
+        year: ''
+      });
+    } catch (error) {
+      console.error('Error creating record: ', error);
+    }
   };
 
-
-  const handleSubmits = () => {
-    const data = { Institution};
-    Axios.post('http://localhost:3001/Batchyears', data)
-      .then(res => console.log(res.data))
-      .catch(err => console.error(err));
-  };
   return (
     <>
       <div class="layout-wrapper layout-content-navbar">
@@ -63,20 +115,16 @@ export default function BatchYears() {
                             <span class="text-danger"> *</span>{" "}
                           </label>
                           <select
-                            _ngcontent-qfm-c181=""
-                            name="institution"
+                            
                             class="form-control default-input ng-pristine ng-valid ng-touched"
-                            onChange={(e)=>setcreateInstitution(e.target.value)}
-
+                            onChange={e=>setValues({...values, institutionName:e.target.value})}
                           >
-                            <option value="" selected="" disabled="">
+                            <option value="selected">
                               -- Select Institution --
                             </option>
-                            <option>IIT Hyderabad</option>
-                            <option>AITS_HYD</option>
-                            <option>IIT Kanpur</option>
-                            <option>Stanford University</option>
-                            <option>Harvard University</option>
+                            {options.map(option => (
+                            <option key={option.id} value={option.institutionName}>{option.institutionName}</option>
+                            ))}
                           </select>
                         </div>
                       </div>
@@ -89,10 +137,11 @@ export default function BatchYears() {
                           <input
                             type="text"
                             id="Batch-year"
+                            name="year"
+                            required
                             class="form-control"
                             placeholder="Enter Your Batch Year"
-                            onChange={(e)=>setcreateBatchyear(e.target.value)}
-
+                            onChange={e=>setValues({...values, year:e.target.value})}
                           />
                         </div>
                       </div>
@@ -105,12 +154,13 @@ export default function BatchYears() {
                       >
                         Close
                       </button>
-                      <button type="button" class="btn btn-primary" onClick={handleSubmit}
+                      <button type="button" class="btn btn-primary"  onClick={handleClick}
 >
                         Create
                       </button>
                     </div>
                   </div>
+                  {error && <div className="alert alert-danger">{error}</div>}
                 </div>
               </div>
               <div class="container-xxl flex-grow-1 container-p-y">
@@ -131,29 +181,24 @@ export default function BatchYears() {
                   <div class="card-body">
                     <div class="row">
                       <div class="col-md">
-                        <select
-                          _ngcontent-qfm-c181=""
-                          name="institution"
-                          class="form-control default-input ng-pristine ng-valid ng-touched"
-                          onChange={(e)=>setInstitution(e.target.value)}
-
-                        >
-                          <option value="" selected="" disabled="">
-                            -- Select Institution --
-                          </option>
-                          <option>IIT Hyderabad</option>
-                          <option>AITS_HYD</option>
-                          <option>IIT Kanpur</option>
-                          <option>Stanford University</option>
-                          <option>Harvard University</option>
-                        </select>
+                      <select
+                            defaultValue="selected"
+                            class="form-control default-input ng-pristine ng-valid ng-touched"
+                            onChange={e=>setValues({...values, institutionName:e.target.value})}
+                          >
+                            <option value="selected">
+                              -- Select Institution --
+                            </option>
+                            {options.map(option => (
+                            <option key={option.id} value={option.institutionName}>{option.institutionName}</option>
+                            ))}
+                          </select>
                       </div>
                       <div _ngcontent-qfm-c181="" class="col-md">
                         <button
                           _ngcontent-qfm-c181=""
                           type="button"
                           class="btn btn-primary mx-2"
-                          onClick={handleSubmits}
 s
                         >
                           Go

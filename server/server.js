@@ -7,16 +7,17 @@ import cookieParser from 'cookie-parser'
 import path from 'path'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
+import passport from 'passport'
 
-const express = require("express");
-const mysql = require("mysql");
-const cors = require("cors");
-const Axios = require("axios")
-const multer = require('multer');
-const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
-const session = require("express-session");
-const path = require('path');
+// const express = require("express");
+// const mysql = require("mysql");
+// const cors = require("cors");
+// const Axios = require("axios")
+// const multer = require('multer');
+// const bodyParser = require("body-parser");
+// const cookieParser = require("cookie-parser");
+// const session = require("express-session");
+// const path = require('path');
 
 const app = express();
 
@@ -166,12 +167,6 @@ app.post('/register', (req,res)=>{
 })
 
 
-
-app.get('/login', (req, res) => {
-    res.send('This has CORS enabled ')
-})
-
-
 app.post('/login',(req, res) =>{
 	const sql = "SELECT * FROM users WHERE email = ? ";
     db.query(sql,[req.body.email],(err,data)=>{
@@ -211,11 +206,6 @@ app.post('/institutionuser', (req, res) => {
 	console.log(req.body,firstname,lastname,email,mobile,regid,password,Institution,BatchYear,Batch,AccessPeriod);
 });
 
-app.get('/institution', (req, res) => {
-    const { institutionName, headOfInstitution, primaryEmail, primaryContact, secondaryEmail, secondaryContact, address, city, state, institutionCode, institutionType, password } = req.body;
-    console.log(req.body); // log the request body to the console
-    // process the data and send a response    
-  });
 
 app.post('/institution', (req, res) => {
     
@@ -266,6 +256,46 @@ app.get('/institutions',(req,res) =>{
     db.query(sql,(err,result)=>{
         if(err) return res.json({Message: "Error inside server"});
         return res.json(result)
+    })
+})
+
+app.get('/createInstitutions', async (req, res) => {
+    db.query('SELECT institutionName FROM institutions', (error, results) => {
+        if (error) {
+          console.error(error);
+            res.sendStatus(500);
+            } else {
+          res.json(results);
+        }
+      });
+  });
+
+  app.post('/batchYear', (req,res)=>{
+    const values = [
+        req.body.institutionName,
+        req.body.year,
+    ]
+    const sql = "INSERT INTO batchYear (`institutionName`,`year`) VALUES (?)"; 
+
+    db.query(sql, [values], (error, results) => {
+        if (error) {
+          console.error('Error inserting data: ', error);
+          res.sendStatus(500);
+        } else {
+          console.log('Data inserted successfully');
+          return res.json({Status: "Success"});
+        }
+      });
+    })
+
+
+
+app.get('/users', (req, res) => {
+    const name = req.params.name;
+    const sql = "SELECT * FROM users";
+    db.query(sql, [name], (err, result) => {
+        if(err) return res.json({Error: "Get employee error in sql"});
+        return res.json({Status: "Success", Result: result})
     })
 })
 

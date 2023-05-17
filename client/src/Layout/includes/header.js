@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function Header() {
   const navigate = useNavigate()
@@ -9,6 +10,9 @@ export default function Header() {
         navigate('/')
     }).catch(err=> console.log(err));
 }
+
+
+
 
   return (
     <>
@@ -56,19 +60,6 @@ export default function Header() {
               <ul class="dropdown-menu dropdown-menu-end">
                 <li>
                   <a class="dropdown-item" href="#">
-                    <div class="d-flex">
-                      <div class="flex-grow-1">
-                        <span class="fw-semibold d-block">John Doe</span>
-                        <small class="text-muted">Admin</small>
-                      </div>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <div class="dropdown-divider"></div>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#">
                     <i class="bx bx-user me-2"></i>
                     <span class="align-middle">My Profile</span>
                   </a>
@@ -90,7 +81,7 @@ export default function Header() {
                       <input
                         type="button"
                         value="Logout"
-                        class=" mybtn primary-bg"
+                        class="btn primary-bg align-middle"
                         onClick={handleDelete}
                       />
                       
