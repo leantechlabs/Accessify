@@ -19,10 +19,10 @@ import session from "express-session";
 const app = express();
 
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'accessify'
+    host: 'sql.freedb.tech',
+    user: 'freedb_accessify',
+    password: '!AzjRVUJA@Y&Q3e',
+    database: 'freedb_accessify'
 })
 
 const salt = 10;  //hashing password length
