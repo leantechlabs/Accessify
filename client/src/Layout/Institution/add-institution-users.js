@@ -4,6 +4,9 @@ import Footer from "../includes/footer";
 import axios from 'axios';
 import React,{useState,useEffect} from "react"
 import {  useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 export default function AddInstitutionUser() {
 
@@ -59,6 +62,7 @@ useEffect(()=>{
 })   
        .then((res) => {
         if (res.data.Status === 'Success') {
+          toast.success('multi user created successfully');
           navigate('/users')
   
         } else {
@@ -77,6 +81,7 @@ const handleSubmit = (e) => {
   axios.post('http://localhost:3001/institution-single-user', singleCreateValues)
     .then((res) => {
       if (res.data.Status === 'Success') {
+        toast.success('single user created successfully');
         navigate('/institution')
 
       } else {
@@ -88,6 +93,7 @@ const handleSubmit = (e) => {
 
   return (
     <>
+                  <ToastContainer />
       <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
           <Sidebar />

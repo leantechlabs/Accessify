@@ -4,6 +4,9 @@ import Footer from "../includes/footer";
 import axios from 'axios';
 import React,{useState,useEffect} from "react"
 import {  useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 export default function BatchYears() {
 
@@ -42,7 +45,8 @@ const handleSubmits = (e) => {
   axios.post('http://localhost:3001/createBatchyears', createValues)
     .then((res) => {
       if (res.data.Status === 'Success') {
-        navigate('/batchYears')
+        toast.success('Batch-years created successfully');
+        navigate('/batch-years')
 
       } else {
         alert('Error');
@@ -55,6 +59,7 @@ const handleSubmits = (e) => {
 
   return (
     <>
+                  <ToastContainer />
       <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
           <Sidebar />
