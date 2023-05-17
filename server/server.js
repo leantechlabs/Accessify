@@ -9,14 +9,26 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 
 
+<<<<<<< HEAD
+=======
+import Axios  from "axios";
+import session from "express-session";
+>>>>>>> 3fd9f762caf9f931aecbf43b042aef9bf6323799
 
 const app = express();
 
 const db = mysql.createConnection({
+<<<<<<< HEAD
     host: 'localhost',
     user: 'root',
     password: '',
     database: 'accesify'
+=======
+    host: 'sql.freedb.tech',
+    user: 'freedb_accessify',
+    password: '!AzjRVUJA@Y&Q3e',
+    database: 'freedb_accessify'
+>>>>>>> 3fd9f762caf9f931aecbf43b042aef9bf6323799
 })
 
 const salt = 10;  //hashing password length
