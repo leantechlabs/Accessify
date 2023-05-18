@@ -18,7 +18,12 @@ const [createValues, setcreateValues] = useState({
   createInstitution:'',
   createBatchyear:''
 }); 
-
+const [Institutions, setInstitutions] = useState([])
+useEffect(()=>{
+  axios.get('http://localhost:3001/institution')
+  .then(res => setInstitutions(res.data))
+  .catch(err => console.log(err));
+},[])
 const [data, setData] = useState([])
 useEffect(()=>{
   axios.get('http://localhost:3001/batchyears')
@@ -59,7 +64,7 @@ const handleSubmits = (e) => {
 
   return (
     <>
-                  <ToastContainer />
+                 <ToastContainer />
       <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
           <Sidebar />
@@ -106,7 +111,14 @@ const handleSubmits = (e) => {
                             <option value="" selected="" disabled="">
                               -- Select Institution --
                             </option>
-                            <option>IIT Hyderabad</option>
+                            {Array.isArray(Institutions) &&
+                          Institutions.map((value, index) => {
+                            return (
+                              <>
+                              <option value={value.institutionName}>{value.institutionName}</option>
+                              </>
+                            );
+                          })}
                          
                           </select>
                         </div>
@@ -133,11 +145,10 @@ const handleSubmits = (e) => {
                         type="button"
                         class="btn btn-outline-secondary"
                         data-bs-dismiss="modal"
-                      >
+                        >
                         Close
                       </button>
-                      <button type="button" class="btn btn-primary" onClick={handleSubmits}
->
+                      <button type="button" class="btn btn-primary" onClick={handleSubmits}>
                         Create
                       </button>
                     </div>
@@ -172,11 +183,14 @@ const handleSubmits = (e) => {
                           <option value="" selected="" disabled="">
                             -- Select Institution --
                           </option>
-                          <option>IIT Hyderabad</option>
-                          <option>AITS_HYD</option>
-                          <option>IIT Kanpur</option>
-                          <option>Stanford University</option>
-                          <option>Harvard University</option>
+                          {Array.isArray(Institutions) &&
+                          Institutions.map((value, index) => {
+                            return (
+                              <>
+                              <option value={value.institutionName}>{value.institutionName}</option>
+                              </>
+                            );
+                          })}
                         </select>
                       </div>
                       <div _ngcontent-qfm-c181="" class="col-md">

@@ -5,56 +5,76 @@ import Axios from "axios";
 import React, { useState, useEffect } from "react";
 import urls from "../../../CorsUrls";
 import axios from "axios";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 axios.defaults.withCredentials = true;
-export default function VendorRegister(){
 
-  const [values, setValues] = useState({
-    logo: "",
-    name: "",
-    email: "",
-    businessname: "",
-    phone: "",
-    address: "",
-    state: "",
-    city: "",
-    zip: "",
-    language: "",
-    password: "",
+export default function UpdateVendor() {
+  let [values, setValues] = useState({
+    uid:"",
+    name:"",
+    email:"",
+    businessname:"",
+    phone:"",
+    address:"",
+    state:"",
+    city:"",
+    zip:"",
+    language:""
+
   });
+
+  const location = useLocation();
+
+  let { data } = location.state ?? {};
+  data = data || {};
+  useEffect(() => {
+    if (data) {
+      // Update the values state with the received data
+      setValues((prevValues) => ({
+        ...prevValues,
+        ...data,
+      }));
+    }
+  }, [data]);
+
+  // Rest of
+
   const [error, setError] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     // Perform form validation
-    if (!values.name || !values.email || !values.businessname || !values.phone || !values.address || !values.state || !values.city || !values.zip || !values.language || !values.password) {
-      toast.warning("Please fill in all required fields");
+    if (
+      !values.name ||
+      !values.email ||
+      !values.businessname ||
+      !values.phone ||
+      !values.address ||
+      !values.state ||
+      !values.city ||
+      !values.zip 
+    ) {
+        toast.warning('Please Fill All Fields');
       return;
     }
-    try{
+    try {
       axios
-      .post('http://localhost:3001/vendor-register', values)
-      .then((res) => {
-        if (res.data.Status === "Success") {
-          toast.success("Vendor Registered Successfully");
-        } else {
-          toast.warning(res.data.Error);
-        }
-      })
-      .then((err) => console.log(err));
+        .post("http://localhost:3001/update-vendor", values)
+        .then((res) => {
+            toast.success(res.data.Error);
+        })
+        .then((err) => console.log(err));
+    } catch (error) {
+        toast.warning('Something Went Wrong');
+      return;
     }
-    catch(error){
-        toast.warning("Server Error ");
-        return;
-    }
-   
   };
   return (
     <>
-      <ToastContainer />
+          <ToastContainer />
       <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
           <Sidebar />
@@ -64,10 +84,9 @@ export default function VendorRegister(){
               {/* #contents */}
 
               <div class="container-xxl flex-grow-1 container-p-y">
-                <h4 class="fw-bold py-3 mb-4">
-                  <span class="text-muted fw-light">Register Vendor</span>
+              <h4 class="fw-bold py-3 mb-4">
+                  <span class="text-muted fw-light">Update Vendor</span>
                 </h4>
-
                 <div class="row">
                   <div class="col-md-12">
                     <div class="card mb-4">
@@ -111,6 +130,20 @@ export default function VendorRegister(){
                                 Allowed JPG, GIF or PNG. Max size of 800K
                               </p>
                             </div> */}
+                             <input
+                                class="form-control"
+                                type="hidden"
+                                id="_id"
+                                name="_id"
+                                onChange={(e) =>
+                                  setValues({
+                                    ...values,
+                                    uid: values.uid,
+                                  })
+                                }
+                                autofocus
+                                required
+                              />
                             <div class="mb-3 col-md-12">
                               <label for="fulltName" class="form-label">
                                 Full Name
@@ -121,6 +154,7 @@ export default function VendorRegister(){
                                 id="_name"
                                 name="_name"
                                 placeholder="Vendor Name"
+                                value={values.name}
                                 onChange={(e) =>
                                   setValues({
                                     ...values,
@@ -140,6 +174,7 @@ export default function VendorRegister(){
                                 type="email"
                                 id="_email"
                                 name="_email"
+                                value={values.email}
                                 placeholder="VendorName@example.com"
                                 onChange={(e) =>
                                   setValues({
@@ -160,6 +195,7 @@ export default function VendorRegister(){
                                 id="_bname"
                                 name="_bname"
                                 placeholder="Business Name"
+                                value={values.businessname}
                                 onChange={(e) =>
                                   setValues({
                                     ...values,
@@ -180,8 +216,8 @@ export default function VendorRegister(){
                                   id="_phone"
                                   name="_phone"
                                   class="form-control"
-                                  minLength="10"
                                   placeholder="9876543210"
+                                  value={values.phone}
                                   onChange={(e) =>
                                     setValues({
                                       ...values,
@@ -202,6 +238,7 @@ export default function VendorRegister(){
                                 id="_address"
                                 name="_address"
                                 placeholder="Address"
+                                value={values.address}
                                 onChange={(e) =>
                                   setValues({
                                     ...values,
@@ -221,6 +258,7 @@ export default function VendorRegister(){
                                 name="_state"
                                 class="form-control"
                                 placeholder="State Name"
+                                value={values.state}
                                 onChange={(e) =>
                                   setValues({
                                     ...values,
@@ -239,6 +277,7 @@ export default function VendorRegister(){
                                 id="_city"
                                 name="_city"
                                 class="form-control"
+                                value={values.city}
                                 placeholder="City Name"
                                 onChange={(e) =>
                                   setValues({ ...values, city: e.target.value })
@@ -257,6 +296,7 @@ export default function VendorRegister(){
                                 name="_zipCode"
                                 placeholder="500321"
                                 maxlength="6"
+                                value={values.zip}
                                 onChange={(e) =>
                                   setValues({ ...values, zip: e.target.value })
                                 }
@@ -271,6 +311,7 @@ export default function VendorRegister(){
                                 id="_language"
                                 name="_language"
                                 class="select2 form-select"
+                                value={values.language}
                                 onChange={(e) =>
                                   setValues({
                                     ...values,
@@ -290,11 +331,13 @@ export default function VendorRegister(){
                               <input
                                 id="_password"
                                 name="_password"
+                                type="password"
                                 class="form-control"
+                                value={values.pass}
                                 onChange={(e) =>
                                   setValues({
                                     ...values,
-                                    password: e.target.value,
+                                    pass: e.target.value,
                                   })
                                 }
                                 required
@@ -312,10 +355,9 @@ export default function VendorRegister(){
                               onClick={handleSubmit}
                               class="btn btn-primary me-2"
                             >
-                              Register Vendor
+                              Submit
                             </button>
                           </div>
-                         
                         </form>
                       </div>
                     </div>
