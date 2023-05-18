@@ -9,19 +9,31 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 
 
-
 import Axios  from "axios";
 import session from "express-session";
+import { randomInt } from 'crypto'
 
 const app = express();
-
+//database
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'accessify'
+
+    // host: 'localhost',
+    // user: 'root',
+    // password: '',
+    // database: 'accesify'
+
+    // host: 'sql.freedb.tech',
+    // user: 'freedb_accessify',
+    // password: '!AzjRVUJA@Y&Q3e',
+    // database: 'freedb_accessify'
+
+    host: 'srv984.hstgr.io',
+    user: 'u734900206_accessify',
+    password: 'LeantechLabs@8861',
+    database: 'u734900206_accessify'
 })
 
+// if(db.connect()){console.log('Connected to db')}else{console.log('Not Connected')}
 const salt = 10;  //hashing password length
 
 app.use(express.json());
@@ -48,50 +60,10 @@ function message(props) {
 }
 
 
-// const storage = multer.diskStorage({
-// 	destination: (req, file, cb) => {
-// 		if (file.fieldname === '_logo') {
-// 			cb(null,path.join(__dirname, '/uploads/logos') );
-// 		  } else if (file.fieldname === '_userFile') {
-// 			cb(null, path.join(__dirname, '/uploads/files'));
-// 		  }else {
-// 			cb(new Error('Invalid field name'));
-// 		  }
-// 	},
-// 	filename: (req, file, cb) => {
-// 		console.log(file);
-// 		cb(null, file.originalname+ '-' + Date.now() + path.extname(file.originalname));
-// 	}
-	
-// });
-// const upload = multer({
-// 	dest: 'uploads/' 
-// });
+const upload = multer({ dest: "uploads/" });
+const imageUpload = multer({ dest: "images/" });
 
-const storage = multer.diskStorage({
-	destination: (req, file, callback) => {
-	  callback(null, "uploads");
-	},
-	filename: (req, file, callback) => {
-	  callback(null,file.originalname+ '-' + Date.now() + path.extname(file.originalname));
-	},
-  });
-  const imageStorage = multer.diskStorage({
-	destination: (req, file, callback) => {
-	  callback(null, "images");
-	},
-	filename: (req, file, callback) => {
-	  callback(null, file.originalname+ '-' + Date.now() + path.extname(file.originalname));
-	},
-  });
-const upload = multer({ storage }).single("file");
-const imageUpload = multer({ storage: imageStorage }).single("image");
-// connection.connect(function(err){
-//   if(err) throw err;
-//   console.log("connected database");
-// });
 
-// Regular expressions for validation
 const nameRegex = /^[a-zA-Z\s]+$/;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^\d{10}$/;
@@ -140,8 +112,13 @@ const verifyUser = (req,res,next)=>{
 
 app.get('/',verifyUser,(req,res)=>{
     return res.json({Status: "Success", name:req.name});
+    
 })
-
+app.get('/users',(req,res)=>{
+  const sql = "SELECT * FROM users ";
+  return res.json({Status: "Success",sql})
+})
+//comments
 
 app.post('/register', (req,res)=>{
     const sql = "INSERT INTO users (`name`,`email`,`password`) VALUES (?)";
@@ -190,90 +167,365 @@ app.post('/login',(req, res) =>{
     })
 });
 
-app.post('/multiuser', (req, res) => {
-	upload(req, res, (error) => {
-		if (error) {
-		  console.log(error);
-		  return res.sendStatus(500);
-		}
-	
-		console.log("Upload successful!",req.body);
-		res.sendStatus(200);
-	  });
-});
+// app.post('/multiuser', (req, res) => {
+//     const sql = `INSERT INTO multi_user (Institution, BatchYear, Batch, AccessPeriod, file) VALUES (?, ?, ?, ?, ?)`;  
+// console.log(req.body);
+//     const { Institution, BatchYear, Batch, AccessPeriod } = req.body;
+//     console.log("h");
+//     const { filename } = req.file.filename;
+//     console.log("h");
+
+//     const queryValues = [Institution, BatchYear, Batch, AccessPeriod, filename];
+//     // const values = [
+//     //     req.body.Institution,
+//     //     req.body.BatchYear,
+//     //     req.body.Batch,
+//     //     req.body.AccessPeriod,
+//     //     req.file
+//     // ]
+// 	upload(req, res, (error) => {
+// 		if (error) {
+// 		  console.log(error);   
+// 		  return res.sendStatus(500);
+// 		}
+//         console.log("h",req.body,Institution,BatchYear,Batch,AccessPeriod,filename,path);
+//       db.query(sql, queryValues, (err,result)=>{
+//         if(err) {
+//             return res.json({Error: "Inserting data error"});
+//         }else {
+//             console.log("Upload successful!",req.body,req.file);
+//             return res.json({Status: "Success"});
+//         }
+//     });
+// });
+
+// });
 
 
-app.post('/users', (req, res) => {
-	const { Institution,Batchyear,Batch} = req.body;
-	console.log(req.body,Institution,Batchyear,Batch);
+app.post("/multiuser", upload.single("file"), (req, res) => {
+    const { Institution, BatchYear, Batch, AccessPeriod } = req.body;
+    const filename = req.file.originalname;
+    const sql = `INSERT INTO multi_user (Institution, BatchYear, Batch, AccessPeriod, file) VALUES (?, ?, ?, ?, ?)`;
+    const queryValues = [Institution, BatchYear, Batch, AccessPeriod, filename];
+    console.log(queryValues);
+    db.query(sql, queryValues, (err, result) => {
+      if (err) {
+        console.log("h",err);
+        return res.status(500).json({ error: "Inserting data error" });
+      } else {
+        console.log("Upload successful!", req.body, req.file);
+        return res.status(200).json({ status: "Success" });
 
-});
-app.post('/institutionuser', (req, res) => {
-	const {firstname,lastname,email,mobile,regid,password,Institution,BatchYear,Batch,AccessPeriod} = req.body;
-	console.log(req.body,firstname,lastname,email,mobile,regid,password,Institution,BatchYear,Batch,AccessPeriod);
-});
-app.post('/institution', (req, res) => {
-	const { institutionName,headofinstitution,primarycontact,primaryemail,secondarycontact,secondaryemail,address,institutioncode,state,city,password,InstitutionType} = req.body;
-	console.log(req.body,institutionName,headofinstitution,primarycontact,primaryemail,secondarycontact,secondaryemail,address,institutioncode,state,city,password,InstitutionType);
-});
-
-app.post('/batch', (req, res) => {
-	const { Institution,Batchyear,Batchname} = req.body;
-	console.log(req.body,Institution,Batchyear,Batchname);
-});
-
-app.post('/createBatchyears', (req, res) => {
-	const { createInstitution,createBatchyear} = req.body;
-	console.log(req.body,createInstitution,createBatchyear);
-
-});app.post('/Batchyears', (req, res) => {
-	const { Institution} = req.body;
-	console.log(req.body,Institution);
-
-});
-
-app.post('/batches', (req, res) => {
-	const { SelectInstitution} = req.body;
-	console.log(req.body,SelectInstitution);
-});
-
-
-// app.post('/register', upload.single('image'), (req, res) => {
-// 	const { filename } = req.file;
-// 	const fileExtension = path.extname(filename);
-// 	const newName = `${filename}${fileExtension}`;
-// 	const oldPath = `uploads/${filename}`;
-  
-// 	const { name,email,businessname,phone,address,state,city,zip,language } = req.body;
-
-// 	console.log(req.body ,name,email,businessname,phone,address,state,city,zip,language);
-// 	// move the file to the images folder with the new name
-// 	// fs.rename(oldPath, newPath, (err) => {
-// 	//   if (err) {
-// 	// 	console.error(err);
-// 	// 	res.status(500).json({ message: 'Failed to upload image' });
-// 	//   } else {
-// 	// 	console.log(`Image saved as ${newName}`);
-// 	// 	res.json({ message: 'Image uploaded successfully' });
-// 	//   }
-// 	// });
-//   });
-  app.post('/register',(req, res) => {
-
-    imageUpload(req, res, (error) => {
-		if (error) {
-		  console.log(error);
-		  return res.sendStatus(500);
-		}
-		console.log("Upload successful!");
-  
-	const { name,email,businessname,phone,address,state,city,zip,language } = req.body;
-
-	console.log(req.body ,name,email,businessname,phone,address,state,city,zip,language);
-
-	});
+      }
+    });
   });
 
+
+app.get('/users/:institution/:batchYear/:batch', (req, res) => {    
+    const { institution, batchYear, batch } = req.params;
+
+    let sql = "SELECT * FROM users";
+    console.log("h");
+    if (institution) {
+    const sql = `SELECT * FROM users WHERE institution = ? AND batchYear = ? AND batch = ?`;
+    const values = [institution, batchYear, batch];
+      }
+      db.query(sql, values, (err, result) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send("Internal Server Error");
+        } else {
+          res.json(result);
+          console.log(result);
+        }
+      });
+});
+app.post('/institution-single-user', (req, res) => {
+    const sql = "INSERT INTO `single-user` (`Institution`,`BatchYear`,`Batch`,`firstname`,`lastname`,`email`,`regid`,`mobile`,`password`,`AccessPeriod`) VALUES (?)";  
+
+    bcrypt.hash(req.body.password.toString(), salt, (err, hash)=>{
+        if(err) return res.json({Error:"Error for hashing password"})
+    const values = [
+        req.body.Institution,
+        req.body.BatchYear,
+        req.body.Batch,
+        req.body.firstname,
+        req.body.lastname,
+        req.body.email,
+        req.body.regid,
+        req.body.mobile,
+        hash,
+        req.body.AccessPeriod
+    ]	
+    console.log(req.body,);
+    db.query(sql, [values], (err,result)=>{
+        if(err){ 
+            console.log(err);
+            return res.json({Error: "Inserting data error"});
+    }else{
+        return res.json({Status: "Success"});
+    }
+    })
+})
+});
+
+
+app.get('/institution',(req,res) =>{
+  const sql="SELECT * FROM institutions";
+  
+  db.query(sql,(err,result)=>{
+      if(err){
+        console.log(err);
+        return res.json({Message: "Error inside server"});
+      } 
+      return res.json(result)
+  })
+})
+
+app.post('/institution', (req, res) => {
+     
+  const sql = "INSERT INTO institutions (`institutionName`,`headOfInstitution`,`primaryEmail`,`primaryContact`,`secondaryEmail`,`secondaryContact`,`address`,`city`,`state`,`instituteCode`,`instituteType`,`password`) VALUES (?)";  
+  bcrypt.hash(req.body.password.toString(), salt, (err, hash)=>{
+      if(err) return res.json({Error:"Error for hashing password"})
+      const values = [
+          req.body.institutionName,
+          req.body.headOfInstitution,
+          req.body.primaryEmail,
+          req.body.primaryContact,
+          req.body.secondaryEmail,
+          req.body.secondaryContact,
+          req.body.address,
+          req.body.city,
+          req.body.state,
+          req.body.instituteCode,
+          req.body.instituteType,  
+          hash
+      ]
+      db.query(sql, [values], (err,result)=>{
+          if(err) return res.json({Error: "Inserting data error"});
+          return res.json({Status: "Success"});
+      })
+  })
+	});
+
+app.post('/batch', (req, res) => {
+    const sql = "INSERT INTO batch (`institution`,`BatchYear`,`Batchname`) VALUES (?)";  
+
+    const values = [
+        req.body.institution,
+        req.body.BatchYear,
+        req.body.Batchname,
+    ]	
+    console.log(req.body);
+    db.query(sql, [values], (err,result)=>{
+        if(err){ 
+            console.log(err);
+            return res.json({Error: "Inserting data error"});
+    }else{
+        return res.json({Status: "Success"});
+    }
+    })
+});
+
+app.post('/createBatchyears', (req, res) => {    
+    const sql = "INSERT INTO Batchyears (`createinstitution`,`createBatchyear`) VALUES (?)";  
+
+const values = [
+    req.body.createInstitution,
+    req.body.createBatchyear
+]	
+console.log(req.body,req.body.createInstitution,req.body.createBatchyear);
+db.query(sql, [values], (err,result)=>{
+    if(err) return res.json({Error: "Inserting data error"});
+    return res.json({Status: "Success"});
+})
+
+});
+
+
+app.get('/batchyears/:selectInstitution?', (req, res) => {
+    const { selectInstitution } = req.params;
+    let sql = "SELECT * FROM Batchyears";
+    console.log("h");
+
+    if (selectInstitution) {
+      sql += ` WHERE createinstitution = '${selectInstitution}'`;
+      console.log("hh");
+
+    }
+  
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send("Internal Server Error");
+      } else {
+        res.json(result);
+      }
+    });
+  });
+  
+// app.get('/batchyearshh', (req, res) => {
+
+//     let sql = "SELECT * FROM Batchyears";
+//     console.log("h");
+
+//     if (req.params.selectInstitution) {
+//         const selectedInstitution = req.params.selectInstitution;
+//         sql = `SELECT * FROM batch WHERE institution = '${selectedInstitution}'`;
+//         console.log("hh");
+
+//       }
+    
+    
+//       db.query(sql, (err, result) => {
+//         if (err) {
+//             console.log("hhh");
+
+//           console.log(err);
+//           res.status(500).send("Internal Server Error");
+//         } else {
+//           res.json(result);
+//           console.log("hhhh");
+
+//         }
+//       });
+//     });
+
+// app.get('/batchs',(req,res) =>{
+//     const sql="SELECT * FROM batch";
+//     db.query(sql,(err,result)=>{
+//         if(err) console.log("l",err);
+
+//         res.json(result);
+//         });
+// });
+
+app.get('/batchs/:selectInstitution?', (req, res) => {
+    const { selectInstitution } = req.params;
+    let sql = "SELECT * FROM batch";
+
+    if (selectInstitution) {
+      sql += ` WHERE institution = '${selectInstitution}'`;
+    }
+  
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send("Internal Server Error");
+      } else {
+        res.json(result);
+      }
+    });
+  });
+  app.get('/categories',(req,res) =>{
+    const sql="SELECT * FROM categories";
+    db.query(sql,(err,result)=>{
+        if(err) return res.json({Message: "Error inside server"});
+        return res.json(result)
+    })
+  })
+
+  app.post('/categorie', (req, res) => {
+    const sql = "INSERT INTO categories (`name`,`description`,`tag`,`accessType`,`accessPlan`,`display`) VALUES (?)";  
+
+    const values = [
+        req.body.name,
+        req.body.description,
+        req.body.tag,
+        req.body.accessType,
+        req.body.accessPlan,
+        req.body.display
+
+    ]	
+    console.log(req.body);
+    db.query(sql, [values], (err,result)=>{
+        if(err){ 
+            console.log(err);
+            return res.json({Error: "Inserting data error"});
+    }else{
+        return res.json({Status: "Success"});
+    }
+    })
+});
+
+
+// app.get('/batchs/:selectInstitution', (req, res) => {
+//     const selectedInstitution = req.params.selectInstitution;
+
+//   const sql = `SELECT * FROM batch WHERE institution = '${selectedInstitution}'`;
+
+//   db.query(sql, (err, result) => {
+//     if (err) console.log(err);
+
+//     res.send(result);
+//   });
+// });
+
+// app.get('/vendor-register', (req, res) => {
+//     res.send('This has CORS enabled ')
+// })
+app.get('/manage-vendor',(req,res)=>{
+    let sql = "SELECT uid,name,email,businessname,phone,address,state,city,zip,language,pass FROM vendor";
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send("Internal Server Error");
+      } else {
+        res.json(result);
+      }
+    });
+})
+
+  app.post('/update-vendor',(req, res) => {
+	const {uid, name,email,businessname,phone,address,state,city,zip,language,pass } = req.body;
+    console.log(req.body);
+    const sql = `UPDATE vendor SET 
+    name = '${name}',
+    email = '${email}',
+    businessname = '${businessname}',
+    phone = '${phone}',
+    address = '${address}',
+    state = '${state}',
+    city = '${city}',
+    zip = '${zip}',
+    language = '${language}',
+    pass = '${pass}'
+    WHERE uid = ${uid}`; 
+    db.query(sql, (err, result) => { 
+        if (err){
+            console.log(err)
+            return res.json({Error: "Something Went Wrong"});
+        }
+        else {
+            return res.json({Error: "Vendor Updated Successfully"});
+        }
+    });
+
+  });
+
+  app.post('/vendor-register',(req, res) => {
+	const { name,email,businessname,phone,address,state,city,zip,language,password } = req.body;
+    const sql = `INSERT INTO vendor (name,email,businessname,phone,address,state,city,zip,language,pass) 
+    VALUES ('${name}',
+    '${email}',
+    '${businessname}',
+    '${phone}',
+    '${address}',
+    '${state}',
+    '${city}',
+    '${zip}',
+    '${language}',
+    '${password}')`;
+    db.query(sql, (err, result) => { 
+        if (err){
+            return res.json({Error: "Something Went Wrong"});
+        }
+        else {
+            return res.json({Error: "Success"});
+        }
+    });
+
+  });
 
   app.get('/logout',(req,res) =>{
     res.clearCookie('token');
@@ -284,3 +536,4 @@ app.post('/batches', (req, res) => {
 app.listen(3001, () => {
     console.log("running server port 3001");
 });
+

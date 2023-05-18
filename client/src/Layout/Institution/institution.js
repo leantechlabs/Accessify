@@ -1,108 +1,140 @@
 import Sidebar from "../includes/sidebar";
 import Header from "../includes/header";
 import Footer from "../includes/footer";
-import Axios from 'axios';
-import React,{useState,useEffect} from "react"
-export default function Institution() {
-    const [institutionName, setInstitutionName] = useState('');
-    const [headofinstitution, setHeadOfInstitution] = useState('');
-    const [primaryemail, setPrimaryEmaill] = useState('');
-    const [primarycontact, setPrimaryContact] = useState('');
-    const [secondarycontact, setSecondaryContact] = useState('');
-    const [secondaryemail, setSecondaryEmail] = useState('');
-    const [address, setAddress] = useState('');
-    const [institutioncode, setInstitutionCode] = useState('');
-    const [state, setState] = useState('');
-    const [city, setCity] = useState('');
-    const [password, setPassword] = useState('');
-    const [InstitutionType, setInstitutionType] = useState('');
+import axios from 'axios';
+import React,{useState, useEffect} from "react"
+import {  useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
-  
-    const handleSubmit = () => {
-      const data = { institutionName,headofinstitution,primarycontact,primaryemail,secondarycontact,secondaryemail,address,institutioncode,state,city,password,InstitutionType};
-      Axios.post('http://localhost:3001/institution', data)
-        .then(res => console.log(res.data))
-        .catch(err => console.error(err));
-    };
+
+export default function Institution() {
+  const [values, setValues] = useState({
+      institutionName:'',
+      headOfInstitution:'',
+      primaryEmail:'',
+      primaryContact:'',
+      secondaryEmail:'',
+      secondaryContact:'',
+      address:'',
+      city:'',
+      state:'',
+      instituteCode:'',
+      instituteType:'',
+      password:'',
+  }); 
+
+  const [data, setData] = useState([])
+  useEffect(()=>{
+    axios.get('http://localhost:3001/institution')
+    .then(res => setData(res.data))
+    .catch(err => console.log(err));
+},[])
+
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(values);
+    axios.post('http://localhost:3001/institution', values)
+      .then((res) => {
+        if (res.data.Status === 'Success') {
+            toast.success('Batch created successfully');
+            const timeout = setTimeout(() => {
+              window.location.reload();
+            }, 5000); // Reload after 5 seconds
+        
+            return () => clearTimeout(timeout);
+        } else {
+              alert('College Already Exists');
+        }
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
     <>
-      <div class="layout-wrapper layout-content-navbar">
-        <div class="layout-container">
+      <ToastContainer />
+      <div className="layout-wrapper layout-content-navbar">
+        <div className="layout-container">
           <Sidebar />
-          <div class="layout-page">
+          <div className="layout-page">
             <Header />
-            <div class="content-wrapper">
+            <div className="content-wrapper">
               
 
-              <div class="container-xxl flex-grow-1 container-p-y">
-                <div class="card">
-                  <div class="inline-flexbox">
-                    <h5 class="card-header">Institutions</h5>
-                    <div class="modal-footer">
-                      <div class="col-lg-12 col-md-12 col-sm-12">
-                        <div class="mt-3">
+              <div className="container-xxl flex-grow-1 container-p-y">
+                <div className="card">
+                  <div className="inline-flexbox">
+                    <h5 className="card-header">Institutions</h5>
+                    <div className="modal-footer">
+                      <div className="col-lg-12 col-md-12 col-sm-12">
+                        <div className="mt-12">
                           <button
                             type="button"
-                            class="btn btn-primary"
+                            className="btn btn-primary"
                             data-bs-toggle="modal"
                             data-bs-target="#basicModal"
+                            style={{float:"right"}}
                           >
-                            Create Institution
+                            + Create Institution
                           </button>
-
+                          <form action="" onSubmit={handleSubmit} >
                           <div
-                            class="modal fade"
+                            className="modal fade"
                             id="basicModal"
-                            tabindex="-1"
+                            tabIndex="-1"
                             aria-hidden="true"
                           >
-                            <div class="modal-dialog" role="document">
-                              <div class="modal-content">
-                                <div class="modal-header">
+                            <div className="modal-dialog" role="document">
+                              <div className="modal-content">
+                                <div className="modal-header">
                                   <button
                                     type="button"
-                                    class="btn-close"
+                                    className="btn-close"
                                     data-bs-dismiss="modal"
                                     aria-label="Close"
                                   ></button>
                                 </div>
-                                <div class="modal-body">
-                                  <div class="">
+                                
+                                <div className="modal-body">
+                                  <div className="">
                                     <h4
-                                      class="card-header"
+                                      className="card-header"
                                     //   style={{color:"black"}}
                                     >
                                       Create Institution
                                     </h4>
-
-                                    <div class="card-body my-2">
-                                      <div class="row">
-                                        <div class="mb-3 col-md-12">
+                                    <div className="card-body my-2">
+                                      <div className="row">
+                                        <div className="mb-3 col-md-12">
                                           <label
                                             for="tutorname"
-                                            class="form-label"
+                                            className="form-label"
                                           >
                                             <b>
                                               Institution Name<sup>*</sup>
                                             </b>
                                           </label>
                                           <input
-                                            class="form-control"
+                                            className="form-control"
                                             type="text"
                                             id="_instituteName"
                                             name="_instituteName"
-                                            required="true"
-                                            autofocus
+                                            required={true}
+                                            autoFocus
                                             placeholder="Institution Name"
-                                            onChange={(e) =>setInstitutionName(e.target.value)}
+                                            onChange={(e) =>
+                                              setValues({ ...values, institutionName: e.target.value })
+                                            }
 
                                           />
                                         </div>
-                                        <div class="mb-3 col-md-12">
+                                        <div className="mb-3 col-md-12">
                                           <label
                                             for="tutorname"
-                                            class="form-label"
+                                            className="form-label"
                                           >
                                             <b >
                                               Head of Institution Name
@@ -112,21 +144,21 @@ export default function Institution() {
                                             </b>
                                           </label>
                                           <input
-                                            class="form-control"
+                                            className="form-control"
                                             type="text"
                                             id="_headOfInstitute"
                                             name="_headOfInstitute"
                                             required="true"
-                                            autofocus
+                                            autoFocus
                                             placeholder="Head of Institution Name"
-                                            onChange={(e) =>setHeadOfInstitution(e.target.value)}
+                                            onChange={e=>setValues({...values, headOfInstitution:e.target.value})}
 
                                           />
                                         </div>
-                                        <div class="mb-3 col-md-6">
+                                        <div className="mb-3 col-md-6">
                                           <label
                                             for="tutorname"
-                                            class="form-label"
+                                            className="form-label"
                                           >
                                             <b >
                                               Primary Email
@@ -136,42 +168,42 @@ export default function Institution() {
                                             </b>
                                           </label>
                                           <input
-                                            class="form-control"
+                                            className="form-control"
                                             type="text"
                                             id="_primaryEmail"
                                             name="_primaryEmail"
                                             required="true"
-                                            autofocus
+                                            autoFocus
                                             placeholder="Primary Email"
-                                            onChange={(e) =>setPrimaryEmaill(e.target.value)}
+                                            onChange={e=>setValues({...values, primaryEmail:e.target.value})}
 
                                           />
                                         </div>
-                                        <div class="mb-3 col-md-6">
+                                        <div className="mb-3 col-md-6">
                                           <label
                                             for="tutorname"
-                                            class="form-label"
+                                            className="form-label"
                                           >
                                             <b >
                                               Primary Contact
                                             </b>
                                           </label>
                                           <input
-                                            class="form-control"
+                                            className="form-control"
                                             type="text"
                                             id="_primaryContact"
                                             name="_primaryContact"
                                             required="true"
-                                            autofocus
+                                            autoFocus
                                             placeholder="Primary Contact"
-                                            onChange={(e) =>setPrimaryContact(e.target.value)}
+                                            onChange={e=>setValues({...values, primaryContact:e.target.value})}
 
                                           />
                                         </div>
-                                        <div class="mb-3 col-md-6">
+                                        <div className="mb-3 col-md-6">
                                           <label
                                             for="tutorname"
-                                            class="form-label"
+                                            className="form-label"
                                           >
                                             <b >
                                               Secondary Email
@@ -181,42 +213,42 @@ export default function Institution() {
                                             </b>
                                           </label>
                                           <input
-                                            class="form-control"
+                                            className="form-control"
                                             type="text"
                                             id="_secondaryEmail"
                                             name="_secondaryEmail"
                                             required="true"
-                                            autofocus
+                                            autoFocus
                                             placeholder="Secondary Email"
-                                            onChange={(e) =>setSecondaryEmail(e.target.value)}
+                                            onChange={e=>setValues({...values, secondaryEmail:e.target.value})}
 
                                           />
                                         </div>
-                                        <div class="mb-3 col-md-6">
+                                        <div className="mb-3 col-md-6">
                                           <label
                                             for="tutorname"
-                                            class="form-label"
+                                            className="form-label"
                                           >
                                             <b>
                                               Secondary Contact
                                             </b>
                                           </label>
                                           <input
-                                            class="form-control"
+                                            className="form-control"
                                             type="text"
                                             id="_secondaryContact"
                                             name="_secondaryContact"
                                             required="true"
-                                            autofocus
+                                            autoFocus
                                             placeholder="Secondary Contact"
-                                            onChange={(e) =>setSecondaryContact(e.target.value)}
+                                            onChange={e=>setValues({...values, secondaryContact:e.target.value})}
 
                                           />
                                         </div>
-                                        <div class="mb-3 col-md-12">
+                                        <div className="mb-3 col-md-12">
                                           <label
                                             for="tutorname"
-                                            class="form-label"
+                                            className="form-label"
                                           >
                                             <b >
                                               Address
@@ -226,21 +258,21 @@ export default function Institution() {
                                             </b>
                                           </label>
                                           <input
-                                            class="form-control"
+                                            className="form-control"
                                             type="text"
                                             id="_address"
                                             name="_address"
                                             required="true"
-                                            autofocus
+                                            autoFocus
                                             placeholder="Address"
-                                            onChange={(e) =>setAddress(e.target.value)}
+                                            onChange={e=>setValues({...values, address:e.target.value})}
 
                                           />
                                         </div>
-                                        <div class="mb-3 col-md-6">
+                                        <div className="mb-3 col-md-6">
                                           <label
                                             for="tutorname"
-                                            class="form-label"
+                                            className="form-label"
                                           >
                                             <b >
                                               City
@@ -250,42 +282,42 @@ export default function Institution() {
                                             </b>
                                           </label>
                                           <input
-                                            class="form-control"
+                                            className="form-control"
                                             type="text"
                                             id="_city"
                                             name="_city"
                                             required="true"
-                                            autofocus
+                                            autoFocus
                                             placeholder="City"
-                                            onChange={(e) =>setCity(e.target.value)}
+                                            onChange={e=>setValues({...values, city:e.target.value})}
 
                                           />
                                         </div>
-                                        <div class="mb-3 col-md-6">
+                                        <div className="mb-3 col-md-6">
                                           <label
                                             for="tutorname"
-                                            class="form-label"
+                                            className="form-label"
                                           >
                                             <b >
                                               State
                                             </b>
                                           </label>
                                           <input
-                                            class="form-control"
+                                            className="form-control"
                                             type="text"
                                             id="_state"
                                             name="_state"
                                             required="true"
-                                            autofocus
+                                            autoFocus
                                             placeholder="State"
-                                            onChange={(e) =>setState(e.target.value)}
+                                            onChange={e=>setValues({...values, state:e.target.value})}
 
                                           />
                                         </div>
-                                        <div class="mb-3 col-md-6">
+                                        <div className="mb-3 col-md-6">
                                           <label
                                             for="tutorname"
-                                            class="form-label"
+                                            className="form-label"
                                           >
                                             <b>
                                               Institution Code
@@ -295,33 +327,34 @@ export default function Institution() {
                                             </b>
                                           </label>
                                           <input
-                                            class="form-control"
+                                            className="form-control"
                                             type="text"
                                             id="_instituteCode"
                                             name="_instituteCode"
                                             required="true"
-                                            autofocus
+                                            autoFocus
                                             placeholder="Institution Code"
-                                            onChange={(e) =>setInstitutionCode(e.target.value)}
+                                            onChange={e=>setValues({...values, instituteCode:e.target.value})}
 
                                           />
                                         </div>
-                                        <div class="mb-3 col-md-6">
+                                        <div className="mb-3 col-md-6">
                                           <label
                                             for="instituteType"
-                                            class="form-label"
+                                            className="form-label"
                                           >
                                             <b>
                                               Institution Type
                                             </b>
                                           </label>
                                           <select
-                                            class="form-select"
+                                            className="form-select"
                                             id="instituteType"
                                             aria-label="Default select example"
-                                            onChange={(e) =>setInstitutionType(e.target.value)}
+                                            defaultValue="selected"
+                                            onChange={e=>setValues({...values, instituteType:e.target.value})}
                                           >
-                                            <option selected>
+                                            <option value="selected">
                                               --Institution Type--
                                             </option>
                                             <option value="School">
@@ -342,34 +375,32 @@ export default function Institution() {
                                             <option value="NGO">NGO</option>
                                           </select>
                                         </div>
-                                        <div class="mb-3 col-md-10">
+                                        <div className="mb-3 col-md-10">
                                           <label
                                             for="tutorname"
-                                            class="form-label"
+                                            className="form-label"
                                           >
                                             <b>
                                               Password<sup>*</sup>
                                             </b>
                                           </label>
                                           <input
-                                            class="form-control"
+                                            className="form-control"
                                             type="text"
                                             id="_password"
                                             name="_password"
                                             required="true"
-                                            autofocus
+                                            autoFocus
                                             placeholder="Password"
-                                            onChange={(e) =>setPassword(e.target.value)}
+                                            onChange={e=>setValues({...values, password:e.target.value})}
 
                                           />
                                         </div>
 
-                                        <div class="mt-2">
-                                          <button
+                                        <div className="mt-2">
+                                          <button 
                                             type="submit"
-                                            class="btn btn-primary me-2"
-                                            onClick={handleSubmit}
-                                          >
+                                            className="btn btn-primary me-2">
                                             Create
                                           </button>
                                         </div>
@@ -380,15 +411,16 @@ export default function Institution() {
                               </div>
                             </div>
                           </div>
+                          </form>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div class="container-md flex-grow-1 container-p-y">
-                    <div class="card">
-                      <div class="container-md flex-grow-1 container-p-y ">
-                        <div class="table-responsive text-nowrap">
-                          <table class="table table-striped">
+                  <div className="container-md flex-grow-1 container-p-y">
+                    <div className="card">
+                      <div className="container-md flex-grow-1 container-p-y ">
+                        <div className="table-responsive text-nowrap">
+                          <table className="table table-striped">
                             <thead>
                               <tr>
                                 <th>
@@ -414,87 +446,44 @@ export default function Institution() {
                                 </th>
                               </tr>
                             </thead>
-                            <tbody class="table-border-bottom-0">
-                              <tr>
-                                <td>1</td>
-                                <td>ABC</td>
-                                <td>Abc@gmail.com</td>
-                                <td>ABC</td>
-                                <td>10</td>
-                                <td>
-                                  <button type="button" class="btn btn-primary">
-                                    abc
-                                  </button>
-                                </td>
-                                <td>
-                                  <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-                                    <li class="mx-2">
+                            <tbody className="table-border-bottom-0">
+                                  {Array.isArray(data) &&data.map((institutions, index)=>{
+                                      return <tr key={index}>
+                                          <td>{index + 1}</td>
+                                          <td>{institutions.institutionName}</td>
+                                          <td>{institutions.primaryEmail}</td>
+                                          <td>{institutions.headOfInstitution}</td>
+                                          <td>{institutions.primaryEmail}</td>
+                                          <td>{institutions.instituteCode}</td>
+                                          <td>
+                                          <div class="dropdown">
+                                    <button
+                                      type="button"
+                                      class="btn p-0 dropdown-toggle hide-arrow"
+                                      data-bs-toggle="dropdown"
+                                     
+                                    >
+                                      <i class="bx bx-dots-vertical-rounded"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
                                       <button
-                                        type="button"
-                                        class="btn btn-info"
+                                        class="dropdown-item"
+                                        // onClick={() => {UpdateVendorComponent(data[--id])}}
                                       >
-                                        <i class="bx bx-show"></i>
+                                        <i class="bx bx-edit-alt me-1"></i> Edit
                                       </button>
-                                    </li>
-                                    <li class="mx-2">
-                                      <button
-                                        type="button"
-                                        class="btn btn-secondary"
+                                      <a
+                                        class="dropdown-item"
+                                        // onClick={() => {UpdateVendorComponent(data)}}
                                       >
-                                        <i class="bx bx-pencil"></i>
-                                      </button>
-                                    </li>
-                                    <li class="mx-2">
-                                      <button
-                                        type="button"
-                                        class="btn btn-danger"
-                                      >
-                                        <i class="bx bx-trash"></i>
-                                      </button>
-                                    </li>
-                                  </ul>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>2</td>
-                                <td>ABC</td>
-                                <td>Abc@gmail.com</td>
-                                <td>ABC</td>
-                                <td>10</td>
-                                <td>
-                                  <button type="button" class="btn btn-primary">
-                                    abc
-                                  </button>
-                                </td>
-                                <td>
-                                  <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-                                    <li class="mx-2">
-                                      <button
-                                        type="button"
-                                        class="btn btn-info"
-                                      >
-                                        <i class="bx bx-show"></i>
-                                      </button>
-                                    </li>
-                                    <li class="mx-2">
-                                      <button
-                                        type="button"
-                                        class="btn btn-secondary"
-                                      >
-                                        <i class="bx bx-pencil"></i>
-                                      </button>
-                                    </li>
-                                    <li class="mx-2">
-                                      <button
-                                        type="button"
-                                        class="btn btn-danger"
-                                      >
-                                        <i class="bx bx-trash"></i>
-                                      </button>
-                                    </li>
-                                  </ul>
-                                </td>
-                              </tr>
+                                        <i class="bx bx-trash me-1"></i> Delete
+                                      </a>
+                                    </div>
+                                  </div>
+</td>
+                                      </tr>
+                                    })}
+                                            <div style={{ marginBottom: "100px" }}></div>
                             </tbody>
                           </table>
                         </div>
@@ -504,7 +493,9 @@ export default function Institution() {
                 </div>
               </div>
             </div>
+          <Footer />
           </div>
+
         </div>
       </div>
     </>

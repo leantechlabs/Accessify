@@ -1,31 +1,70 @@
 import Sidebar from "../includes/sidebar";
 import Header from "../includes/header";
 import Footer from "../includes/footer";
-import Axios from 'axios';
+import axios from 'axios';
 import React,{useState,useEffect} from "react"
+import {  useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+
 export default function BatchYears() {
-  const[Institution,setInstitution]=useState("");
-
-  const[createInstitution,setcreateInstitution]=useState("");
-  const[createBatchyear,setcreateBatchyear]=useState("");
 
 
-  const handleSubmit = () => {
-    const data = { createInstitution,createBatchyear};
-    Axios.post('http://localhost:3001/createBatchyears', data)
-      .then(res => console.log(res.data))
-      .catch(err => console.error(err));
-  };
+  const [selectInstitution, setselectInstitution] = useState('');
 
 
-  const handleSubmits = () => {
-    const data = { Institution};
-    Axios.post('http://localhost:3001/Batchyears', data)
-      .then(res => console.log(res.data))
-      .catch(err => console.error(err));
-  };
+const [createValues, setcreateValues] = useState({
+  createInstitution:'',
+  createBatchyear:''
+}); 
+const [Institutions, setInstitutions] = useState([])
+useEffect(()=>{
+  axios.get('http://localhost:3001/institution')
+  .then(res => setInstitutions(res.data))
+  .catch(err => console.log(err));
+},[])
+const [data, setData] = useState([])
+useEffect(()=>{
+  axios.get('http://localhost:3001/batchyears')
+  .then(res => setData(res.data))
+  .catch(err => console.log(err));
+},[])
+
+const navigate = useNavigate()
+const handleSubmit = (e) => {
+  e.preventDefault();
+
+  axios.get(`http://localhost:3001/batchyears/${selectInstitution}`)
+    .then(res => {
+      setData(res.data);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+const handleSubmits = (e) => {
+  e.preventDefault();
+  console.log(createValues);
+  axios.post('http://localhost:3001/createBatchyears', createValues)
+    .then((res) => {
+      if (res.data.Status === 'Success') {
+        toast.success('Batch-years created successfully');
+        navigate('/batch-years')
+
+      } else {
+        alert('Error');
+      }
+    })
+    .catch((err) => console.log(err));
+};
+
+
+
   return (
     <>
+                 <ToastContainer />
       <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
           <Sidebar />
@@ -66,17 +105,21 @@ export default function BatchYears() {
                             _ngcontent-qfm-c181=""
                             name="institution"
                             class="form-control default-input ng-pristine ng-valid ng-touched"
-                            onChange={(e)=>setcreateInstitution(e.target.value)}
-
+                            onChange={(e)=>setcreateValues({...createValues, createInstitution:e.target.value})}
+                            
                           >
                             <option value="" selected="" disabled="">
                               -- Select Institution --
                             </option>
-                            <option>IIT Hyderabad</option>
-                            <option>AITS_HYD</option>
-                            <option>IIT Kanpur</option>
-                            <option>Stanford University</option>
-                            <option>Harvard University</option>
+                            {Array.isArray(Institutions) &&
+                          Institutions.map((value, index) => {
+                            return (
+                              <>
+                              <option value={value.institutionName}>{value.institutionName}</option>
+                              </>
+                            );
+                          })}
+                         
                           </select>
                         </div>
                       </div>
@@ -91,7 +134,7 @@ export default function BatchYears() {
                             id="Batch-year"
                             class="form-control"
                             placeholder="Enter Your Batch Year"
-                            onChange={(e)=>setcreateBatchyear(e.target.value)}
+                            onChange={e=>setcreateValues({...createValues, createBatchyear:e.target.value})}
 
                           />
                         </div>
@@ -102,11 +145,10 @@ export default function BatchYears() {
                         type="button"
                         class="btn btn-outline-secondary"
                         data-bs-dismiss="modal"
-                      >
+                        >
                         Close
                       </button>
-                      <button type="button" class="btn btn-primary" onClick={handleSubmit}
->
+                      <button type="button" class="btn btn-primary" onClick={handleSubmits}>
                         Create
                       </button>
                     </div>
@@ -135,17 +177,20 @@ export default function BatchYears() {
                           _ngcontent-qfm-c181=""
                           name="institution"
                           class="form-control default-input ng-pristine ng-valid ng-touched"
-                          onChange={(e)=>setInstitution(e.target.value)}
+                          onChange={(e) =>setselectInstitution(e.target.value)}
 
                         >
                           <option value="" selected="" disabled="">
                             -- Select Institution --
                           </option>
-                          <option>IIT Hyderabad</option>
-                          <option>AITS_HYD</option>
-                          <option>IIT Kanpur</option>
-                          <option>Stanford University</option>
-                          <option>Harvard University</option>
+                          {Array.isArray(Institutions) &&
+                          Institutions.map((value, index) => {
+                            return (
+                              <>
+                              <option value={value.institutionName}>{value.institutionName}</option>
+                              </>
+                            );
+                          })}
                         </select>
                       </div>
                       <div _ngcontent-qfm-c181="" class="col-md">
@@ -153,7 +198,7 @@ export default function BatchYears() {
                           _ngcontent-qfm-c181=""
                           type="button"
                           class="btn btn-primary mx-2"
-                          onClick={handleSubmits}
+                          onClick={handleSubmit}
 s
                         >
                           Go
@@ -161,6 +206,38 @@ s
                       </div>
                     </div>
                   </div>
+
+                  <div className="container-md flex-grow-1 container-p-y">
+                    <div className="card">
+                      <div className="container-md flex-grow-1 container-p-y ">
+                        <div className="table-responsive text-nowrap">
+                          <table className="table table-striped">
+                            <thead>
+                              <tr>
+                                <th>
+                                  <strong>instituion</strong>
+                                </th>
+                                <th>
+                                  <strong>batchyear</strong>
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody className="table-border-bottom-0">
+                                  {Array.isArray(data) && data.map((batchyear, index)=>{
+                                      return <tr key={index}>
+                                          <td>{batchyear.createinstitution}</td>
+                                          <td>{batchyear.createBatchyear}</td>
+                                          
+                                      </tr>
+                                    })}
+                                        
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
 

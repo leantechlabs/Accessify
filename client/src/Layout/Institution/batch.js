@@ -1,30 +1,70 @@
 import Sidebar from "../includes/sidebar"
 import Header  from "../includes/header"
 import Footer from "../includes/footer"
-import Axios from 'axios';
+import axios from 'axios';
 import React,{useState,useEffect} from "react"
+import {  useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+
 export default function Batches(){
-  const[Institution,setInstitution]=useState("");
-  const[SelectInstitution,setSelectinstitution]=useState("");
-  const[Batchyear,setBatchyear]=useState("");
-  const[Batchname,setBatchname]=useState("");
+  const [selectInstitution, setselectInstitution] = useState('');
+
+  const [values, setValues] = useState({
+    institution:'',
+    BatchYear:'',
+    Batchname:''
+
+}); 
+const [data, setData] = useState([])
+useEffect(()=>{
+  axios.get('http://localhost:3001/batchs')
+  .then(res => setData(res.data))
+  .catch(err => console.log(err));
+},[])
+const [Institutions, setInstitutions] = useState([])
+useEffect(()=>{
+  axios.get('http://localhost:3001/institution')
+  .then(res => setInstitutions(res.data))
+  .catch(err => console.log(err));
+},[])
+
+const handleSubmits = (e) => {
+  e.preventDefault();
+
+  axios.get(`http://localhost:3001/batchs/${selectInstitution}`)
+    .then(res => {
+      setData(res.data);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
+
+const navigate = useNavigate()
+const handleSubmit = (e) => {
+  e.preventDefault();
+  console.log(values);
+  axios.post('http://localhost:3001/batch', values)
+    .then((res) => {
+      if (res.data.Status === 'Success') {
+        toast.success('Batch created successfully');
+        navigate('/batch')
+
+      } else {
+        alert('Error');
+      }
+    })
+    .catch((err) => console.log(err));
+};
 
 
-  const handleSubmit = () => {
-    const data = { Institution,Batchyear,Batchname};
-    Axios.post('http://localhost:3001/batch', data)
-      .then(res => console.log(res.data))
-      .catch(err => console.error(err));
-  };
-  const handleSubmits = () => {
-    const data = { SelectInstitution};
-    Axios.post('http://localhost:3001/batches', data)
-      .then(res => console.log(res.data))
-      .catch(err => console.error(err));
-  };
+
 
     return(
         <>
+              <ToastContainer />
       <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
           <Sidebar />
@@ -66,17 +106,20 @@ export default function Batches(){
                             
                             name="institution"
                             class="form-control default-input ng-pristine ng-valid ng-touched"
-                            onChange={(e)=>setInstitution(e.target.value)}
+                            onChange={(e)=>setValues({...values, institution:e.target.value})}
 
                           >
                             <option value="" selected="" disabled="">
                               -- Select Institution --
                             </option>
-                            <option>IIT Hyderabad</option>
-                            <option>AITS_HYD</option>
-                            <option>IIT Kanpur</option>
-                            <option>Stanford University</option>
-                            <option>Harvard University</option>
+                            {Array.isArray(Institutions) &&
+                          Institutions.map((value, index) => {
+                            return (
+                              <>
+                              <option value={value.institutionName}>{value.institutionName}</option>
+                              </>
+                            );
+                          })}
                           </select>
                         </div>
                       </div>
@@ -94,7 +137,7 @@ export default function Batches(){
                           
                             name="BatchYear"
                             class="form-control"
-                            onChange={(e)=>setBatchyear(e.target.value)}
+                            onChange={(e)=>setValues({...values, BatchYear:e.target.value})}
                           >
                             <option value="" selected="" disabled="">
                               -- Select Batch Year --
@@ -120,7 +163,7 @@ export default function Batches(){
                             id="Batch-name"
                             class="form-control"
                             placeholder="Enter Your Batch Name"
-                            onChange={(e)=>setBatchname(e.target.value)}
+                            onChange={(e)=>setValues({...values, Batchname:e.target.value})}
 
                           />
                         </div>
@@ -159,16 +202,20 @@ export default function Batches(){
                         <select
                           name="institution"
                           class="form-control default-input ng-pristine ng-valid ng-touched"
-                          onChange={(e)=>setSelectinstitution(e.target.value)}
+                          onChange={(e) =>setselectInstitution(e.target.value)}
+
                           >
                           <option value="" selected="" disabled="">
                             -- Select Institution --
                           </option>
-                          <option>IIT Hyderabad</option>
-                          <option>AITS_HYD</option>
-                          <option>IIT Kanpur</option>
-                          <option>Stanford University</option>
-                          <option>Harvard University</option>
+                          {Array.isArray(Institutions) &&
+                          Institutions.map((value, index) => {
+                            return (
+                              <>
+                              <option value={value.institutionName}>{value.institutionName}</option>
+                              </>
+                            );
+                          })}
                         </select>
                       </div>
                       <div _ngcontent-qfm-c181="" class="col-md">
@@ -177,14 +224,52 @@ export default function Batches(){
                           type="button"
                           class="btn btn-primary mx-2"
                           onClick={handleSubmits}
+
                         >
                           Go
                         </button>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>                              
+                         
+                <div className="container-md flex-grow-1 container-p-y">
+                    <div className="card">
+                      <div className="container-md flex-grow-1 container-p-y ">
+                        <div className="table-responsive text-nowrap">
+                          <table className="table table-striped">
+                            <thead>
+                              <tr>
+                                <th>
+                                  <strong>instituion</strong>
+                                </th>
+                                <th>
+                                  <strong>batchyear</strong>
+                                </th>
+                                <th>
+                                  <strong>batch</strong>
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody className="table-border-bottom-0">
+                                  {Array.isArray(data) && data.map((batch, index)=>{
+                                      return <tr key={index}>
+                                          <td>{batch.institution}</td>
+                                          <td>{batch.BatchYear}</td>
+                                          <td>{batch.Batchname}</td>
+
+                                          
+                                      </tr>
+                                    })}
+                                        
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  </div>
+                </div>     
             </div>
         </div>
         </div>

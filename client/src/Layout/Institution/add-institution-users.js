@@ -1,63 +1,99 @@
 import Sidebar from "../includes/sidebar";
 import Header from "../includes/header";
 import Footer from "../includes/footer";
-import Axios from 'axios';
+import axios from 'axios';
 import React,{useState,useEffect} from "react"
+import {  useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+
 export default function AddInstitutionUser() {
-  const [Institution, setInstitution] = useState('');
-  const [BatchYear, setBatchYear] = useState('');
-  const [Batch, setBatch] = useState('');
-  const [firstname, setFirstname] = useState('');
-  const [lastname, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [mobile, setMobile] = useState('');
-  const [regid, setRegdId] = useState('');
-  const [password, setPassword] = useState('');
-  const [AccessPeriod, setAccessPeriod] = useState('');
 
 
-  const [multiInstitution, setmultiInstitution] = useState('');
-  const [multiBatchYear, setmultiBatchYear] = useState('');
-  const [multiBatch, setmultiBatch] = useState('');
-  const [multiAccessPeriod, setmultiAccessPeriod] = useState('');
-  const [file, setFile] = useState(null);
+  const [singleCreateValues, setsingleCreateValues] = useState({
+    Institution:'',
+    BatchYear:'',
+    Batch:'',
+    firstname:'',
+    lastname:'',
+    email:'',
+    regid:'',
+    mobile:'',
+    password:'',
+    AccessPeriod:''
+}); 
 
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-  };
-  const handleSubmits = async (event) => {
-    event.preventDefault();
-
-    const formData = new FormData();
-    formData.append("multiInstitution",multiInstitution);
-    formData.append("multiBatchYear",multiBatchYear);
-    formData.append("multiBatch",multiBatch);
-    formData.append("multiAccessPeriod",multiAccessPeriod);
-    formData.append("file", file);
-
-    try {
-      await Axios.post("http://localhost:3001/multiuser", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      console.log("Upload successful!");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-
+const [multiCreateValues, setmultiCreateValues] = useState({
+  Institution:'',
+  BatchYear:'',
+  Batch:'',
+  AccessPeriod:'',
+  file: null
   
-  const handleSubmit = () => {
-    const data = {firstname,lastname,email,mobile,regid,password,Institution,BatchYear,Batch,AccessPeriod};
-    Axios.post('http://localhost:3001/institutionuser', data)
-      .then(res => console.log(res.data))
-      .catch(err => console.error(err));
+}); 
+console.log(multiCreateValues,multiCreateValues.file);
+const [data, setData] = useState([])
+useEffect(()=>{
+  axios.get('http://localhost:3000/')
+  .then(res => setData(res.data))
+  .catch(err => console.log(err));
+},[])
+
+
+  const handleFileChange = (e) => {
+    setmultiCreateValues( {...multiCreateValues ,file:e.target.files[0]} );
   };
+  const handleSubmits = (e) => {
+    e.preventDefault();
+
+    const data = new FormData();
+    data.append('Institution', multiCreateValues.Institution);
+    data.append('BatchYear', multiCreateValues.BatchYear);
+    data.append('Batch', multiCreateValues.Batch);
+    data.append('AccessPeriod', multiCreateValues.AccessPeriod);
+    data.append('file', multiCreateValues.file);
+    console.log(data);
+
+ axios.post("http://localhost:3001/multiuser",data , {
+  headers: {
+    'Content-Type': 'multipart/form-data',
+  },
+})   
+       .then((res) => {
+        if (res.data.Status === 'Success') {
+          toast.success('multi user created successfully');
+          navigate('/users')
+  
+        } else {
+          alert('Error');
+        }
+      })
+      .catch((err) => console.log(err));
+
+  };
+
+
+  const navigate = useNavigate()
+const handleSubmit = (e) => {
+  e.preventDefault();
+  console.log(singleCreateValues);
+  axios.post('http://localhost:3001/institution-single-user', singleCreateValues)
+    .then((res) => {
+      if (res.data.Status === 'Success') {
+        toast.success('single user created successfully');
+        navigate('/institution')
+
+      } else {
+        alert('Error');
+      }
+    })
+    .catch((err) => console.log(err));
+};
+
   return (
     <>
+                  <ToastContainer />
       <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
           <Sidebar />
@@ -117,7 +153,7 @@ export default function AddInstitutionUser() {
                                         id="_institute"
                                         formcontrolname="institute"
                                         class="form-select default-input ng-untouched ng-pristine ng-invalid"
-                                        onChange={(e) =>setInstitution(e.target.value)}
+                                        onChange={(e)=>setsingleCreateValues({...singleCreateValues, Institution:e.target.value})}
 
                                       >
                                         <option value="" selected="">
@@ -139,7 +175,7 @@ export default function AddInstitutionUser() {
                                         id="_batch_year"
                                         formcontrolname="batch_year"
                                         class="form-select default-input ng-untouched ng-pristine ng-invalid"
-                                        onChange={(e) =>setBatchYear(e.target.value)}
+                                        onChange={(e)=>setsingleCreateValues({...singleCreateValues, BatchYear:e.target.value})}
 
                                       >
                                         <option value="" selected="">
@@ -157,7 +193,7 @@ export default function AddInstitutionUser() {
                                         id="_batch"
                                         formcontrolname="batch"
                                         class="form-select default-input ng-untouched ng-pristine ng-invalid"
-                                        onChange={(e) =>setBatch(e.target.value)}
+                                        onChange={(e)=>setsingleCreateValues({...singleCreateValues, Batch:e.target.value})}
 
                                       >
                                         <option value="" selected="">
@@ -179,7 +215,7 @@ export default function AddInstitutionUser() {
                                         id="_first_name"
                                         formcontrolname="first_name"
                                         class="form-control ng-untouched ng-pristine ng-invalid"
-                                        onChange={(e) =>setFirstname(e.target.value)}
+                                        onChange={(e)=>setsingleCreateValues({...singleCreateValues, firstname:e.target.value})}
 
                                       />
                                     </div>
@@ -192,7 +228,7 @@ export default function AddInstitutionUser() {
                                         name="_last_name"
                                         id="_last_name"
                                         class="form-control ng-untouched ng-pristine ng-invalid"
-                                        onChange={(e) =>setLastName(e.target.value)}
+                                        onChange={(e)=>setsingleCreateValues({...singleCreateValues, lastname:e.target.value})}
 
                                       />
                                     </div>
@@ -207,7 +243,7 @@ export default function AddInstitutionUser() {
                                         placeholder="Email"
                                         formcontrolname="email"
                                         class="form-control ng-untouched ng-pristine ng-invalid"
-                                        onChange={(e) =>setEmail(e.target.value)}
+                                        onChange={(e)=>setsingleCreateValues({...singleCreateValues, email:e.target.value})}
 
                                       />
                                     </div>
@@ -222,7 +258,7 @@ export default function AddInstitutionUser() {
                                         placeholder="Regd / HallTicket No."
                                         formcontrolname="regd"
                                         class="form-control ng-untouched ng-pristine ng-invalid"
-                                        onChange={(e) =>setRegdId(e.target.value)}
+                                        onChange={(e)=>setsingleCreateValues({...singleCreateValues, regid:e.target.value})}
 
                                       />
                                     </div>
@@ -235,7 +271,7 @@ export default function AddInstitutionUser() {
                                         id="_mobile"
                                         formcontrolname="mobile"
                                         class="form-control ng-untouched ng-pristine ng-invalid"
-                                        onChange={(e) =>setMobile(e.target.value)}
+                                        onChange={(e)=>setsingleCreateValues({...singleCreateValues, mobile:e.target.value})}
 
                                       />
                                     </div>
@@ -250,7 +286,7 @@ export default function AddInstitutionUser() {
                                         placeholder="Password"
                                         formcontrolname="password"
                                         class="form-control ng-untouched ng-pristine ng-invalid"
-                                        onChange={(e) =>setPassword(e.target.value)}
+                                        onChange={(e)=>setsingleCreateValues({...singleCreateValues, password:e.target.value})}
 
                                       />
                                     </div>
@@ -261,7 +297,7 @@ export default function AddInstitutionUser() {
                                         id="_access_period"
                                         formcontrolname="access_period"
                                         class="form-select default-input ng-untouched ng-pristine ng-invalid"
-                                        onChange={(e) =>setAccessPeriod(e.target.value)}
+                                        onChange={(e)=>setsingleCreateValues({...singleCreateValues, AccessPeriod:e.target.value})}
 
                                       >
                                         <option value="" selected="">
@@ -320,7 +356,7 @@ export default function AddInstitutionUser() {
                                         id="_institute"
                                         formcontrolname="institute"
                                         class="form-select default-input ng-untouched ng-pristine ng-invalid"
-                                        onChange={(e) =>setmultiInstitution(e.target.value)}
+                                        onChange={(e)=>setmultiCreateValues({...multiCreateValues, Institution:e.target.value})}
 
                                      >
                                         <option
@@ -344,7 +380,7 @@ export default function AddInstitutionUser() {
                                         id="_batch_year"
                                         formcontrolname="batch_year"
                                         class="form-select default-input ng-untouched ng-pristine ng-invalid"
-                                        onChange={(e) =>setmultiBatchYear(e.target.value)}
+                                        onChange={(e)=>setmultiCreateValues({...multiCreateValues,BatchYear:e.target.value})}
 
                                       >
                                         <option
@@ -362,7 +398,7 @@ export default function AddInstitutionUser() {
                                         id="_batch"
                                         formcontrolname="batch"
                                         class="form-select default-input ng-untouched ng-pristine ng-invalid"
-                                        onChange={(e) =>setmultiBatch(e.target.value)}
+                                        onChange={(e)=>setmultiCreateValues({...multiCreateValues, Batch:e.target.value})}
 
                                       >
                                         <option
@@ -382,7 +418,7 @@ export default function AddInstitutionUser() {
                                         id="_access_period"
                                         formcontrolname="access_period"
                                         class="form-select default-input ng-untouched ng-pristine ng-invalid"
-                                        onChange={(e) =>setmultiAccessPeriod(e.target.value)}
+                                        onChange={(e)=>setmultiCreateValues({...multiCreateValues, AccessPeriod:e.target.value})}
 
                                       >
                                         <option
