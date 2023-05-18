@@ -23,6 +23,12 @@ useEffect(()=>{
   .then(res => setData(res.data))
   .catch(err => console.log(err));
 },[])
+const [Institutions, setInstitutions] = useState([])
+useEffect(()=>{
+  axios.get('http://localhost:3001/institution')
+  .then(res => setInstitutions(res.data))
+  .catch(err => console.log(err));
+},[])
 
 const handleSubmits = (e) => {
   e.preventDefault();
@@ -106,11 +112,14 @@ const handleSubmit = (e) => {
                             <option value="" selected="" disabled="">
                               -- Select Institution --
                             </option>
-                            <option>IIT Hyderabad</option>
-                            <option>AITS_HYD</option>
-                            <option>IIT Kanpur</option>
-                            <option>Stanford University</option>
-                            <option>Harvard University</option>
+                            {Array.isArray(Institutions) &&
+                          Institutions.map((value, index) => {
+                            return (
+                              <>
+                              <option value={value.institutionName}>{value.institutionName}</option>
+                              </>
+                            );
+                          })}
                           </select>
                         </div>
                       </div>
@@ -199,11 +208,14 @@ const handleSubmit = (e) => {
                           <option value="" selected="" disabled="">
                             -- Select Institution --
                           </option>
-                          <option>IIT Hyderabad</option>
-                          <option>AITS_HYD</option>
-                          <option>IIT Kanpur</option>
-                          <option>Stanford University</option>
-                          <option>Harvard University</option>
+                          {Array.isArray(Institutions) &&
+                          Institutions.map((value, index) => {
+                            return (
+                              <>
+                              <option value={value.institutionName}>{value.institutionName}</option>
+                              </>
+                            );
+                          })}
                         </select>
                       </div>
                       <div _ngcontent-qfm-c181="" class="col-md">
