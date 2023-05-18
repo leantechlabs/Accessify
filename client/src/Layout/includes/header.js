@@ -65,9 +65,6 @@ export default function Header() {
                   </a>
                 </li>
                 <li>
-                  <div class="dropdown-divider"></div>
-                </li>
-                <li>
                   <a class="dropdown-item" href="#">
                     <i class="bx bx-user me-2"></i>
                     <span class="align-middle">My Profile</span>
@@ -90,7 +87,7 @@ export default function Header() {
                       <input
                         type="button"
                         value="Logout"
-                        class=" mybtn primary-bg"
+                        class=" btn primary-bg"
                         onClick={handleDelete}
                       />
                       
