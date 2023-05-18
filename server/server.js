@@ -9,28 +9,33 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 
 
-<<<<<<< HEAD
-=======
 import Axios  from "axios";
 import session from "express-session";
->>>>>>> 3fd9f762caf9f931aecbf43b042aef9bf6323799
+
+import { randomInt } from 'crypto'
 
 const app = express();
 
 const db = mysql.createConnection({
-<<<<<<< HEAD
+/*
     host: 'localhost',
     user: 'root',
     password: '',
     database: 'accesify'
-=======
+
     host: 'sql.freedb.tech',
     user: 'freedb_accessify',
     password: '!AzjRVUJA@Y&Q3e',
     database: 'freedb_accessify'
->>>>>>> 3fd9f762caf9f931aecbf43b042aef9bf6323799
+*/
+    host: 'srv984.hstgr.io',
+    user: 'u734900206_accessify',
+    password: 'LeantechLabs@8861',
+    database: 'u734900206_accessify'
+
 })
 
+// if(db.connect()){console.log('Connected to db')}else{console.log('Not Connected')}
 const salt = 10;  //hashing password length
 
 app.use(express.json());
@@ -57,55 +62,10 @@ function message(props) {
 }
 
 
-// const storage = multer.diskStorage({
-// 	destination: (req, file, cb) => {
-// 		if (file.fieldname === '_logo') {
-// 			cb(null,path.join(__dirname, '/uploads/logos') );
-// 		  } else if (file.fieldname === '_userFile') {
-// 			cb(null, path.join(__dirname, '/uploads/files'));
-// 		  }else {
-// 			cb(new Error('Invalid field name'));
-// 		  }
-// 	},
-// 	filename: (req, file, cb) => {
-// 		console.log(file);
-// 		cb(null, file.originalname+ '-' + Date.now() + path.extname(file.originalname));
-// 	}
-	
-// });
-// const upload = multer({
-// 	dest: 'uploads/' 
-// });
-
-// const storage = multer.diskStorage({
-// 	destination: (req, file, callback) => {
-// 	  callback(null, "uploads");
-// 	},
-// 	filename: (req, file, callback) => {
-// 	  callback(null,file.originalname+ '-' + Date.now() + path.extname(file.originalname));
-// 	},
-//   });
-//   const imageStorage = multer.diskStorage({
-// 	destination: (req, file, callback) => {
-// 	  callback(null, "images");
-// 	},
-// 	filename: (req, file, callback) => {
-// 	  callback(null, file.originalname+ '-' + Date.now() + path.extname(file.originalname));
-// 	},
-//   });
-// const upload = multer({ storage }).single("file");
-// const imageUpload = multer({ storage: imageStorage }).single("image");
-
-
 const upload = multer({ dest: "uploads/" });
-const imageupload = multer({ dest: "images/" });
+const imageUpload = multer({ dest: "images/" });
 
-// connection.connect(function(err){
-//   if(err) throw err;
-//   console.log("connected database");
-// });
 
-// Regular expressions for validation
 const nameRegex = /^[a-zA-Z\s]+$/;
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^\d{10}$/;
@@ -157,22 +117,22 @@ app.get('/',verifyUser,(req,res)=>{
 })
 
 
-app.post('/register', (req,res)=>{
-    const sql = "INSERT INTO users (`name`,`email`,`password`) VALUES (?)";
-    bcrypt.hash(req.body.password.toString(), salt, (err, hash)=>{
-        if(err) return res.json({Error:"Error for hashing password"})
-        const values = [
-            req.body.name,
-            req.body.email,
-            hash
-        ]
-        db.query(sql, [values], (err,result)=>{
-            if(err) return res.json({Error: "Inserting data error"});
-            return res.json({Status: "Success"});
-        })
-    })
+// app.post('/register', (req,res)=>{
+//     const sql = "INSERT INTO users (`name`,`email`,`password`) VALUES (?)";
+//     bcrypt.hash(req.body.password.toString(), salt, (err, hash)=>{
+//         if(err) return res.json({Error:"Error for hashing password"})
+//         const values = [
+//             req.body.name,
+//             req.body.email,
+//             hash
+//         ]
+//         db.query(sql, [values], (err,result)=>{
+//             if(err) return res.json({Error: "Inserting data error"});
+//             return res.json({Status: "Success"});
+//         })
+//     })
     
-})
+// })
 
 
 
@@ -442,12 +402,9 @@ app.get('/batchyears/:selectInstitution?', (req, res) => {
 app.get('/batchs/:selectInstitution?', (req, res) => {
     const { selectInstitution } = req.params;
     let sql = "SELECT * FROM batch";
-    console.log("h");
 
     if (selectInstitution) {
       sql += ` WHERE institution = '${selectInstitution}'`;
-      console.log("hh");
-
     }
   
     db.query(sql, (err, result) => {
@@ -505,41 +462,45 @@ app.get('/batchs/:selectInstitution?', (req, res) => {
 //   });
 // });
 
+// app.get('/vendor-register', (req, res) => {
+//     res.send('This has CORS enabled ')
+// })
+app.get('/manage-vendor',(req,res)=>{
+    let sql = "SELECT uid,name,email,businessname,phone,address,state,city,zip,language FROM vendor";
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send("Internal Server Error");
+      } else {
+        res.json(result);
+      }
+    });
+})
 
-// app.post('/register', upload.single('image'), (req, res) => {
-// 	const { filename } = req.file;
-// 	const fileExtension = path.extname(filename);
-// 	const newName = `${filename}${fileExtension}`;
-// 	const oldPath = `uploads/${filename}`;
+  app.post('/vendor-register',(req, res) => {
+	const { fullname,email,businessname,phone,address,state,city,zip,language,password } = req.body;
+    console.log(req.body);
   
-// 	const { name,email,businessname,phone,address,state,city,zip,language } = req.body;
+    const sql = `INSERT INTO vendor (name,email,businessname,phone,address,state,city,zip,language,pass) 
+    VALUES ('${fullname}',
+    '${email}',
+    '${businessname}',
+    '${phone}',
+    '${address}',
+    '${state}',
+    '${city}',
+    '${zip}',
+    '${language}',
+    '${password}')`;
+    db.query(sql, (err, result) => { 
+        if (err){
+            return res.json({Error: "Something Went Wrong"});
+        }
+        else {
+            return res.json({Error: "Success"});
+        }
+    });
 
-// 	console.log(req.body ,name,email,businessname,phone,address,state,city,zip,language);
-// 	// move the file to the images folder with the new name
-// 	// fs.rename(oldPath, newPath, (err) => {
-// 	//   if (err) {
-// 	// 	console.error(err);
-// 	// 	res.status(500).json({ message: 'Failed to upload image' });
-// 	//   } else {
-// 	// 	console.log(`Image saved as ${newName}`);
-// 	// 	res.json({ message: 'Image uploaded successfully' });
-// 	//   }
-// 	// });
-//   });
-  app.post('/register',(req, res) => {
-
-    imageUpload(req, res, (error) => {
-		if (error) {
-		  console.log(error);
-		  return res.sendStatus(500);
-		}
-		console.log("Upload successful!");
-  
-	const { name,email,businessname,phone,address,state,city,zip,language } = req.body;
-
-	console.log(req.body ,name,email,businessname,phone,address,state,city,zip,language);
-
-	});
   });
 
 
@@ -552,3 +513,4 @@ app.get('/batchs/:selectInstitution?', (req, res) => {
 app.listen(3001, () => {
     console.log("running server port 3001");
 });
+

@@ -107,10 +107,7 @@ const handleSubmits = (e) => {
                               -- Select Institution --
                             </option>
                             <option>IIT Hyderabad</option>
-                            <option>AITS_HYD</option>
-                            <option>IIT Kanpur</option>
-                            <option>Stanford University</option>
-                            <option>Harvard University</option>
+                         
                           </select>
                         </div>
                       </div>
