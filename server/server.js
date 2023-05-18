@@ -112,6 +112,11 @@ const verifyUser = (req,res,next)=>{
 
 app.get('/',verifyUser,(req,res)=>{
     return res.json({Status: "Success", name:req.name});
+    
+})
+app.get('/users',(req,res)=>{
+  const sql = "SELECT * FROM users ";
+  return res.json({Status: "Success",sql})
 })
 //comments
 

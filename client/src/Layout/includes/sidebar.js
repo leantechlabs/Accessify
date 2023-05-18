@@ -39,7 +39,7 @@ export default function Sidebar() {
           <span class="menu-header-text">Vendor</span>
         </li>
 
-        <li class="menu-item">
+        <li href="javascript:void(0);" class="menu-item">
           <a class="menu-link menu-toggle">
             <i class="menu-icon tf-icons bx bx-detail"></i>
             <div data-i18n="Form Elements">Vendor</div>
@@ -57,6 +57,7 @@ export default function Sidebar() {
             </li>
          
         </li>
+
 
         <li class="menu-item">
           <a class="menu-link menu-toggle">
