@@ -11,13 +11,12 @@ import bcrypt from 'bcrypt'
 
 import Axios  from "axios";
 import session from "express-session";
-
 import { randomInt } from 'crypto'
 
 const app = express();
-
+//database
 const db = mysql.createConnection({
-/*
+    /*
     host: 'localhost',
     user: 'root',
     password: '',
@@ -32,7 +31,6 @@ const db = mysql.createConnection({
     user: 'u734900206_accessify',
     password: 'LeantechLabs@8861',
     database: 'u734900206_accessify'
-
 })
 
 // if(db.connect()){console.log('Connected to db')}else{console.log('Not Connected')}
@@ -145,9 +143,7 @@ app.post('/login',(req, res) =>{
 
 	const sql = "SELECT * FROM users WHERE email = ? ";
     db.query(sql,[req.body.email],(err,data)=>{
-        if(err) {
-          console.log(err);
-          return res.json({Error: "Login error in server"});}
+        if(err) return res.json({Error: "Login error in server"});
         if(data.length > 0){
             bcrypt.compare(req.body.password.toString(), data[0].password,(err,response)=>{
                 if(err) return res.json({Error: "Password compare error"});
@@ -271,7 +267,7 @@ app.post('/institution-single-user', (req, res) => {
 
 app.get('/institutions',(req,res) =>{
   const sql="SELECT * FROM institutions";
-  console.log("h")
+  
   db.query(sql,(err,result)=>{
       if(err){
         console.log(err);
@@ -282,7 +278,7 @@ app.get('/institutions',(req,res) =>{
 })
 
 app.post('/institution', (req, res) => {
-    
+     
   const sql = "INSERT INTO institutions (`institutionName`,`headOfInstitution`,`primaryEmail`,`primaryContact`,`secondaryEmail`,`secondaryContact`,`address`,`city`,`state`,`instituteCode`,`instituteType`,`password`) VALUES (?)";  
   bcrypt.hash(req.body.password.toString(), salt, (err, hash)=>{
       if(err) return res.json({Error:"Error for hashing password"})
@@ -305,7 +301,7 @@ app.post('/institution', (req, res) => {
           return res.json({Status: "Success"});
       })
   })
-});
+	});
 
 app.post('/batch', (req, res) => {
     const sql = "INSERT INTO batch (`institution`,`BatchYear`,`Batchname`) VALUES (?)";  
@@ -313,7 +309,7 @@ app.post('/batch', (req, res) => {
     const values = [
         req.body.institution,
         req.body.BatchYear,
-        req.body.Batchname
+        req.body.Batchname,
     ]	
     console.log(req.body);
     db.query(sql, [values], (err,result)=>{
@@ -416,7 +412,6 @@ app.get('/batchs/:selectInstitution?', (req, res) => {
       }
     });
   });
-
   app.get('/categories',(req,res) =>{
     const sql="SELECT * FROM categories";
     db.query(sql,(err,result)=>{
@@ -449,7 +444,6 @@ app.get('/batchs/:selectInstitution?', (req, res) => {
 });
 
 
-
 // app.get('/batchs/:selectInstitution', (req, res) => {
 //     const selectedInstitution = req.params.selectInstitution;
 
@@ -480,7 +474,6 @@ app.get('/manage-vendor',(req,res)=>{
   app.post('/vendor-register',(req, res) => {
 	const { fullname,email,businessname,phone,address,state,city,zip,language,password } = req.body;
     console.log(req.body);
-  
     const sql = `INSERT INTO vendor (name,email,businessname,phone,address,state,city,zip,language,pass) 
     VALUES ('${fullname}',
     '${email}',
