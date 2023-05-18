@@ -42,17 +42,7 @@ export default function ManageVendor() {
                     </div>
                     <div class="modal-body">
                     <div class="row g-2">
-                        <div class="col mb-0">
-                          <label
-                            for="nameWithTitle"
-                            class="form-label"
-                            required
-                          >
-                            Institution
-                            <span class="text-danger"> *</span>{" "}
-                          </label>
-                         
-                        </div>
+                       
                       </div>
                       <div class="row g-2">
                         <div class="col mb-0">
@@ -72,13 +62,7 @@ export default function ManageVendor() {
                       </div>
                     </div>
                     <div class="modal-footer">
-                      <button
-                        type="button"
-                        class="btn btn-outline-secondary"
-                        data-bs-dismiss="modal"
-                        >
-                        Close
-                      </button>
+                      
                       <button type="button" class="btn btn-primary" >
                         Create
                       </button>
