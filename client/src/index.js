@@ -20,6 +20,7 @@ import Chapters from './Layout/QuestionBank/chapters';
 import UpdateVendor from  './Layout/Dashboard/Vendor/update-vendor';
 import Catergories from './Layout/Assessments/catergories';
 import Assessments from './Layout/Assessments/assessments';
+import StaffProfile from './Layout/profile/staffProfile';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -48,6 +49,7 @@ function App() {
          <Route path="/chapters" element={<Chapters/>}/>
          <Route path="/catergories" element={<Catergories/>}/>
          <Route path="/assessments" element={<Assessments/>}/>
+         <Route path="/profile/staff-profile" element={<StaffProfile/>}/>
          <Route path="/update-vendor" element={<UpdateVendor/>}/>
 
         </Route>

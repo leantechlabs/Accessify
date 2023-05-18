@@ -1,7 +1,16 @@
+import React, { useState,useEffect } from "react";
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Header() {
+  const [user,setUser] = useState([])
+
+  useEffect(()=>{
+    axios.get('http://localhost:3001/')
+    .then(res => setUser(res.data))
+    .catch(err => console.log(err));
+},[])
+
   const navigate = useNavigate()
     const handleDelete = () => {
     axios.get('http://localhost:3001/logout')
@@ -58,26 +67,23 @@ export default function Header() {
                   <a class="dropdown-item" href="#">
                     <div class="d-flex">
                       <div class="flex-grow-1">
-                        <span class="fw-semibold d-block">John Doe</span>
+                        <span class="fw-semibold d-block">{user.name}</span>
                         <small class="text-muted">Admin</small>
                       </div>
                     </div>
                   </a>
-                </li>
+                </li>  
                 <li>
-                  <div class="dropdown-divider"></div>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="#">
+                  <Link class="dropdown-item" to="/profile/staff-profile">
                     <i class="bx bx-user me-2"></i>
                     <span class="align-middle">My Profile</span>
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="#">
+                  <Link class="dropdown-item" to="/staff-profile">
                     <i class="bx bx-cog me-2"></i>
                     <span class="align-middle">Settings</span>
-                  </a>
+                  </Link>
                 </li>
 
                 <li>
@@ -90,7 +96,7 @@ export default function Header() {
                       <input
                         type="button"
                         value="Logout"
-                        class=" mybtn primary-bg"
+                        class=" btn primary-bg"
                         onClick={handleDelete}
                       />
                       

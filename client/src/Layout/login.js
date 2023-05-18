@@ -10,6 +10,11 @@ export default function Login() {
     password:'',
   });
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const navigate = useNavigate()
   axios.defaults.withCredentials = true;
@@ -76,16 +81,17 @@ export default function Login() {
                     </div>
                     <div class="input-group input-group-merge">
                       <input
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         id="_password"
                         class="form-control"
                         name="_password"
                         placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                         aria-describedby="password"
+                        value={values.password}
                         onChange={e=>setValues({...values, password:e.target.value})}
                       />
                       <span class="input-group-text cursor-pointer">
-                        <i class="bx bx-hide"></i>
+                        <i class="bx bx-hide" onClick={toggleShowPassword}></i>
                       </span>
                     </div>
                   </div>
