@@ -146,6 +146,7 @@ const verifyUser = (req,res,next)=>{
 
 app.get('/',verifyUser,(req,res)=>{
     return res.json({Status: "Success", name:req.name});
+
 })
 
 
@@ -165,6 +166,7 @@ app.post('/register', (req,res)=>{
     })
     
 })
+
 
 
 app.post('/login',(req, res) =>{
@@ -200,6 +202,7 @@ app.post('/multiuser', (req, res) => {
 		res.sendStatus(200);
 	  });
 });
+
 
 app.post('/institutionuser', (req, res) => {
 	const {firstname,lastname,email,mobile,regid,password,Institution,BatchYear,Batch,AccessPeriod} = req.body;

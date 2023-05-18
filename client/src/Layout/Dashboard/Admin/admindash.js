@@ -1,6 +1,14 @@
-
+import React, { useState,useEffect } from "react";
+import axios from 'axios';
 
 export default function AdminDashboard() {
+
+  const [users,setUsers] = useState([]);
+  useEffect(()=>{
+    axios.get('http://localhost:3001/')
+    .then(res => setUsers(res.data))
+    .catch(err => console.log(err));
+},[])
 
   return (
     <>
@@ -11,7 +19,7 @@ export default function AdminDashboard() {
               <div class="d-flex align-items-end row">
                 <div class="col-sm-7">
                   <div class="card-body">
-                    <h5 class="card-title text-primary">Congratulations 🎉</h5>
+                    <h5 class="card-title text-primary">Congratulations 🎉 <span>{users.name}</span></h5>
                     <p class="mb-4">
                       You have done <span class="fw-bold">72%</span> More Users
                       today. Check your new users.

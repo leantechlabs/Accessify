@@ -7,8 +7,15 @@ export default function Login() {
   const [values, setValues] = useState({
     email:'',
     password:'',
+    rememberMe:''
   });
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
+
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   const navigate = useNavigate()
   axios.defaults.withCredentials = true;
@@ -29,88 +36,91 @@ export default function Login() {
    
     <div>
 
-      <div class="container-xxl">
-        <div class="authentication-wrapper authentication-basic container-p-y">
-          <div class="authentication-inner">
-            <div class="card">
-              <div class="card-body">
-                <div class="app-brand justify-content-center">
-                  <a href="#" class="app-brand-link gap-2">
-                    <h1 class="logo primary">
-                      <span class="logo text-body fw-bolder">Accessify</span>
+      <div className="container-xxl">
+        <div className="authentication-wrapper authentication-basic container-p-y">
+          <div className="authentication-inner">
+            <div className="card">
+              <div className="card-body">
+                <div className="app-brand justify-content-center">
+                  <a href="#" className="app-brand-link gap-2">
+                    <h1 className="logo primary">
+                      <span className="logo text-body fw-bolder">Accessify</span>
                     </h1>
                   </a>
                 </div>
 
-                <h4 class="mb-2">Welcome to Accessify! 👋</h4>
-                <p class="mb-4">Please sign-in to your account</p>
+                <h4 className="mb-2">Welcome to Accessify! 👋</h4>
+                <p className="mb-4">Please sign-in to your account</p>
 
                 <form
                   id="formAuthentication"
-                  class="mb-3"
+                  className="mb-3"
                   action="/"
                   onSubmit={handleSubmit}
                 >
-                  <div class="mb-3">
-                    <label  class="form-label">
+                  <div className="mb-3">
+                    <label  className="form-label">
                       Email or Username
                     </label>
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       id="_email"
                       name="_email"
                       placeholder="Enter your email or username"
                       onChange={e=>setValues({...values, email:e.target.value})}
                     />
                   </div>
-                  <div class="mb-3 form-password-toggle">
-                    <div class="d-flex justify-content-between">
-                      <label class="form-label" >
+                  <div className="mb-3 form-password-toggle">
+                    <div className="d-flex justify-content-between">
+                      <label className="form-label" >
                         Password
                       </label>
                       <a href="#">
                         <small>Forgot Password?</small>
                       </a>
                     </div>
-                    <div class="input-group input-group-merge">
+                    <div className="input-group input-group-merge">
                       <input
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         id="_password"
-                        class="form-control"
+                        className="form-control"
                         name="_password"
                         placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                         aria-describedby="password"
+                        value={values.password}
                         onChange={e=>setValues({...values, password:e.target.value})}
                       />
-                      <span class="input-group-text cursor-pointer">
-                        <i class="bx bx-hide"></i>
+                      <span className="input-group-text cursor-pointer" onClick={handleTogglePassword}>
+                        <i className="bx bx-hide"></i>
                       </span>
                     </div>
                   </div>
-                  <div class="mb-3">
-                    <div class="form-check">
+                  <div className="mb-3">
+                    <div className="form-check">
                       <div id="validate"></div>
                       <input
-                        class="form-check-input"
+                        className="form-check-input"
                         type="checkbox"
                         id="remember-me"
+                        value="checked"
+                        onChange={e=>setValues({...values, rememberMe:e.target.value})}
                       />
-                      <label class="form-check-label" >
+                      <label className="form-check-label" >
                         Remember Me
                       </label>
                     </div>
                   </div>
-                  <div class="mb-3">
+                  <div className="mb-3">
                     <button
-                      class="btn btn-primary d-grid w-100"
+                      className="btn btn-primary d-grid w-100"
                       type="submit"
                       name="_submit"
                     >
                       Sign in
                     </button>
                   </div>
-                  {error && <div className="alert alert-danger">{error}</div>}
+                  {error && <div classNameName="alert alert-danger">{error}</div>}
                 </form>
               </div>
             </div>
