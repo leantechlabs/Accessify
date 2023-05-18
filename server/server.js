@@ -16,17 +16,17 @@ import { randomInt } from 'crypto'
 const app = express();
 //database
 const db = mysql.createConnection({
-    /*
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'accesify'
 
-    host: 'sql.freedb.tech',
-    user: 'freedb_accessify',
-    password: '!AzjRVUJA@Y&Q3e',
-    database: 'freedb_accessify'
-*/
+    // host: 'localhost',
+    // user: 'root',
+    // password: '',
+    // database: 'accesify'
+
+    // host: 'sql.freedb.tech',
+    // user: 'freedb_accessify',
+    // password: '!AzjRVUJA@Y&Q3e',
+    // database: 'freedb_accessify'
+
     host: 'srv984.hstgr.io',
     user: 'u734900206_accessify',
     password: 'LeantechLabs@8861',
@@ -115,22 +115,22 @@ app.get('/',verifyUser,(req,res)=>{
 })
 //comments
 
-// app.post('/register', (req,res)=>{
-//     const sql = "INSERT INTO users (`name`,`email`,`password`) VALUES (?)";
-//     bcrypt.hash(req.body.password.toString(), salt, (err, hash)=>{
-//         if(err) return res.json({Error:"Error for hashing password"})
-//         const values = [
-//             req.body.name,
-//             req.body.email,
-//             hash
-//         ]
-//         db.query(sql, [values], (err,result)=>{
-//             if(err) return res.json({Error: "Inserting data error"});
-//             return res.json({Status: "Success"});
-//         })
-//     })
+app.post('/register', (req,res)=>{
+    const sql = "INSERT INTO users (`name`,`email`,`password`) VALUES (?)";
+    bcrypt.hash(req.body.password.toString(), salt, (err, hash)=>{
+        if(err) return res.json({Error:"Error for hashing password"})
+        const values = [
+            req.body.name,
+            req.body.email,
+            hash
+        ]
+        db.query(sql, [values], (err,result)=>{
+            if(err) return res.json({Error: "Inserting data error"});
+            return res.json({Status: "Success"});
+        })
+    })
     
-// })
+})
 
 
 
