@@ -11,12 +11,17 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.0",
+<<<<<<< HEAD
+    "react-scripts": "5.0.1",
+    "react-toastify": "^9.1.2",
+=======
 
     "react-scripts": "5.0.1",
     "react-toastify": "^9.1.2",
 
     "react-scripts": "^5.0.1",
 
+>>>>>>> 3fd9f762caf9f931aecbf43b042aef9bf6323799
     "web-vitals": "^2.1.4"
   },
   "scripts": {

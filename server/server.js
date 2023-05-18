@@ -11,15 +11,28 @@ import bcrypt from 'bcrypt'
 
 import Axios  from "axios";
 import session from "express-session";
+
 import { randomInt } from 'crypto'
 
 const app = express();
 
 const db = mysql.createConnection({
+/*
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'accesify'
+
+    host: 'sql.freedb.tech',
+    user: 'freedb_accessify',
+    password: '!AzjRVUJA@Y&Q3e',
+    database: 'freedb_accessify'
+*/
     host: 'srv984.hstgr.io',
     user: 'u734900206_accessify',
     password: 'LeantechLabs@8861',
     database: 'u734900206_accessify'
+
 })
 
 // if(db.connect()){console.log('Connected to db')}else{console.log('Not Connected')}
@@ -132,7 +145,9 @@ app.post('/login',(req, res) =>{
 
 	const sql = "SELECT * FROM users WHERE email = ? ";
     db.query(sql,[req.body.email],(err,data)=>{
-        if(err) return res.json({Error: "Login error in server"});
+        if(err) {
+          console.log(err);
+          return res.json({Error: "Login error in server"});}
         if(data.length > 0){
             bcrypt.compare(req.body.password.toString(), data[0].password,(err,response)=>{
                 if(err) return res.json({Error: "Password compare error"});
@@ -252,9 +267,44 @@ app.post('/institution-single-user', (req, res) => {
     })
 })
 });
+
+
+app.get('/institutions',(req,res) =>{
+  const sql="SELECT * FROM institutions";
+  console.log("h")
+  db.query(sql,(err,result)=>{
+      if(err){
+        console.log(err);
+        return res.json({Message: "Error inside server"});
+      } 
+      return res.json(result)
+  })
+})
+
 app.post('/institution', (req, res) => {
-	const { institutionName,headofinstitution,primarycontact,primaryemail,secondarycontact,secondaryemail,address,institutioncode,state,city,password,InstitutionType} = req.body;
-	console.log(req.body,institutionName,headofinstitution,primarycontact,primaryemail,secondarycontact,secondaryemail,address,institutioncode,state,city,password,InstitutionType);
+    
+  const sql = "INSERT INTO institutions (`institutionName`,`headOfInstitution`,`primaryEmail`,`primaryContact`,`secondaryEmail`,`secondaryContact`,`address`,`city`,`state`,`instituteCode`,`instituteType`,`password`) VALUES (?)";  
+  bcrypt.hash(req.body.password.toString(), salt, (err, hash)=>{
+      if(err) return res.json({Error:"Error for hashing password"})
+      const values = [
+          req.body.institutionName,
+          req.body.headOfInstitution,
+          req.body.primaryEmail,
+          req.body.primaryContact,
+          req.body.secondaryEmail,
+          req.body.secondaryContact,
+          req.body.address,
+          req.body.city,
+          req.body.state,
+          req.body.instituteCode,
+          req.body.instituteType,  
+          hash
+      ]
+      db.query(sql, [values], (err,result)=>{
+          if(err) return res.json({Error: "Inserting data error"});
+          return res.json({Status: "Success"});
+      })
+  })
 });
 
 app.post('/batch', (req, res) => {
@@ -263,7 +313,7 @@ app.post('/batch', (req, res) => {
     const values = [
         req.body.institution,
         req.body.BatchYear,
-        req.body.Batchname,
+        req.body.Batchname
     ]	
     console.log(req.body);
     db.query(sql, [values], (err,result)=>{
@@ -366,6 +416,39 @@ app.get('/batchs/:selectInstitution?', (req, res) => {
       }
     });
   });
+
+  app.get('/categories',(req,res) =>{
+    const sql="SELECT * FROM categories";
+    db.query(sql,(err,result)=>{
+        if(err) return res.json({Message: "Error inside server"});
+        return res.json(result)
+    })
+  })
+
+  app.post('/categorie', (req, res) => {
+    const sql = "INSERT INTO categories (`name`,`description`,`tag`,`accessType`,`accessPlan`,`display`) VALUES (?)";  
+
+    const values = [
+        req.body.name,
+        req.body.description,
+        req.body.tag,
+        req.body.accessType,
+        req.body.accessPlan,
+        req.body.display
+
+    ]	
+    console.log(req.body);
+    db.query(sql, [values], (err,result)=>{
+        if(err){ 
+            console.log(err);
+            return res.json({Error: "Inserting data error"});
+    }else{
+        return res.json({Status: "Success"});
+    }
+    })
+});
+
+
 
 // app.get('/batchs/:selectInstitution', (req, res) => {
 //     const selectedInstitution = req.params.selectInstitution;

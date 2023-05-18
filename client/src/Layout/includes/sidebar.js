@@ -130,7 +130,10 @@ export default function Sidebar() {
             </Link>
             </li>
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> 3fd9f762caf9f931aecbf43b042aef9bf6323799
 
         </li>
         <li class="menu-item">
