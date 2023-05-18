@@ -48,6 +48,7 @@ function App() {
          <Route path="/chapters" element={<Chapters/>}/>
          <Route path="/catergories" element={<Catergories/>}/>
          <Route path="/assessments" element={<Assessments/>}/>
+         
 
         </Route>
       </Routes>
