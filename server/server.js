@@ -265,7 +265,7 @@ app.post('/institution-single-user', (req, res) => {
 });
 
 
-app.get('/institutions',(req,res) =>{
+app.get('/institution',(req,res) =>{
   const sql="SELECT * FROM institutions";
   
   db.query(sql,(err,result)=>{
@@ -460,7 +460,7 @@ app.get('/batchs/:selectInstitution?', (req, res) => {
 //     res.send('This has CORS enabled ')
 // })
 app.get('/manage-vendor',(req,res)=>{
-    let sql = "SELECT uid,name,email,businessname,phone,address,state,city,zip,language FROM vendor";
+    let sql = "SELECT uid,name,email,businessname,phone,address,state,city,zip,language,pass FROM vendor";
     db.query(sql, (err, result) => {
       if (err) {
         console.log(err);
@@ -471,11 +471,37 @@ app.get('/manage-vendor',(req,res)=>{
     });
 })
 
-  app.post('/vendor-register',(req, res) => {
-	const { fullname,email,businessname,phone,address,state,city,zip,language,password } = req.body;
+  app.post('/update-vendor',(req, res) => {
+	const {uid, name,email,businessname,phone,address,state,city,zip,language,pass } = req.body;
     console.log(req.body);
+    const sql = `UPDATE vendor SET 
+    name = '${name}',
+    email = '${email}',
+    businessname = '${businessname}',
+    phone = '${phone}',
+    address = '${address}',
+    state = '${state}',
+    city = '${city}',
+    zip = '${zip}',
+    language = '${language}',
+    pass = '${pass}'
+    WHERE uid = ${uid}`; 
+    db.query(sql, (err, result) => { 
+        if (err){
+            console.log(err)
+            return res.json({Error: "Something Went Wrong"});
+        }
+        else {
+            return res.json({Error: "Vendor Updated Successfully"});
+        }
+    });
+
+  });
+
+  app.post('/vendor-register',(req, res) => {
+	const { name,email,businessname,phone,address,state,city,zip,language,password } = req.body;
     const sql = `INSERT INTO vendor (name,email,businessname,phone,address,state,city,zip,language,pass) 
-    VALUES ('${fullname}',
+    VALUES ('${name}',
     '${email}',
     '${businessname}',
     '${phone}',
@@ -495,7 +521,6 @@ app.get('/manage-vendor',(req,res)=>{
     });
 
   });
-
 
   app.get('/logout',(req,res) =>{
     res.clearCookie('token');
