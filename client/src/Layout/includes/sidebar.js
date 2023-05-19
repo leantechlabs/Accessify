@@ -26,7 +26,7 @@ const [collapsed, setCollapsed] = useState(false);
     }
   };
 
-  return (
+  return (  
 
     <aside
       id="layout-menu"
