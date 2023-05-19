@@ -204,7 +204,7 @@ export default function StaffProfile() {
                               <input class="form-control" type="text" id="email" name="email" value={user.email} placeholder="" disabled/>
                             </div>
                             
-                            <div class="mb-3 col-md-6">
+                            {/* <div class="mb-3 col-md-6">
                               <label class="form-label" for="phoneNumber">Phone Number</label>
                               <div class="input-group input-group-merge">
                                 <span class="input-group-text">IND (+91)</span>
@@ -222,7 +222,7 @@ export default function StaffProfile() {
                             <div class="mb-3 col-md-6">
                               <label for="zipCode" class="form-label">Zip Code</label>
                               <input type="text" class="form-control" id="zipCode" name="zipCode" placeholder="231465" maxlength="6"/>
-                            </div>
+                            </div> */}
                           </div>
                           <div class="mt-2">
                             <button type="submit" class="btn btn-primary me-2">Save changes</button>

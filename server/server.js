@@ -239,6 +239,41 @@ app.get('/login', (req, res) => {
 
 
 
+// app.post('/login', (req, res) => {
+//   const { email, password } = req.body;
+
+//   const sql = "SELECT * FROM users WHERE email = ?";
+//   db.query(sql, [email], (err, data) => {
+//     if (err) {
+//       console.error('Login error in server: ', err);
+//       return res.json({ Error: 'Login error in server' });
+//     }
+
+//     if (data.length > 0) {
+//       const user = data[0];
+//       bcrypt.compare(password, user.password, (bcryptErr, bcryptRes) => {
+//         if (bcryptErr) {
+//           console.error('Password compare error: ', bcryptErr);
+//           return res.json({ Error: 'Password compare error' });
+//         }
+
+//         if (bcryptRes) {
+//           const { id, name } = user;
+//           const token = jwt.sign({ id, name }, 'jwt-secret-key', {
+//             expiresIn: '1d',
+//           });
+//           res.cookie('token', token);
+//           return res.json({ Status: 'Success' });
+//         } else {
+//           return res.json({ Error: 'Wrong password' });
+//         }
+//       });
+//     } else {
+//       return res.json({ Error: 'No email exists' });
+//     }
+//   });
+// });
+
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
@@ -249,30 +284,36 @@ app.post('/login', (req, res) => {
       return res.json({ Error: 'Login error in server' });
     }
 
-    if (data.length > 0) {
-      const user = data[0];
-      bcrypt.compare(password, user.password, (bcryptErr, bcryptRes) => {
-        if (bcryptErr) {
-          console.error('Password compare error: ', bcryptErr);
-          return res.json({ Error: 'Password compare error' });
-        }
+    // Assuming there is an 'isAdmin' field in the 'users' table
+if (data.length > 0) {
+  const user = data[0];
+  bcrypt.compare(password, user.password, (bcryptErr, bcryptRes) => {
+    if (bcryptErr) {
+      console.error('Password compare error: ', bcryptErr);
+      return res.json({ Error: 'Password compare error' });
+    }
 
-        if (bcryptRes) {
-          const { id, name } = user;
-          const token = jwt.sign({ id, name }, 'jwt-secret-key', {
-            expiresIn: '1d',
-          });
-          res.cookie('token', token);
-          return res.json({ Status: 'Success' });
-        } else {
-          return res.json({ Error: 'Wrong password' });
-        }
-      });
+    if (bcryptRes) {
+      const { id, name, isAdmin } = user;
+      if (isAdmin) {
+        const token = jwt.sign({ id, name }, 'jwt-secret-key', {
+          expiresIn: '1d',
+        });
+        res.cookie('token', token);
+        return res.json({ Status: 'Success', isAdmin: true });
+      } else {
+        return res.json({ Error: 'User is not an admin' });
+      }
     } else {
-      return res.json({ Error: 'No email exists' });
+      return res.json({ Error: 'Wrong password' });
     }
   });
-});
+} else {
+  return res.json({ Error: 'No email exists' });
+}
+  });
+}); 
+
 
 // app.post('/multiuser', (req, res) => {
 //     const sql = `INSERT INTO multi_user (Institution, BatchYear, Batch, AccessPeriod, file) VALUES (?, ?, ?, ?, ?)`;  
