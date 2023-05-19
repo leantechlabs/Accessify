@@ -21,7 +21,7 @@ import UpdateVendor from  './Layout/Dashboard/Vendor/update-vendor';
 import Catergories from './Layout/Assessments/catergories';
 import Assessments from './Layout/Assessments/assessments';
 import StaffProfile from './Layout/profile/staffProfile';
-
+import CreateAssessment from './Layout/Assessments/create-assessment';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 function App() {
@@ -51,6 +51,7 @@ function App() {
          <Route path="/assessments" element={<Assessments/>}/>
          <Route path="/profile/staff-profile" element={<StaffProfile/>}/>
          <Route path="/update-vendor" element={<UpdateVendor/>}/>
+         <Route path="/create-assessment" element={<CreateAssessment/>}/>
 
         </Route>
       </Routes>
