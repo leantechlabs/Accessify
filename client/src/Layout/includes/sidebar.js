@@ -39,7 +39,7 @@ export default function Sidebar() {
           <span class="menu-header-text">Vendor</span>
         </li>
 
-        <li href="javascript:void(0);" class="menu-item">
+        <li class="menu-item">
           <a class="menu-link menu-toggle">
             <i class="menu-icon tf-icons bx bx-detail"></i>
             <div data-i18n="Form Elements">Vendor</div>
@@ -57,7 +57,6 @@ export default function Sidebar() {
             </li>
          
         </li>
-
 
         <li class="menu-item">
           <a class="menu-link menu-toggle">
@@ -148,6 +147,21 @@ export default function Sidebar() {
             </Link>
             </li>
         </li>
+        <li class="menu-item">
+          <a class="menu-link menu-toggle">
+            <i class="menu-icon tf-icons bx bx-detail"></i>
+            <div data-i18n="Form Elements">Reports</div>
+          </a>
+         
+            <li class="menu-item">
+            <Link class="menu-link " to="/Assessmentreport"> 
+                <div data-i18n="Reports/assessmentreport.js">Assessment Report</div>
+            </Link></li>
+            <li class="menu-item">
+            <Link class="menu-link " to="/Participationreport"> 
+                <div data-i18n="Reports/participationreport.js">Participation Report</div>
+            </Link></li>
+         </li>
         <li class="menu-header small text-uppercase">
           <span class="menu-header-text">Vendor Utils</span>
         </li>
