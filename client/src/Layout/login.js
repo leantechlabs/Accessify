@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import urls from "../CorsUrls";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 axios.defaults.withCredentials = true;
 
 export default function Login() {
@@ -23,9 +26,11 @@ export default function Login() {
     axios.post(urls['login'], values)
     .then(res => {
         if(res.data.Status === "Success"){
+          
             navigate('/dashboard')
         }else{
-            setError(res.data.Error);
+
+            toast.warning(res.data.Error);
         }
     })
     .then(err => console.log(err));
@@ -34,7 +39,7 @@ export default function Login() {
   return (
    
     <div>
-
+    <ToastContainer />
       <div class="container-xxl">
         <div class="authentication-wrapper authentication-basic container-p-y">
           <div class="authentication-inner">
