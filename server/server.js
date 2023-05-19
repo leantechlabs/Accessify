@@ -75,15 +75,6 @@ function message(props) {
 }
 
 
-app.post('/upload',upload.single('avatar'),(req, res)=>{
-    const image = req.file.filename;
-    const email = req.body.email;
-    const sql = "UPDATE users SET filename=? WHERE email=?";
-    db.query(sql,[image,email],(err,result)=>{
-      if(err) return res.json({Message: "Error"});
-      return res.json({Status: "Success"});
-    })
-})
 
 
 // const upload = multer({ dest: "uploads/" });
@@ -162,9 +153,9 @@ app.get('/', verifyUser, (req, res) => {
 
 
 app.get('/users',(req,res)=>{
-  const currentUserID = req.session.userID; // Example: using session-based authentication
+  const currentUserID = req.session.userID; 
 
-  const sql = 'SELECT email FROM users WHERE id = ?'; // Assuming 'id' is the column name for the user ID
+  const sql = 'SELECT email FROM users WHERE id = ?'; 
   const values = [currentUserID];
 
   connection.query(sql, values, (error, results) => {
@@ -205,7 +196,7 @@ app.get('/users',(req,res)=>{
 app.post('/changePassword', (req, res) => {
   const { email, password } = req.body;
 
-  // Generate a salt and hash the new password
+ 
   bcrypt.hash(password, 10, (err, hash) => {
     if (err) {
       console.error('Error hashing password: ', err);
@@ -213,7 +204,7 @@ app.post('/changePassword', (req, res) => {
       return;
     }
 
-    // Update the password in the database
+  
     const sql = 'UPDATE users SET password = ? WHERE email = ?';
     const values = [hash, email];
 
@@ -228,6 +219,16 @@ app.post('/changePassword', (req, res) => {
     });
   });
 });
+
+app.post('/upload',upload.single('avatar'),(req, res)=>{
+  const image = req.file.filename;
+  const email = req.body.email;
+  const sql = "UPDATE users SET filename=? WHERE email=?";
+  db.query(sql,[image,email],(err,result)=>{
+    if(err) return res.json({message: "Error"});
+      return res.json({Status: "Success", message: 'Profile updated successfully'});
+  })
+})
 
 
 

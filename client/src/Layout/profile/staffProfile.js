@@ -32,12 +32,13 @@ export default function StaffProfile() {
     formData.append('email',user.email)
 
     axios.post('http://localhost:3001/upload', formData)
-    .then((res) => {
-        if(res.data.Status === "Success"){
+    .then((response) => {
+        if(response.data.Status === "Success"){
+          toast.success("Profile Updated Successfully");
           console.log("Succeded")
-          toast.success(res.data.Message)
         }else{
           console.log("Failed")
+          toast.warning(response.data.message);
         }
     })
     .catch((error) => {
@@ -61,7 +62,7 @@ export default function StaffProfile() {
           toast.success(response.data.message);
           const timeout = setTimeout(() => {
             window.location.reload();
-          }, 5000); // Reload after 5 seconds
+          }, 5000); 
       
           return () => clearTimeout(timeout);
         })
