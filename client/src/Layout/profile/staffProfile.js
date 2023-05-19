@@ -3,9 +3,45 @@ import Sidebar from "../includes/sidebar";
 import Header from "../includes/header";
 import Footer from "../includes/footer";
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 export default function StaffProfile() {
   const [user,setUser] = useState([])
+  
+  const [values, setValues] = useState({
+    password:'',
+    confirmPassword:'',
+  });
+
+
+    const handleChangePassword = (e) => {
+      e.preventDefault();
+      if (values.password !== values.confirmPassword) {
+        toast.warning('Passwords do not match');
+        return;
+      }
+
+      axios
+        .post('http://localhost:3001/changePassword', {
+          email: user.email,
+          password: values.password,
+        })
+        .then((response) => {
+          toast.success(response.data.message);
+          const timeout = setTimeout(() => {
+            window.location.reload();
+          }, 5000); // Reload after 5 seconds
+      
+          return () => clearTimeout(timeout);
+        })
+        .catch((error) => {
+          console.error('Error updating password: ', error);
+          toast.warning('An error occurred while updating the password');
+        });
+    };
+
 
   useEffect(()=>{
     axios.get('http://localhost:3001/')
@@ -14,7 +50,9 @@ export default function StaffProfile() {
 },[])
 
 
+
   return (
+    <> <ToastContainer />
     <div class="layout-wrapper layout-content-navbar">
       <div class="layout-container">
       <Sidebar />
@@ -22,7 +60,7 @@ export default function StaffProfile() {
               <Header />
               <div class="content-wrapper">
         <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Account Settings /</span> Staff</h4>
+              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Account Settings /</span> Vendor</h4>
 
               <div class="row">
                 <div class="col-md-6">
@@ -53,7 +91,7 @@ export default function StaffProfile() {
                         <div class="row">
                           <div class="mb-3 col-md-6">
                             <label for="firstName" class="form-label">First Name</label>
-                            <input class="form-control" type="text" id="firstName" name="firstName" value={user.name} autofocus="" disabled/>
+                            <input class="form-control" type="text" id="firstName" name="firstName" value={user.name} autofocus="" />
                           </div>
                           <div class="mb-3 col-md-6">
                             <label for="lastName" class="form-label">Last Name</label>
@@ -61,7 +99,7 @@ export default function StaffProfile() {
                           </div>
                           <div class="mb-3 col-md-6">
                             <label for="email" class="form-label">E-mail</label>
-                            <input class="form-control" type="text" id="email" name="email" value={user.email} placeholder=""/>
+                            <input class="form-control" type="text" id="email" name="email" value={user.email} placeholder="" disabled/>
                           </div>
                           
                           <div class="mb-3 col-md-6">
@@ -111,21 +149,22 @@ export default function StaffProfile() {
                 <h5 class="card-header">Change Password</h5>
                 <div class="card-body">
                       <div class="d-flex align-items-start align-items-sm-center gap-4">
-                      <form id="formAccountSettings" method="POST" onsubmit="return false">
+                      <form id="formAccountSettings">
                         <div class="row">
                           <div class="mb-3 col-md-12">
                             <label for="password" class="form-label">password</label>
-                            <input class="form-control" type="password" id="password" name="password" placeholder="Password" autofocus=""/>
+                            <input class="form-control" type="password" id="password" name="password" value={values.password} placeholder="Password" autofocus=""
+                            onChange={e=>setValues({...values, password:e.target.value})}/>
                           </div>
                           
                           <div class="mb-3 col-md-12">
                             <label for="confirmPassword" class="form-label">Confirm Password</label>
-                            <input class="form-control" type="password" id="confirmPassword" name="confirmPassword"  placeholder="Confirm Password"/>
+                            <input class="form-control" type="password" id="confirmPassword" name="confirmPassword" value={values.confirmPassword} placeholder="Confirm Password"
+                            onChange={e=>setValues({...values, confirmPassword:e.target.value})}/>
                           </div>
                           </div>
                           <div class="mt-2">
-                          <button type="submit" class="btn btn-primary me-2">Change Password</button>
-                          <button type="reset" class="btn btn-outline-secondary">Reset</button>
+                          <button type="submit" class="btn btn-primary me-2" onClick={handleChangePassword}>Change Password</button>
                         </div>
                       </form>
                       </div>
@@ -140,6 +179,6 @@ export default function StaffProfile() {
             </div>
       </div>
     </div>
-    
+    </>
   );
 }
