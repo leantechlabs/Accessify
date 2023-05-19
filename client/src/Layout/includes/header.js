@@ -11,6 +11,9 @@ export default function Header() {
     .catch(err => console.log(err));
 },[])
 
+
+
+
   const navigate = useNavigate()
     const handleDelete = () => {
     axios.get('http://localhost:3001/logout')
@@ -55,11 +58,25 @@ export default function Header() {
                 data-bs-toggle="dropdown"
               >
                 <div class="avatar avatar-online">
-                  <img
+                  {user.filename ? (
+                    <>
+                    <img
+                    src={`http://localhost:3001/images/`+ user.filename} 
+                    alt
+                    className="w-px-40  rounded-circle"
+                    style={{height:'2.5rem'}}
+                  />
+                  </>
+                  ):(
+                    <>
+                    <img
                     src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
                     alt
                     class="w-px-40 h-auto rounded-circle"
                   />
+                  </>
+                  )}
+                  
                 </div>
               </a>
               <ul class="dropdown-menu dropdown-menu-end">

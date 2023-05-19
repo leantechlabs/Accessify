@@ -36,9 +36,12 @@ export default function StaffProfile() {
         if(response.data.Status === "Success"){
           toast.success("Profile Updated Successfully");
           console.log("Succeded")
+          setTimeout(function() {
+            window.location.reload();
+          }, 2000);
         }else{
           console.log("Failed")
-          toast.warning(response.data.message);
+          toast.warning("Failed to Update Profile");
         }
     })
     .catch((error) => {
