@@ -1,9 +1,49 @@
 import Sidebar from "../includes/sidebar";
 import Header from "../includes/header";
+import axios from 'axios';
+import React,{useState,useEffect} from "react"
+import {  useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 export default function Subjects() {
+
+
+    const [values, setValues] = useState({
+        name:'',
+        description:'',
+        subjectTag:''
+    
+    }); 
+    const [data, setData] = useState([])
+
+    useEffect(()=>{
+        axios.get('http://localhost:3001/subject')
+        .then(res => setData(res.data))
+        .catch(err => console.log(err));
+      },[])
+
+      const navigate = useNavigate()
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(values);
+        axios.post('http://localhost:3001/subject', values)
+          .then((res) => {
+            if (res.data.Status === 'Success') {
+              toast.success('subject created successfully');
+              navigate('/subjects')
+      
+            } else {
+              alert('Error');
+            }
+          })
+          .catch((err) => console.log(err));
+      };
+
     return (
         <>
+                      <ToastContainer />
             <div class="layout-wrapper layout-content-navbar">
                 <div class="layout-container">
                     <Sidebar />
@@ -53,6 +93,8 @@ export default function Subjects() {
                                                                 id="nameBasic"
                                                                 className="form-control"
                                                                 placeholder="Enter Name"
+                                                                onChange={(e)=>setValues({...values, name:e.target.value})}
+
                                                             />
                                                         </div>
                                                         <div className="mb-3">
@@ -64,6 +106,8 @@ export default function Subjects() {
                                                                 id="DescriptionBasic"
                                                                 className="form-control"
                                                                 placeholder="Description"
+                                                                onChange={(e)=>setValues({...values, description:e.target.value})}
+
                                                             />
                                                         </div>
                                                         <div className="mb-3">
@@ -73,6 +117,8 @@ export default function Subjects() {
                                                             <select
                                                                 name="institution"
                                                                 class="form-control default-input ng-pristine ng-valid ng-touched"
+                                                                onChange={(e)=>setValues({...values, subjectTag:e.target.value})}
+
                                                             >
                                                                 <option value="" selected="" disabled="">
                                                                     -- Select Institution --
@@ -87,7 +133,9 @@ export default function Subjects() {
                                                     </div>
                                                 </div>
                                                 <div className="modal-footer d-flex flex-row justify-content-center">
-                                                    <button type="button" className="btn btn-primary text-center">
+                                                    <button type="button" className="btn btn-primary text-center"
+                                                                           onClick={handleSubmit}
+                                                                           >
                                                         Submit
                                                     </button>
                                                 </div>
@@ -106,16 +154,12 @@ export default function Subjects() {
                                             </tr>
                                         </thead>
                                         <tbody className="table-border-bottom-0">
-                                            <tr>
-                                                <td>
-                                                    <i className="fab fa-angular fa-lg text-danger me-3" />{' '}
-                                                    <strong>Verbal</strong>
-                                                </td>
-                                                <td>1</td>
-                                                <td>
-                                                    <span className="badge bg-label-primary me-1">Verbal</span>
-                                                </td>
-                                                <td>
+                                        {Array.isArray(data) && data.map((subject, index)=>{
+                                      return <tr key={index}>
+                                          <td>{subject.name}</td>
+                                          <td>1</td>
+                                          <td><span className="badge bg-label-primary me-1">{subject.subjectTag}</span></td>
+                                          <td>
                                                     <div className="dropdown">
                                                         <button
                                                             type="button"
@@ -134,95 +178,12 @@ export default function Subjects() {
                                                         </div>
                                                     </div>
                                                 </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <i className="fab fa-react fa-lg text-info me-3" />{' '}
-                                                    <strong>Programming</strong>
-                                                </td>
-                                                <td>1</td>
-                                                <td>
-                                                    <span className="badge bg-label-success me-1">Programming</span>
-                                                </td>
-                                                <td>
-                                                    <div className="dropdown">
-                                                        <button
-                                                            type="button"
-                                                            className="btn p-0 dropdown-toggle hide-arrow"
-                                                            data-bs-toggle="dropdown"
-                                                        >
-                                                            <i className="bx bx-dots-vertical-rounded" />
-                                                        </button>
-                                                        <div className="dropdown-menu">
-                                                            <a className="dropdown-item" href="javascript:void(0);">
-                                                                <i className="bx bx-edit-alt me-1" /> Edit
-                                                            </a>
-                                                            <a className="dropdown-item" href="javascript:void(0);">
-                                                                <i className="bx bx-trash me-1" /> Delete
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <i className="fab fa-vuejs fa-lg text-success me-3" />{' '}
-                                                    <strong>Variables</strong>
-                                                </td>
-                                                <td>1</td>
-                                                <td>
-                                                    <span className="badge bg-label-info me-1">Python_Programming</span>
-                                                </td>
-                                                <td>
-                                                    <div className="dropdown">
-                                                        <button
-                                                            type="button"
-                                                            className="btn p-0 dropdown-toggle hide-arrow"
-                                                            data-bs-toggle="dropdown"
-                                                        >
-                                                            <i className="bx bx-dots-vertical-rounded" />
-                                                        </button>
-                                                        <div className="dropdown-menu">
-                                                            <a className="dropdown-item" href="javascript:void(0);">
-                                                                <i className="bx bx-edit-alt me-1" /> Edit
-                                                            </a>
-                                                            <a className="dropdown-item" href="javascript:void(0);">
-                                                                <i className="bx bx-trash me-1" /> Delete
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <i className="fab fa-bootstrap fa-lg text-primary me-3" />{' '}
-                                                    <strong>Validation Of Dob</strong>
-                                                </td>
-                                                <td>1</td>
-
-                                                <td>
-                                                    <span className="badge bg-label-warning me-1">Java_Programming</span>
-                                                </td>
-                                                <td>
-                                                    <div className="dropdown">
-                                                        <button
-                                                            type="button"
-                                                            className="btn p-0 dropdown-toggle hide-arrow"
-                                                            data-bs-toggle="dropdown"
-                                                        >
-                                                            <i className="bx bx-dots-vertical-rounded" />
-                                                        </button>
-                                                        <div className="dropdown-menu">
-                                                            <a className="dropdown-item" href="javascript:void(0);">
-                                                                <i className="bx bx-edit-alt me-1" /> Edit
-                                                            </a>
-                                                            <a className="dropdown-item" href="javascript:void(0);">
-                                                                <i className="bx bx-trash me-1" /> Delete
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
+                                          
+                                      </tr>
+                                    })}
+                                            
+                                           
+                                                
                                         </tbody>
                                     </table>
                                 </div>
