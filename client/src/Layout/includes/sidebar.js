@@ -162,6 +162,24 @@ export default function Sidebar() {
                 <div data-i18n="Reports/participationreport.js">Participation Report</div>
             </Link></li>
          </li>
+         <li class="menu-item">
+          <a class="menu-link menu-toggle">
+            <i class="menu-icon tf-icons bx bx-detail"></i>
+            <div data-i18n="Form Elements">Practice</div>
+          </a>
+            <li class="menu-item">
+            <Link class="menu-link " to="/Pcategories"> 
+                <div data-i18n="Practice/pcategories.js">Categories</div>
+            </Link></li>
+            <li class="menu-item">
+            <Link class="menu-link " to="/Ptopics"> 
+                <div data-i18n="Practice/ptopics.js">Topics</div>
+            </Link></li>
+            <li class="menu-item">
+            <Link class="menu-link " to="/Ptests"> 
+                <div data-i18n="Practice/ptests.js">Tests</div>
+            </Link></li>
+         </li>
         <li class="menu-header small text-uppercase">
           <span class="menu-header-text">Vendor Utils</span>
         </li>

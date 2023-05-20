@@ -23,6 +23,10 @@ import Assessments from './Layout/Assessments/assessments';
 import StaffProfile from './Layout/profile/staffProfile';
 import Assessmentreport from './Layout/Reports/assessmentreport';
 import Participationreport from './Layout/Reports/participationreport';
+import Pcategories from './Layout/Practice/pcategories';
+import Ptopics from './Layout/Practice/ptopics';
+import Ptests from './Layout/Practice/ptests';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 function App() {
@@ -54,6 +58,9 @@ function App() {
          <Route path="/update-vendor" element={<UpdateVendor/>}/>
          <Route path="/assessmentreport" element={<Assessmentreport/>}/>
          <Route path="/participationreport" element={<Participationreport/>}/>
+         <Route path="/pcategories" element={<Pcategories/>}/>
+         <Route path="/ptopics" element={<Ptopics/>}/>
+         <Route path="/ptests" element={<Ptests/>}/>
 
         </Route>
       </Routes>
