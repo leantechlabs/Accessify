@@ -14,6 +14,19 @@ import session from "express-session";
 import { randomInt } from 'crypto'
 
 const app = express();
+app.use(express.static('public'));
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null,'public/images')
+  },
+  filename:(req, file, cb)=>{
+    cb(null,file.fieldname + "_" + Date.now() + path.extname(file.originalname));
+  }
+})
+
+const upload = multer({storage:storage});
+
 //database
 const db = mysql.createConnection({
 
@@ -32,6 +45,8 @@ const db = mysql.createConnection({
     password: 'LeantechLabs@8861',
     database: 'u734900206_accessify'
 })
+
+
 
 // if(db.connect()){console.log('Connected to db')}else{console.log('Not Connected')}
 const salt = 10;  //hashing password length
@@ -60,8 +75,12 @@ function message(props) {
 }
 
 
-const upload = multer({ dest: "uploads/" });
-const imageUpload = multer({ dest: "images/" });
+
+
+// const upload = multer({ dest: "uploads/" });
+// const imageUpload = multer({ dest: "images/" });
+
+
 
 
 const nameRegex = /^[a-zA-Z\s]+$/;
@@ -110,7 +129,7 @@ const verifyUser = (req, res, next) => {
 };
 
 app.get('/', verifyUser, (req, res) => {
-  const sql = 'SELECT name, email FROM users WHERE id = ?'; // Assuming 'name' and 'email' are the column names for name and email in the users table
+  const sql = 'SELECT name, email,filename FROM users WHERE id = ?'; // Assuming 'name' and 'email' are the column names for name and email in the users table
   const values = [req.userID];
 
   db.query(sql, values, (error, results) => {
@@ -125,8 +144,8 @@ app.get('/', verifyUser, (req, res) => {
       return;
     }
 
-    const { name, email } = results[0];
-    return res.json({ Status: "Success",name, email });
+    const { name, email ,filename} = results[0];
+    return res.json({ Status: "Success",name, email,filename}); 
   });
 });
 
@@ -134,9 +153,9 @@ app.get('/', verifyUser, (req, res) => {
 
 
 app.get('/users',(req,res)=>{
-  const currentUserID = req.session.userID; // Example: using session-based authentication
+  const currentUserID = req.session.userID; 
 
-  const sql = 'SELECT email FROM users WHERE id = ?'; // Assuming 'id' is the column name for the user ID
+  const sql = 'SELECT email FROM users WHERE id = ?'; 
   const values = [currentUserID];
 
   connection.query(sql, values, (error, results) => {
@@ -177,7 +196,7 @@ app.get('/users',(req,res)=>{
 app.post('/changePassword', (req, res) => {
   const { email, password } = req.body;
 
-  // Generate a salt and hash the new password
+ 
   bcrypt.hash(password, 10, (err, hash) => {
     if (err) {
       console.error('Error hashing password: ', err);
@@ -185,7 +204,7 @@ app.post('/changePassword', (req, res) => {
       return;
     }
 
-    // Update the password in the database
+  
     const sql = 'UPDATE users SET password = ? WHERE email = ?';
     const values = [hash, email];
 
@@ -200,6 +219,16 @@ app.post('/changePassword', (req, res) => {
     });
   });
 });
+
+app.post('/upload',upload.single('avatar'),(req, res)=>{
+  const image = req.file.filename;
+  const email = req.body.email;
+  const sql = "UPDATE users SET filename=? WHERE email=?";
+  db.query(sql,[image,email],(err,result)=>{
+    if(err) return res.json({message: "Error"});
+      return res.json({Status: "Success", message: 'Profile updated successfully'});
+  })
+})
 
 
 
@@ -245,6 +274,9 @@ app.post('/login', (req, res) => {
     }
   });
 });
+
+
+
 
 // app.post('/multiuser', (req, res) => {
 //     const sql = `INSERT INTO multi_user (Institution, BatchYear, Batch, AccessPeriod, file) VALUES (?, ?, ?, ?, ?)`;  
