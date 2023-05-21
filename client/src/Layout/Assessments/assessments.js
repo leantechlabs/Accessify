@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import Sidebar from "../includes/sidebar";
 import Header from "../includes/header";
+import { Link } from "react-router-dom";
 export default function Assessments() {
     return (
         <>
@@ -25,9 +26,9 @@ export default function Assessments() {
                                                                 </h6>
                                                             </div>
                                                             <div className="col-md-6 d-flex flex-row justify-content-end">
-                                                                <button type="button" className="btn btn-primary">
+                                                                <Link type="button" className="btn btn-primary" to="/create-assessment">
                                                                     + Create Assessment
-                                                                </button>
+                                                                </Link>
                                                             </div>
                                                         </div>
                                                         <div className="template-body tab-bg">

@@ -21,6 +21,7 @@ import UpdateVendor from  './Layout/Dashboard/Vendor/update-vendor';
 import Catergories from './Layout/Assessments/catergories';
 import Assessments from './Layout/Assessments/assessments';
 import StaffProfile from './Layout/profile/staffProfile';
+import CreateAssessment from './Layout/Assessments/create-assessment';
 import Assessmentreport from './Layout/Reports/assessmentreport';
 import Participationreport from './Layout/Reports/participationreport';
 import PasswordReset from './Layout/profile/passwordReset'
@@ -53,6 +54,7 @@ function App() {
          <Route path="/assessments" element={<Assessments/>}/>
          <Route path="/profile/staff-profile" element={<StaffProfile/>}/>
          <Route path="/update-vendor" element={<UpdateVendor/>}/>
+         <Route path="/create-assessment" element={<CreateAssessment/>}/>
          <Route path="/assessmentreport" element={<Assessmentreport/>}/>
          <Route path="/participationreport" element={<Participationreport/>}/>
          <Route path="/password-reset" element={<PasswordReset/>}/>
