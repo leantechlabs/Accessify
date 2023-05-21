@@ -21,7 +21,13 @@ import UpdateVendor from  './Layout/Dashboard/Vendor/update-vendor';
 import Catergories from './Layout/Assessments/catergories';
 import Assessments from './Layout/Assessments/assessments';
 import StaffProfile from './Layout/profile/staffProfile';
-
+import CreateAssessment from './Layout/Assessments/create-assessment';
+import Assessmentreport from './Layout/Reports/assessmentreport';
+import Participationreport from './Layout/Reports/participationreport';
+import Pcategories from './Layout/Practice/pcategories';
+import Ptopics from './Layout/Practice/ptopics';
+import Ptests from './Layout/Practice/ptests';
+import PasswordReset from './Layout/profile/passwordReset'
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 function App() {
@@ -51,11 +57,17 @@ function App() {
          <Route path="/assessments" element={<Assessments/>}/>
          <Route path="/profile/staff-profile" element={<StaffProfile/>}/>
          <Route path="/update-vendor" element={<UpdateVendor/>}/>
-
+         <Route path="/create-assessment" element={<CreateAssessment/>}/>
+         <Route path="/assessmentreport" element={<Assessmentreport/>}/>
+         <Route path="/participationreport" element={<Participationreport/>}/>
+         <Route path="/pcategories" element={<Pcategories/>}/>
+         <Route path="/ptopics" element={<Ptopics/>}/>
+         <Route path="/ptests" element={<Ptests/>}/>
+         <Route path="/password-reset" element={<PasswordReset/>}/>
         </Route>
       </Routes>
     </BrowserRouter>
-   
+
    </>
   );
 }
@@ -66,8 +78,3 @@ root.render(
     <App/>
   </React.StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-

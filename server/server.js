@@ -14,6 +14,19 @@ import session from "express-session";
 import { randomInt } from 'crypto'
 
 const app = express();
+app.use(express.static('public'));
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null,'public/images')
+  },
+  filename:(req, file, cb)=>{
+    cb(null,file.fieldname + "_" + Date.now() + path.extname(file.originalname));
+  }
+})
+
+const upload = multer({storage:storage});
+
 //database
 const db = mysql.createConnection({
 
@@ -32,6 +45,8 @@ const db = mysql.createConnection({
     // password: 'LeantechLabs@8861',
     // database: 'u734900206_accessify'
 })
+
+
 
 // if(db.connect()){console.log('Connected to db')}else{console.log('Not Connected')}
 const salt = 10;  //hashing password length
@@ -80,7 +95,16 @@ const multiUserStorage = multer.diskStorage({
 const multiUserUpload = multer({ storage: multiUserStorage });
 const pacreate = multer({ storage: paStorage });
 
+
 const imageUpload = multer({ dest: "images/" });
+
+
+
+// const upload = multer({ dest: "uploads/" });
+// const imageUpload = multer({ dest: "images/" });
+
+
+
 
 
 const nameRegex = /^[a-zA-Z\s]+$/;
@@ -112,49 +136,124 @@ function validateFileType(fileType) {
 	return allowedTypes.test(fileType);
 }
 
+const verifyUser = (req, res, next) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.json({ Error: "You are not Authenticated" });
+  } else {
+    jwt.verify(token, "jwt-secret-key", (err, decoded) => {
+      if (err) {
+        return res.json({ Error: "Token is not matched" });
+      } else {
+        req.userID = decoded.id; // Assuming 'id' is the column name for the user ID
+        next();
+      }
+    });
+  }
+};
 
-const verifyUser = (req,res,next)=>{
-    const token = req.cookies.token;
-    if(!token){
-        return res.json({Error:"You are not Authenticated"})
-    }else{
-        jwt.verify(token, "jwt-secret-key", (err, decoded)=>{
-            if(err){
-                return res.json({Error:"Token is not matched"})
-            }else{
-                req.name = decoded.name;
-                next();
-            }
-        })
+app.get('/', verifyUser, (req, res) => {
+  const sql = 'SELECT name, email,filename FROM users WHERE id = ?'; // Assuming 'name' and 'email' are the column names for name and email in the users table
+  const values = [req.userID];
+
+  db.query(sql, values, (error, results) => {
+    if (error) {
+      console.error('Error retrieving user data: ', error);
+      res.json({ error: 'Internal server error' });
+      return;
     }
-}
 
-app.get('/',verifyUser,(req,res)=>{
-    return res.json({Status: "Success", name:req.name});
-    
-})
+    if (results.length === 0) {
+      res.json({ error: 'User not found' });
+      return;
+    }
+
+    const { name, email ,filename} = results[0];
+    return res.json({ Status: "Success",name, email,filename}); 
+  });
+});
+
+
+
+
 app.get('/users',(req,res)=>{
-  const sql = "SELECT * FROM users ";
-  return res.json({Status: "Success",sql})
+  const currentUserID = req.session.userID; 
+
+  const sql = 'SELECT email FROM users WHERE id = ?'; 
+  const values = [currentUserID];
+
+  connection.query(sql, values, (error, results) => {
+    if (error) {
+      console.error('Error retrieving user email: ', error);
+      res.json({ error: 'Internal server error' });
+      return;
+    }
+
+    if (results.length === 0) {
+      res.json({ error: 'User not found' });
+      return;
+    }
+
+    const userEmail = results[0].email;
+    res.json({ email: userEmail });
+  });
 })
 //comments
 
-app.post('/register', (req,res)=>{
-    const sql = "INSERT INTO users (`name`,`email`,`password`) VALUES (?)";
-    bcrypt.hash(req.body.password.toString(), salt, (err, hash)=>{
-        if(err) return res.json({Error:"Error for hashing password"})
-        const values = [
-            req.body.name,
-            req.body.email,
-            hash
-        ]
-        db.query(sql, [values], (err,result)=>{
-            if(err) return res.json({Error: "Inserting data error"});
-            return res.json({Status: "Success"});
-        })
-    })
+// app.post('/register', (req,res)=>{
+//     const sql = "INSERT INTO users (`name`,`email`,`password`) VALUES (?)";
+//     bcrypt.hash(req.body.password.toString(), salt, (err, hash)=>{
+//         if(err) return res.json({Error:"Error for hashing password"})
+//         const values = [
+//             req.body.name,
+//             req.body.email,
+//             hash
+//         ]
+//         db.query(sql, [values], (err,result)=>{
+//             if(err) return res.json({Error: "Inserting data error"});
+//             return res.json({Status: "Success"});
+//         })
+//     })
     
+// })
+
+app.post('/changePassword', (req, res) => {
+  const { email, password } = req.body;
+
+ 
+  bcrypt.hash(password, 10, (err, hash) => {
+    if (err) {
+      console.error('Error hashing password: ', err);
+      res.json({ error: 'Internal server error' });
+      return;
+    }
+
+  
+    const sql = 'UPDATE users SET password = ? WHERE email = ?';
+    const values = [hash, email];
+
+    db.query(sql, values, (error, results) => {
+      if (error) {
+        console.error('Error updating password: ', error);
+        res.json({ error: 'Internal server error' });
+        return;
+      }
+
+      res.json({ message: 'Password updated successfully' });
+    });
+  });
+});
+
+app.post('/upload',upload.single('avatar'),(req, res)=>{
+  const image = req.file.filename;
+  const email = req.body.email;
+  const sql = "UPDATE users SET filename=? WHERE email=?";
+  db.query(sql,[image,email],(err,result)=>{
+    if(err) return res.json({message: "Error"});
+      return res.json({Status: "Success", message: 'Profile updated successfully'});
+  })
 })
+
 
 
 
@@ -163,28 +262,45 @@ app.get('/login', (req, res) => {
 })
 
 
-app.post('/login',(req, res) =>{
 
-	const sql = "SELECT * FROM users WHERE email = ? ";
-    db.query(sql,[req.body.email],(err,data)=>{
-        if(err) return res.json({Error: "Login error in server"});
-        if(data.length > 0){
-            bcrypt.compare(req.body.password.toString(), data[0].password,(err,response)=>{
-                if(err) return res.json({Error: "Password compare error"});
-                if(response){
-                    const name =data[0].name;
-                    const token = jwt.sign({name}, "jwt-secret-key", {expiresIn: '1d'});
-                    res.cookie('token', token);
-                    return res.json({Status: "Success"});
-                }else{
-                    return res.json({Error: "Wrong password"});
-                }
-            })
-        }else{
-            return res.json({Error:"No email exist"});
+
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+
+  const sql = "SELECT * FROM users WHERE email = ?";
+  db.query(sql, [email], (err, data) => {
+    if (err) {
+      console.error('Login error in server: ', err);
+      return res.json({ Error: 'Login error in server' });
+    }
+
+    if (data.length > 0) {
+      const user = data[0];
+      bcrypt.compare(password, user.password, (bcryptErr, bcryptRes) => {
+        if (bcryptErr) {
+          console.error('Password compare error: ', bcryptErr);
+          return res.json({ Error: 'Password compare error' });
         }
-    })
+
+        if (bcryptRes) {
+          const { id, name } = user;
+          const token = jwt.sign({ id, name }, 'jwt-secret-key', {
+            expiresIn: '1d',
+          });
+          res.cookie('token', token);
+          return res.json({ Status: 'Success' });
+        } else {
+          return res.json({ Error: 'Wrong password' });
+        }
+      });
+    } else {
+      return res.json({ Error: 'No email exists' });
+    }
+  });
 });
+
+
+
 
 
 
