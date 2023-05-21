@@ -24,6 +24,9 @@ import StaffProfile from './Layout/profile/staffProfile';
 import CreateAssessment from './Layout/Assessments/create-assessment';
 import Assessmentreport from './Layout/Reports/assessmentreport';
 import Participationreport from './Layout/Reports/participationreport';
+import Pcategories from './Layout/Practice/pcategories';
+import Ptopics from './Layout/Practice/ptopics';
+import Ptests from './Layout/Practice/ptests';
 import PasswordReset from './Layout/profile/passwordReset'
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -57,6 +60,9 @@ function App() {
          <Route path="/create-assessment" element={<CreateAssessment/>}/>
          <Route path="/assessmentreport" element={<Assessmentreport/>}/>
          <Route path="/participationreport" element={<Participationreport/>}/>
+         <Route path="/pcategories" element={<Pcategories/>}/>
+         <Route path="/ptopics" element={<Ptopics/>}/>
+         <Route path="/ptests" element={<Ptests/>}/>
          <Route path="/password-reset" element={<PasswordReset/>}/>
         </Route>
       </Routes>
