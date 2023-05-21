@@ -2,9 +2,46 @@ import Sidebar from "../includes/sidebar";
 import Header from "../includes/header";
 import Footer from "../includes/footer";
 import { Link } from "react-router-dom";
+import axios from 'axios';
+import React,{useState,useEffect} from "react"
+import {  useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+
 export default function Pview() {
-  return (
+    const [values, setValues] = useState({
+      subject:'',
+      chapter:'',
+      difficulty:'',
+      reference:''
+
+  
+  }); 
+    const [data, setData] = useState([])
+useEffect(()=>{
+  console.log("h");
+
+  axios.get('http://localhost:3001/pview')
+  .then(res => setData(res.data))
+  .catch(err => console.log(err));
+},[])
+
+    const handleSubmits = (e) => {
+      e.preventDefault();
+      const { subject, chapter, difficulty, reference } = values;
+      axios.get(`http://localhost:3001/pview/${subject}/${chapter}/${difficulty}/${reference}`)
+        .then(res => {
+          setData(res.data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    };
+    return (
+
     <>
+                  <ToastContainer />
       <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
           <Sidebar />
@@ -34,12 +71,19 @@ export default function Pview() {
                                 name="_subject"
                                 id="_subject"
                                 class="form-select default-input ng-untouched ng-pristine ng-invalid"
+                                onChange={(e)=>setValues({...values, subject:e.target.value})}
                               >
                                 <option value="" selected="">
                                   -- Select Subject --
                                 </option>
-                                <option value="">Maths</option>
-                                <option value="">Aplitude</option>
+                                {Array.isArray(data) &&
+                          data.map((pacreate, index) => {
+                            return (
+                              <>
+                              <option value={pacreate.subjects}>{pacreate.subjects}</option>
+                              </>
+                            );
+                          })}
                               </select>
                               <small>
                                 <strong>Select Subject</strong>
@@ -51,10 +95,19 @@ export default function Pview() {
                                 name="selectchapter"
                                 id="selectchapter"
                                 class="form-select default-input ng-untouched ng-pristine ng-invalid"
+                                onChange={(e)=>setValues({...values, chapter:e.target.value})}
                               >
-                                <option value="" selected="">
+                                <option  selected="">
                                   -- Select-Chapter --
                                 </option>
+                                {Array.isArray(data) &&
+                          data.map((pacreate, index) => {
+                            return (
+                              <>
+                              <option value={pacreate.chapters}>{pacreate.chapters}</option>
+                              </>
+                            );
+                          })}
                               </select>
                               <small>
                                 <strong>Select Chapter</strong>
@@ -66,11 +119,17 @@ export default function Pview() {
                                 name="_difficulty"
                                 id="_difficulty"
                                 class="form-select default-input ng-untouched ng-pristine ng-valid"
+                                onChange={(e)=>setValues({...values, difficulty:e.target.value})}
                               >
-                                <option value="">-- Select Difficulty --</option>
-                                <option value="">Easy</option>
-                                <option value="">Medium</option>
-                                <option value="">Hard</option>
+                                <option >-- Select Difficulty --</option>
+                                {Array.isArray(data) &&
+                          data.map((pacreate, index) => {
+                            return (
+                              <>
+                              <option value={pacreate.difficulty}>{pacreate.difficulty}</option>
+                              </>
+                            );
+                          })}
                               </select>
                               <small>
                                 <strong>Select Difficulty</strong>
@@ -79,8 +138,9 @@ export default function Pview() {
                             <div class="col-md form-group">
                             <input class="form-control" 
                             type="text" id="_name" 
-                            name="_name" placeholder="Reference Name">
-
+                            name="_name" placeholder="Reference Name"
+                            onChange={(e)=>setValues({...values, reference:e.target.value})}
+                            >
                             </input>
                               <small>
                                 <strong>Reference</strong>
@@ -90,6 +150,7 @@ export default function Pview() {
                               <button
                                 type="submit"
                                 class="btn btn-primary mx-2"
+                                onClick={handleSubmits}
                               >
                                 Go 
                               </button>
@@ -152,6 +213,19 @@ export default function Pview() {
                                 </th>
                               </tr>
                             </thead>
+                            {Array.isArray(data) && data.map((pacreate, index)=>{
+                                      return <tr key={index}>
+                                          <td>{index + 1}</td>
+                                          <td>{index + 1}</td>
+                                          <td>{pacreate.subjects}</td>
+                                          <td>{pacreate.chapters}</td>
+                                          <td>{pacreate.difficulty}</td>
+                                          <td>{pacreate.reference}</td>
+
+
+                                          
+                                      </tr>
+                                    })}
                             
                           </table>
                         </div>
