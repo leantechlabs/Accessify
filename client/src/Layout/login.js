@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import urls from "../CorsUrls";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -80,9 +80,9 @@ export default function Login() {
                       <label class="form-label" >
                         Password
                       </label>
-                      <a href="#">
+                      <Link to="/password-reset">
                         <small>Forgot Password?</small>
-                      </a>
+                      </Link>
                     </div>
                     <div class="input-group input-group-merge">
                       <input
