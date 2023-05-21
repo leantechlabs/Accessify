@@ -32,6 +32,7 @@ export default function Institution() {
     .catch(err => console.log(err));
 },[])
 
+  const navigate = useNavigate()
 
 
   const handleSubmit = (e) => {
@@ -40,14 +41,11 @@ export default function Institution() {
     axios.post('http://localhost:3001/institution', values)
       .then((res) => {
         if (res.data.Status === 'Success') {
-            toast.success('Batch created successfully');
-            const timeout = setTimeout(() => {
-              window.location.reload();
-            }, 5000); // Reload after 5 seconds
-        
-            return () => clearTimeout(timeout);
+          toast.success('Batch created successfully');
+              navigate('/institution')
+              
         } else {
-              alert('College Already Exists');
+          alert('Error');
         }
       })
       .catch((err) => console.log(err));

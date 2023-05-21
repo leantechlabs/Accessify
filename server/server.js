@@ -30,20 +30,20 @@ const upload = multer({storage:storage});
 //database
 const db = mysql.createConnection({
 
-    // host: 'localhost',
-    // user: 'root',
-    // password: '',
-    // database: 'accesify'
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'accesify'
 
     // host: 'sql.freedb.tech',
     // user: 'freedb_accessify',
     // password: '!AzjRVUJA@Y&Q3e',
     // database: 'freedb_accessify'
 
-    host: 'srv984.hstgr.io',
-    user: 'u734900206_accessify',
-    password: 'LeantechLabs@8861',
-    database: 'u734900206_accessify'
+    // host: 'srv984.hstgr.io',
+    // user: 'u734900206_accessify',
+    // password: 'LeantechLabs@8861',
+    // database: 'u734900206_accessify'
 })
 
 
@@ -74,11 +74,35 @@ function message(props) {
     console.log(props);
 }
 
+const multiUserStorage = multer.diskStorage({
+	destination: (req, file, callback) => {
+	  callback(null, "uploads");
+	},
+	filename: (req, file, callback) => {
+	  callback(null,file.originalname+ '-' + Date.now() + path.extname(file.originalname));
+	},
+  });
+  const paStorage = multer.diskStorage({
+	destination: (req, file, callback) => {
+	  callback(null, "pacreate");
+	},
+	filename: (req, file, callback) => {
+	  callback(null, file.originalname+ '-' + Date.now() + path.extname(file.originalname));
+	},
+  });
+
+
+const multiUserUpload = multer({ storage: multiUserStorage });
+const pacreate = multer({ storage: paStorage });
+
+
+const imageUpload = multer({ dest: "images/" });
 
 
 
 // const upload = multer({ dest: "uploads/" });
 // const imageUpload = multer({ dest: "images/" });
+
 
 
 
@@ -278,42 +302,10 @@ app.post('/login', (req, res) => {
 
 
 
-// app.post('/multiuser', (req, res) => {
-//     const sql = `INSERT INTO multi_user (Institution, BatchYear, Batch, AccessPeriod, file) VALUES (?, ?, ?, ?, ?)`;  
-// console.log(req.body);
-//     const { Institution, BatchYear, Batch, AccessPeriod } = req.body;
-//     console.log("h");
-//     const { filename } = req.file.filename;
-//     console.log("h");
-
-//     const queryValues = [Institution, BatchYear, Batch, AccessPeriod, filename];
-//     // const values = [
-//     //     req.body.Institution,
-//     //     req.body.BatchYear,
-//     //     req.body.Batch,
-//     //     req.body.AccessPeriod,
-//     //     req.file
-//     // ]
-// 	upload(req, res, (error) => {
-// 		if (error) {
-// 		  console.log(error);   
-// 		  return res.sendStatus(500);
-// 		}
-//         console.log("h",req.body,Institution,BatchYear,Batch,AccessPeriod,filename,path);
-//       db.query(sql, queryValues, (err,result)=>{
-//         if(err) {
-//             return res.json({Error: "Inserting data error"});
-//         }else {
-//             console.log("Upload successful!",req.body,req.file);
-//             return res.json({Status: "Success"});
-//         }
-//     });
-// });
-
-// });
 
 
-app.post("/multiuser", upload.single("file"), (req, res) => {
+
+app.post("/multiuser", multiUserUpload.single("file"), (req, res) => {
     const { Institution, BatchYear, Batch, AccessPeriod } = req.body;
     const filename = req.file.originalname;
     const sql = `INSERT INTO multi_user (Institution, BatchYear, Batch, AccessPeriod, file) VALUES (?, ?, ?, ?, ?)`;
@@ -475,41 +467,6 @@ app.get('/batchyears/:selectInstitution?', (req, res) => {
     });
   });
   
-// app.get('/batchyearshh', (req, res) => {
-
-//     let sql = "SELECT * FROM Batchyears";
-//     console.log("h");
-
-//     if (req.params.selectInstitution) {
-//         const selectedInstitution = req.params.selectInstitution;
-//         sql = `SELECT * FROM batch WHERE institution = '${selectedInstitution}'`;
-//         console.log("hh");
-
-//       }
-    
-    
-//       db.query(sql, (err, result) => {
-//         if (err) {
-//             console.log("hhh");
-
-//           console.log(err);
-//           res.status(500).send("Internal Server Error");
-//         } else {
-//           res.json(result);
-//           console.log("hhhh");
-
-//         }
-//       });
-//     });
-
-// app.get('/batchs',(req,res) =>{
-//     const sql="SELECT * FROM batch";
-//     db.query(sql,(err,result)=>{
-//         if(err) console.log("l",err);
-
-//         res.json(result);
-//         });
-// });
 
 app.get('/batchs/:selectInstitution?', (req, res) => {
     const { selectInstitution } = req.params;
@@ -534,7 +491,7 @@ app.get('/batchs/:selectInstitution?', (req, res) => {
         if(err) return res.json({Message: "Error inside server"});
         return res.json(result)
     })
-  })
+  });
 
   app.post('/categorie', (req, res) => {
     const sql = "INSERT INTO categories (`name`,`description`,`tag`,`accessType`,`accessPlan`,`display`) VALUES (?)";  
@@ -558,23 +515,162 @@ app.get('/batchs/:selectInstitution?', (req, res) => {
     }
     })
 });
+//subjects page
+app.get('/subject',(req,res) =>{
+  const sql="SELECT * FROM subject";
+  db.query(sql,(err,result)=>{
+      if(err) return res.json({Message: "Error inside server"});
+      return res.json(result)
+  })
+});
+
+app.post('/subject', (req, res) => {
+  const sql = "INSERT INTO subject (`name`,`description`,`subjectTag`) VALUES (?)";  
+
+  const values = [
+      req.body.name,
+      req.body.description,
+      req.body.subjectTag
+
+  ]	
+  console.log(req.body);
+  db.query(sql, [values], (err,result)=>{
+      if(err){ 
+          console.log(err);
+          return res.json({Error: "Inserting data error"});
+  }else{
+      return res.json({Status: "Success"});
+  }
+  })
+});
+
+//chapter
+
+app.get('/chapter/:selectModule?', (req, res) => {
+  const { selectModule } = req.params;
+  let sql = "SELECT * FROM chapter";
+
+  if (selectModule) {
+    sql += ` WHERE module = '${selectModule}'`;
+  }
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send("Internal Server Error");
+    } else {
+      res.json(result);
+    }
+  });
+});
 
 
-// app.get('/batchs/:selectInstitution', (req, res) => {
-//     const selectedInstitution = req.params.selectInstitution;
+app.post('/chapter', (req, res) => {
+  const sql = "INSERT INTO chapter (`name`,`description`,`subject`,`chapterTag`) VALUES (?)";  
 
-//   const sql = `SELECT * FROM batch WHERE institution = '${selectedInstitution}'`;
+  const values = [
+      req.body.name,
+      req.body.description,
+      req.body.subject,
+      req.body.chapterTag
 
-//   db.query(sql, (err, result) => {
-//     if (err) console.log(err);
+  ]	
+  console.log(req.body);
+  db.query(sql, [values], (err,result)=>{
+      if(err){ 
+          console.log(err);
+          return res.json({Error: "Inserting data error"});
+  }else{
+      return res.json({Status: "Success"});
+  }
+  })
+});
 
-//     res.send(result);
-//   });
+//pacreate
+
+app.post("/pacreate", pacreate.single("file"), (req, res) => {
+  const { subjects, chapters, difficulty, reference,question } = req.body;
+  const filename = req.file.originalname;
+  const sql = `INSERT INTO pacreate (subjects, chapters, difficulty, reference,question, file) VALUES (?, ?, ?, ?, ?,?)`;
+  const queryValues = [subjects, chapters, difficulty, reference, question,filename];
+  console.log(queryValues);
+  db.query(sql, queryValues, (err, queryResult) => {
+    if (err) {
+      console.log("h",err);
+      return res.status(500).json({ error: "Inserting data error" });
+    } else {
+      console.log("Upload successful!", req.body, req.file);
+      return res.status(200).json({ status: "Success" });
+    }
+  });
+});
+//paview
+// app.get('/pview/:subject/:chapter/:difficulty/:reference', (req, res) => { 
+//   console.log("h");
+   
+//   const { subject, chapter, difficulty,reference } = req.params;
+
+//   let sql = "SELECT * FROM pacreate";
+//   console.log("hh");
+//   if (subject) {
+//     console.log("hhh");
+
+//   const sql = `SELECT * FROM pacreate WHERE subjects = ? AND chapter = ? AND difficulty = ? AND reference = ?`;
+//   const values = [subject, chapter, difficulty,reference];
+//     }
+//     db.query(sql, values, (err, result) => {
+//       if (err) {
+//         console.log(err);
+//         res.status(500).send("Internal Server Error");
+//       } else {
+//         res.json(result);
+//         console.log(result);
+//       }
+//     });
+// });
+app.get('/pview/:subject?/:chapter?/:difficulty?/:reference?',(req,res) =>{
+  let sql="SELECT * FROM pacreate";
+    const { subject, chapter, difficulty,reference } = req.params;
+  if (subject) {
+    console.log("hhh");
+
+   sql += ` WHERE subjects = '${subject}' AND chapters = '${chapter}' AND difficulty = '${difficulty}' AND reference = '${reference}'`;
+    }
+  db.query(sql,(err,result)=>{
+      if(err) return res.json({Message: "Error inside server"});
+      return res.json(result)
+  })
+});
+
+// app.get('/pview/:subject/:chapter/:difficulty/:reference', (req, res) => {
+//   const { subject, chapter, difficulty, reference } = req.params;
+  
+//   let sql = "SELECT * FROM pacreate";
+
+//   if (subject) {
+//     console.log("hhh");
+
+//     const dynamicSql = `SELECT * FROM pacreate WHERE subjects = '${subject}' AND chapters = '${chapter}' AND difficulty = '${difficulty}' AND reference = '${reference}'`;
+//     db.query(dynamicSql, (err, result) => {
+//       if (err) {
+//         console.log(err);
+//         return res.json({ Message: "Error inside server" });
+//       }
+//       return res.json(result);
+//     });
+//   } else {
+//     db.query(sql, (err, result) => {
+//       if (err) {
+//         console.log(err);
+//         return res.json({ Message: "Error inside server" });
+//       }
+//       return res.json(result);
+//     });
+//   }
 // });
 
-// app.get('/vendor-register', (req, res) => {
-//     res.send('This has CORS enabled ')
-// })
+
+
 app.get('/manage-vendor',(req,res)=>{
     let sql = "SELECT uid,name,email,businessname,phone,address,state,city,zip,language,pass FROM vendor";
     db.query(sql, (err, result) => {

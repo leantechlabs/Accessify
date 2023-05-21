@@ -1,9 +1,61 @@
 import Sidebar from "../includes/sidebar";
 import Header from "../includes/header";
+import axios from 'axios';
+import React,{useState,useEffect} from "react"
+import {  useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 export default function Chapters() {
+    const [selectModule, setselectModule] = useState('');
+
+    const [values, setValues] = useState({
+        name:'',
+        description:'',
+        subject:'',
+        chapterTag:''
+    
+    }); 
+    const [data, setData] = useState([])
+
+    useEffect(()=>{
+        axios.get('http://localhost:3001/chapter')
+        .then(res => setData(res.data))
+        .catch(err => console.log(err));
+      },[])
+
+      const handleSubmits = (e) => {
+        e.preventDefault();
+      
+        axios.get(`http://localhost:3001/chapter/${selectModule}`)
+          .then(res => {
+            setData(res.data);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      };
+
+      const navigate = useNavigate()
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(values);
+        axios.post('http://localhost:3001/chapter', values)
+          .then((res) => {
+            if (res.data.Status === 'Success') {
+              toast.success('chapter created successfully');
+              navigate('/chapters')
+      
+            } else {
+              alert('Error');
+            }
+          })
+          .catch((err) => console.log(err));
+      };
     return (
         <>
+                              <ToastContainer />
             <div class="layout-wrapper layout-content-navbar">
                 <div class="layout-container">
                     <Sidebar />
@@ -28,6 +80,7 @@ export default function Chapters() {
                                                         name="module"
                                                         className="form-control default-input ng-untouched ng-pristine ng-invalid"
                                                         style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
+                                                        onChange={(e) =>setselectModule(e.target.value)}
                                                     >
                                                         <option value selected>
                                                             -- Select Module --
@@ -65,7 +118,8 @@ export default function Chapters() {
 
                                                         type="button"
                                                         className="btn btn-primary mx-2"
-                                                    >
+                                                        onClick={handleSubmits}
+                                                        >
                                                         Go
                                                     </button>
                                                     <button
@@ -131,6 +185,7 @@ export default function Chapters() {
                                                                                 id="nameBasic"
                                                                                 className="form-control"
                                                                                 placeholder="Enter Name"
+                                                                                onChange={(e)=>setValues({...values, name:e.target.value})}
                                                                             />
                                                                         </div>
                                                                         <div className="mb-3">
@@ -142,6 +197,7 @@ export default function Chapters() {
                                                                                 id="DescriptionBasic"
                                                                                 className="form-control"
                                                                                 placeholder="Description"
+                                                                                onChange={(e)=>setValues({...values, description:e.target.value})}
                                                                             />
                                                                         </div>
                                                                         <div className="mb-3">
@@ -153,29 +209,30 @@ export default function Chapters() {
                                                                                 name="module"
                                                                                 className="form-control default-input ng-untouched ng-pristine ng-invalid"
                                                                                 style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
+                                                                                onChange={(e)=>setValues({...values, subject:e.target.value})}
                                                                             >
                                                                                 <option value selected>
                                                                                     -- Select Subject --
                                                                                 </option>
-                                                                                <option value="">
+                                                                                <option >
                                                                                     Zoho_1_verbal
                                                                                 </option>
-                                                                                <option value="">
+                                                                                <option >
                                                                                     Zoho _ C Fundamentals
                                                                                 </option>
-                                                                                <option value="">
+                                                                                <option >
                                                                                     Zoho Advanced Programming{' '}
                                                                                 </option>
-                                                                                <option value="">
+                                                                                <option >
                                                                                     Introduction
                                                                                 </option>
-                                                                                <option value="">
+                                                                                <option >
                                                                                     Java Programming{' '}
                                                                                 </option>
-                                                                                <option value="">
+                                                                                <option >
                                                                                     Python - R K
                                                                                 </option>
-                                                                                <option value="lcprej83">
+                                                                                <option >
                                                                                     Coding Assessments Q B
                                                                                 </option>
                                                                             </select>
@@ -189,6 +246,7 @@ export default function Chapters() {
                                                                                 name="module"
                                                                                 className="form-control default-input ng-untouched ng-pristine ng-invalid"
                                                                                 style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
+                                                                                onChange={(e)=>setValues({...values, chapterTag:e.target.value})}
                                                                              >
                                                                                 <option value selected>
                                                                                     -- Select Chapter --
@@ -198,7 +256,8 @@ export default function Chapters() {
                                                                     </div>
                                                                 </div>
                                                                 <div className="modal-footer d-flex flex-row justify-content-center">
-                                                                    <button type="button" className="btn btn-primary text-center">
+                                                                    <button type="button" className="btn btn-primary text-center"
+                                                                onClick={handleSubmit}            >
                                                                         Submit
                                                                     </button>
                                                                 </div>
@@ -225,6 +284,36 @@ export default function Chapters() {
                                                             </tr>
                                                         </thead>
                                                         <tbody className="text-center">
+                                                        {Array.isArray(data) && data.map((chapter, index)=>{
+                                      return <tr key={index}>
+                                          <td>{index + 1}</td>                                       
+                                          <td>{chapter.subject}</td>
+                                          <td>{chapter.name}</td>
+                                          <td>{chapter.chapterTag}</td>
+                                          <td>{index + 1}</td>                                       
+                                          <td>
+                                                    <div className="dropdown">
+                                                        <button
+                                                            type="button"
+                                                            className="btn p-0 dropdown-toggle hide-arrow"
+                                                            data-bs-toggle="dropdown"
+                                                        >
+                                                            <i className="bx bx-dots-vertical-rounded" />
+                                                        </button>
+                                                        <div className="dropdown-menu">
+                                                            <a className="dropdown-item" href="javascript:void(0);">
+                                                                <i className="bx bx-edit-alt me-1" /> Edit
+                                                            </a>
+                                                            <a className="dropdown-item" href="javascript:void(0);">
+                                                                <i className="bx bx-trash me-1" /> Delete
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                          
+                                      </tr>
+                                    })}
                                                             {/**/}
                                                         </tbody>
                                                     </table>
