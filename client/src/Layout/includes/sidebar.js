@@ -355,7 +355,7 @@ const [collapsed, setCollapsed] = useState(false);
             <Link
                 className={`menu-link menu-toggle ${collapsed ? "collapsed" : ""}`}
                 onClick={handleSubMenuToggle}
-              >
+               >
                 <i class="menu-icon tf-icons bx bx-detail"></i>
                 <div data-i18n="Form Elements">Reports</div>
               </Link>
@@ -368,6 +368,22 @@ const [collapsed, setCollapsed] = useState(false);
                 <li class="menu-item">
                   <Link class="menu-link" to="/Participationreport">
                     <div data-i18n="Reports/participationreport.js">Participation Report</div>
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item">
+            <Link
+                className={`menu-link menu-toggle ${collapsed ? "collapsed" : ""}`}
+                onClick={handleSubMenuToggle}
+               >
+                <i class="menu-icon tf-icons bx bx-detail"></i>
+                <div data-i18n="Form Elements">Learning Path</div>
+              </Link>
+              <ul className={`menu-submenu ${collapsed ? "collapsed" : ""}`}>
+                <li class="menu-item">
+                  <Link class="menu-link" to="/access">
+                    <div data-i18n="LearningPath/access.js">Access</div>
                   </Link>
                 </li>
               </ul>

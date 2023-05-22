@@ -28,6 +28,8 @@ import Pcategories from './Layout/Practice/pcategories';
 import Ptopics from './Layout/Practice/ptopics';
 import Ptests from './Layout/Practice/ptests';
 import PasswordReset from './Layout/profile/passwordReset'
+import Access from './Layout/LearningPath/access'
+import AddLearningPath from './Layout/LearningPath/add-learning-path'
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 function App() {
@@ -64,6 +66,8 @@ function App() {
          <Route path="/ptopics" element={<Ptopics/>}/>
          <Route path="/ptests" element={<Ptests/>}/>
          <Route path="/password-reset" element={<PasswordReset/>}/>
+         <Route path="/access" element={<Access/>}/>
+         <Route path="/add-learning-path" element={<AddLearningPath/>}/>
         </Route>
       </Routes>
     </BrowserRouter>
