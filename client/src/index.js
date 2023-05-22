@@ -31,6 +31,9 @@ import PasswordReset from './Layout/profile/passwordReset'
 import Learningpath from './Layout/Learningpath/Learningpath';
 import Viedofolders from './Layout/Learningpath/Viedofolders';
 import Access from './Layout/Learningpath/Access';
+
+import Access from './Layout/LearningPath/access'
+import AddLearningPath from './Layout/LearningPath/add-learning-path'
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 function App() {
@@ -70,6 +73,9 @@ function App() {
          <Route path="/learningpath" element={<Learningpath/>}/>
          <Route path="/viedofolders" element={<Viedofolders/>}/>
          <Route path="/access" element={<Access/>}/>
+         <Route path="/access" element={<Access/>}/>
+         <Route path="/add-learning-path" element={<AddLearningPath/>}/>
+
         </Route>
       </Routes>
     </BrowserRouter>

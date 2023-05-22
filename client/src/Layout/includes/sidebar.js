@@ -226,6 +226,191 @@ export default function Sidebar() {
               </a>
             </li>
           </ul>
+
+        </li> */}
+        <li className="menu-item">
+              <Link
+                className={`menu-link menu-toggle ${collapsed ? "collapsed" : ""}`}
+                onClick={handleSubMenuToggle}
+              >
+                <i className="menu-icon tf-icons bx bx-detail"></i>
+                <div data-i18n="Form Elements" >Institution</div>
+              </Link>
+              <ul className={`menu-submenu ${collapsed ? "collapsed" : ""}`}>
+                <li className="menu-item">
+                  <Link className="menu-link" to="/institution">
+                    <div data-i18n="Register Vendor">Institution</div>
+                  </Link>
+                </li>
+                <li className="menu-item">
+                  <Link className="menu-link" to="/batch-years">
+                    <div data-i18n="Register Vendor">Batch Years</div>
+                  </Link>
+                </li>
+                <li className="menu-item">
+                  <Link className="menu-link" to="/batch">
+                    <div data-i18n="Register Vendor">Batches</div>
+                  </Link>
+                </li>
+                <li className="menu-item">
+                  <Link className="menu-link" to="/institution-users">
+                    <div data-i18n="Register Vendor">Users</div>
+                  </Link>
+                </li>
+                <li className="menu-item">
+                  <a href="#" className="menu-link">
+                    <div data-i18n="Manage Vendor">Manage Institution</div>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item">
+            <Link
+                className={`menu-link menu-toggle ${collapsed ? "collapsed" : ""}`}
+                onClick={handleSubMenuToggle}
+              >
+                <i class="menu-icon tf-icons bx bx-detail"></i>
+                <div data-i18n="Form Elements">QUESTION BANK</div>
+              </Link>
+              <ul className={`menu-submenu ${collapsed ? "collapsed" : ""}`}>
+                <li class="menu-item">
+                  <Link class="menu-link" to="/Subjects">
+                    <div data-i18n="QuestionBank/subjects.js">Subjects</div>
+                  </Link>
+                </li>
+                <li class="menu-item">
+                  <Link class="menu-link" to="/PCreate">
+                    <div data-i18n="QuestionBank/pcreate.js">Paragraph MCQ Create</div>
+                  </Link>
+                </li>
+                <li class="menu-item">
+                  <Link class="menu-link" to="/Pview">
+                    <div data-i18n="QuestionBank/pview.js">Paragraph MCQ View</div>
+                  </Link>
+                </li>
+                <li class="menu-item">
+                  <Link class="menu-link" to="/Createcodingques">
+                    <div data-i18n="QuestionBank/createcodingques.js">Create Coding Questions</div>
+                  </Link>
+                </li>
+                <li class="menu-item">
+                  <Link class="menu-link" to="/Viewcodingques">
+                    <div data-i18n="QuestionBank/viewcodingques.js">View Coding Questions</div>
+                  </Link>
+                </li>
+                <li class="menu-item">
+                  <Link class="menu-link" to="/chapters">
+                    <div data-i18n="QuestionBank/chapters.js">Chapters</div>
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item">
+            <Link
+                className={`menu-link menu-toggle ${collapsed ? "collapsed" : ""}`}
+                onClick={handleSubMenuToggle}
+              >
+                <i class="menu-icon tf-icons bx bx-detail"></i>
+                <div data-i18n="Form Elements">ASSESSMENTS</div>
+              </Link>
+              <ul className={`menu-submenu ${collapsed ? "collapsed" : ""}`}>
+                <li class="menu-item">
+                  <Link class="menu-link" to="/catergories">
+                    <div data-i18n="Assessments/catergories.js">Categories</div>
+                  </Link>
+                </li>
+                <li class="menu-item">
+                  <Link class="menu-link" to="/assessments">
+                    <div data-i18n="Assessments/assessments.js">Assessments</div>
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item">
+            <Link
+                className={`menu-link menu-toggle ${collapsed ? "collapsed" : ""}`}
+                onClick={handleSubMenuToggle}
+               >
+                <i class="menu-icon tf-icons bx bx-detail"></i>
+                <div data-i18n="Form Elements">Reports</div>
+              </Link>
+              <ul className={`menu-submenu ${collapsed ? "collapsed" : ""}`}>
+                <li class="menu-item">
+                  <Link class="menu-link" to="/Assessmentreport">
+                    <div data-i18n="Reports/assessmentreport.js">Assessment Report</div>
+                  </Link>
+                </li>
+                <li class="menu-item">
+                  <Link class="menu-link" to="/Participationreport">
+                    <div data-i18n="Reports/participationreport.js">Participation Report</div>
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item">
+            <Link
+                className={`menu-link menu-toggle ${collapsed ? "collapsed" : ""}`}
+                onClick={handleSubMenuToggle}
+               >
+                <i class="menu-icon tf-icons bx bx-detail"></i>
+                <div data-i18n="Form Elements">Learning Path</div>
+              </Link>
+              <ul className={`menu-submenu ${collapsed ? "collapsed" : ""}`}>
+                <li class="menu-item">
+                  <Link class="menu-link" to="/access">
+                    <div data-i18n="LearningPath/access.js">Access</div>
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item">
+            <Link
+                className={`menu-link menu-toggle ${collapsed ? "collapsed" : ""}`}
+                onClick={handleSubMenuToggle}
+              >
+                <i class="menu-icon tf-icons bx bx-detail"></i>
+                <div data-i18n="Form Elements">Vendor Utils</div>
+              </Link>
+              <ul class="menu-submenu">
+                <li class="menu-item">
+                  <Link class="menu-link menu-toggle" to="">
+                    <div data-i18n="Form Elements">Tutor</div>
+                  </Link>
+                  <ul className={`menu-submenu ${collapsed ? "collapsed" : ""}`}>
+                    <li class="menu-item">
+                      <a href="tutor-register" class="menu-link">
+                        <div data-i18n="Register Vendor">Register Tutor</div>
+                      </a>
+                    </li>
+                    <li class="menu-item">
+                      <a href="vendor-manage" class="menu-link">
+                        <div data-i18n="Manage Vendor">Manage Tutor</div>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <li class="menu-item">
+                <Link
+                className={`menu-link menu-toggle ${collapsed ? "collapsed" : ""}`}
+                onClick={handleSubMenuToggle}
+              >
+                    <div data-i18n="Form Elements">User</div>
+                  </Link>
+                  <ul className={`menu-submenu ${collapsed ? "collapsed" : ""}`}>
+                    <li class="menu-item">
+                      <a href="#" class="menu-link">
+                        <div data-i18n="Register Vendor">Register User</div>
+                      </a>
+                    </li>
+                    <li class="menu-item">
+                      <a href="#" class="menu-link">
+                        <div data-i18n="Manage Vendor">Manage User</div>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+          </ul>
+
         </li>
       </ul>
     </aside>
