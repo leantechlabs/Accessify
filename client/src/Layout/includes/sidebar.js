@@ -183,6 +183,10 @@ export default function Sidebar() {
             <Link class="menu-link " to="/Viedofolders"> 
                 <div data-i18n="Learningpath/Viedofolders.js">Viedo folders</div>
             </Link></li>
+            <li class="menu-item">
+            <Link class="menu-link " to="/Access"> 
+                <div data-i18n="Learningpath/Access.js">Access</div>
+            </Link></li>
          </li>
         <li class="menu-header small text-uppercase">
           <span class="menu-header-text">Vendor Utils</span>

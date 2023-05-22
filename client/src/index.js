@@ -30,6 +30,7 @@ import Ptests from './Layout/Practice/ptests';
 import PasswordReset from './Layout/profile/passwordReset'
 import Learningpath from './Layout/Learningpath/Learningpath';
 import Viedofolders from './Layout/Learningpath/Viedofolders';
+import Access from './Layout/Learningpath/Access';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 function App() {
@@ -68,6 +69,7 @@ function App() {
          <Route path="/password-reset" element={<PasswordReset/>}/>
          <Route path="/learningpath" element={<Learningpath/>}/>
          <Route path="/viedofolders" element={<Viedofolders/>}/>
+         <Route path="/access" element={<Access/>}/>
         </Route>
       </Routes>
     </BrowserRouter>
