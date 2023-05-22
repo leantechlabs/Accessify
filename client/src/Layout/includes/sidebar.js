@@ -283,6 +283,11 @@ const [collapsed, setCollapsed] = useState(false);
                   </Link>
                 </li>
                 <li className="menu-item">
+                  <Link className="menu-link" to="/search-users">
+                    <div data-i18n="Register Vendor">Search Users</div>
+                  </Link>
+                </li>
+                <li className="menu-item">
                   <a href="#" className="menu-link">
                     <div data-i18n="Manage Vendor">Manage Institution</div>
                   </a>
