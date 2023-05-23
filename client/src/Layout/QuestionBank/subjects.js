@@ -9,6 +9,7 @@ import { ToastContainer } from 'react-toastify';
 
 export default function Subjects() {
 
+    const [searchTerm, setSearchTerm] = useState('');
 
     const [values, setValues] = useState({
         name:'',
@@ -50,9 +51,13 @@ export default function Subjects() {
                     <div class="layout-page">
                         <Header />
                         <div class="content-wrapper">
+
                             <div className="card m-5">
+
                                 <h5 className="card-header">Subjects</h5>
+
                                 <div className="p-2 d-flex flex-row justify-content-end">
+
                                     <button
                                         type="button"
                                         className="btn btn-primary"
@@ -61,6 +66,7 @@ export default function Subjects() {
                                     >
                                         + Create Subject
                                     </button>
+
                                     {/* Modal */}
                                     <div
                                         className="modal fade"
@@ -143,6 +149,13 @@ export default function Subjects() {
                                         </div>
                                     </div>
                                 </div>
+                                        <div class="input-group">
+                                        <span class="input-group-text"><i class="tf-icons bx bx-search"></i></span>
+                                         <input type="text" class="form-control" placeholder="Search..." 
+                                            value={searchTerm}
+                                          onChange={(e) => setSearchTerm(e.target.value)}
+                                         />
+                                        </div>
                                 <div className="table-responsive text-nowrap">
                                     <table className="table table-hover">
                                         <thead>
@@ -155,7 +168,10 @@ export default function Subjects() {
                                         </thead>
                                         <tbody className="table-border-bottom-0">
                                         {Array.isArray(data) && data.map((subject, index)=>{
-                                      return <tr key={index}>
+                                                if (searchTerm && !subject.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+                                                    return null; // Skip rendering if search term is provided but does not match
+                                                  }
+                                      return (<tr key={index}>
                                           <td>{subject.name}</td>
                                           <td>1</td>
                                           <td><span className="badge bg-label-primary me-1">{subject.subjectTag}</span></td>
@@ -180,6 +196,7 @@ export default function Subjects() {
                                                 </td>
                                           
                                       </tr>
+                                        );
                                     })}
                                             
                                            

@@ -33,12 +33,12 @@ export default function Assessmentreport() {
                                                 </select> entries</label></div>
                                         <div id="DataTables_Table_0_filter" className="dataTables_filter">
                                         <br></br>
-                                        <form class="d-flex">
                                         <div class="input-group">
                                         <span class="input-group-text"><i class="tf-icons bx bx-search"></i></span>
-                                         <input type="text" class="form-control" placeholder="Search..." />
+                                         <input type="text" class="form-control" placeholder="Search..." 
+                                         />
                                         </div>
-                                        </form>
+
                                         </div>
                                         <br></br>
                                         <div id="DataTables_Table_0_processing" className="dataTables_processing" style={{display: 'none'}}>Processing...</div>

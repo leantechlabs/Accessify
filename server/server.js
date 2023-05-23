@@ -605,7 +605,7 @@ app.post("/pacreate", pacreate.single("file"), (req, res) => {
   });
 });
 //paview
-// app.get('/pview/:subject/:chapter/:difficulty/:reference', (req, res) => { 
+// app.get('/pview/:subject?/:chapter?/:difficulty?/:reference?', (req, res) => { 
 //   console.log("h");
    
 //   const { subject, chapter, difficulty,reference } = req.params;
@@ -642,32 +642,80 @@ app.get('/pview/:subject?/:chapter?/:difficulty?/:reference?',(req,res) =>{
   })
 });
 
-// app.get('/pview/:subject/:chapter/:difficulty/:reference', (req, res) => {
-//   const { subject, chapter, difficulty, reference } = req.params;
-  
-//   let sql = "SELECT * FROM pacreate";
+//preport it needs modification in database to make this request works once need to check not completed yet
+app.get('/pview/:institution?/:category?/:assessment?/:BatchYear?/:Batch?',(req,res) =>{
+  let sql="SELECT * FROM pacreate";
+    const { institution, category, assessment,BatchYear,Batch } = req.params;
+  if (subject) {
+    console.log("hhh");
 
-//   if (subject) {
-//     console.log("hhh");
+   sql += ` WHERE subjects = '${subject}' AND chapters = '${chapter}' AND difficulty = '${difficulty}' AND reference = '${reference}'`;
+    }
+  db.query(sql,(err,result)=>{
+      if(err) return res.json({Message: "Error inside server"});
+      return res.json(result)
+  })
+});
 
-//     const dynamicSql = `SELECT * FROM pacreate WHERE subjects = '${subject}' AND chapters = '${chapter}' AND difficulty = '${difficulty}' AND reference = '${reference}'`;
-//     db.query(dynamicSql, (err, result) => {
-//       if (err) {
-//         console.log(err);
-//         return res.json({ Message: "Error inside server" });
-//       }
-//       return res.json(result);
-//     });
-//   } else {
-//     db.query(sql, (err, result) => {
-//       if (err) {
-//         console.log(err);
-//         return res.json({ Message: "Error inside server" });
-//       }
-//       return res.json(result);
-//     });
-//   }
-// });
+//pcategories
+
+app.get('/pcategories',(req,res) =>{
+  const sql="SELECT * FROM pcategories";
+  db.query(sql,(err,result)=>{
+      if(err) return res.json({Message: "Error inside server"});
+      return res.json(result)
+  })
+});
+
+app.post('/pcategories', (req, res) => {
+  const sql = "INSERT INTO pcategories (`name`,`description`,`tags`,`accessType`,`accessPlan`) VALUES (?)";  
+
+  const values = [
+      req.body.name,
+      req.body.description,
+      req.body.tags,
+      req.body.accessType,
+      req.body.accessPlan
+  ]	
+  console.log(req.body);
+  db.query(sql, [values], (err,result)=>{
+      if(err){ 
+          console.log(err);
+          return res.json({Error: "Inserting data error"});
+  }else{
+      return res.json({Status: "Success"});
+  }
+  })
+});
+
+//ptopics
+
+app.get('/ptopics',(req,res) =>{
+  const sql="SELECT * FROM ptopics";
+  db.query(sql,(err,result)=>{
+      if(err) return res.json({Message: "Error inside server"});
+      return res.json(result)
+  })
+});
+
+app.post('/ptopics', (req, res) => {
+  const sql = "INSERT INTO ptopics (`categories`,`name`,`description`) VALUES (?)";  
+
+  const values = [
+      req.body.categories,
+      req.body.name,
+      req.body.description
+  ]	
+  console.log(req.body);
+  db.query(sql, [values], (err,result)=>{
+      if(err){ 
+          console.log(err);
+          return res.json({Error: "Inserting data error"});
+  }else{
+      return res.json({Status: "Success"});
+  }
+  })
+});
 
 
 
