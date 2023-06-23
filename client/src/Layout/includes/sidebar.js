@@ -258,7 +258,7 @@ const [collapsed, setCollapsed] = useState(false);
                 className={`menu-link menu-toggle ${collapsed ? "collapsed" : ""}`}
                 onClick={handleSubMenuToggle}
               >
-                <i className="menu-icon tf-icons bx bx-detail"></i>
+                <i className="menu-icon tf-icons bx bx-buildings"></i>
                 <div data-i18n="Form Elements" >Institution</div>
               </Link>
               <ul className={`menu-submenu ${collapsed ? "collapsed" : ""}`}>
@@ -289,12 +289,13 @@ const [collapsed, setCollapsed] = useState(false);
                 </li>
               </ul>
             </li>
+
             <li class="menu-item">
             <Link
                 className={`menu-link menu-toggle ${collapsed ? "collapsed" : ""}`}
                 onClick={handleSubMenuToggle}
               >
-                <i class="menu-icon tf-icons bx bx-detail"></i>
+                <i class="menu-icon tf-icons bx bx-book"></i>
                 <div data-i18n="Form Elements">QUESTION BANK</div>
               </Link>
               <ul className={`menu-submenu ${collapsed ? "collapsed" : ""}`}>
@@ -335,7 +336,7 @@ const [collapsed, setCollapsed] = useState(false);
                 className={`menu-link menu-toggle ${collapsed ? "collapsed" : ""}`}
                 onClick={handleSubMenuToggle}
               >
-                <i class="menu-icon tf-icons bx bx-detail"></i>
+                <i class="menu-icon tf-icons bx bx-clipboard"></i>
                 <div data-i18n="Form Elements">ASSESSMENTS</div>
               </Link>
               <ul className={`menu-submenu ${collapsed ? "collapsed" : ""}`}>
@@ -356,7 +357,7 @@ const [collapsed, setCollapsed] = useState(false);
                 className={`menu-link menu-toggle ${collapsed ? "collapsed" : ""}`}
                 onClick={handleSubMenuToggle}
                >
-                <i class="menu-icon tf-icons bx bx-detail"></i>
+                <i class="menu-icon tf-icons bx bx-line-chart"></i>
                 <div data-i18n="Form Elements">Reports</div>
               </Link>
               <ul className={`menu-submenu ${collapsed ? "collapsed" : ""}`}>
@@ -377,7 +378,7 @@ const [collapsed, setCollapsed] = useState(false);
                 className={`menu-link menu-toggle ${collapsed ? "collapsed" : ""}`}
                 onClick={handleSubMenuToggle}
                >
-                <i class="menu-icon tf-icons bx bx-detail"></i>
+                <i class="menu-icon tf-icons bx bx-chalkboard"></i>
                 <div data-i18n="Form Elements">Learning Path</div>
               </Link>
               <ul className={`menu-submenu ${collapsed ? "collapsed" : ""}`}>
@@ -392,8 +393,24 @@ const [collapsed, setCollapsed] = useState(false);
             <Link
                 className={`menu-link menu-toggle ${collapsed ? "collapsed" : ""}`}
                 onClick={handleSubMenuToggle}
+               >
+                <i class="menu-icon tf-icons bx bx-book-reader"></i>
+                <div data-i18n="Form Elements">Blogs</div>
+              </Link>
+              <ul className={`menu-submenu ${collapsed ? "collapsed" : ""}`}>
+                <li class="menu-item">
+                  <Link class="menu-link" to="/blog">
+                    <div data-i18n="Blog/blog.js">Blogs</div>
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item">
+            <Link
+                className={`menu-link menu-toggle ${collapsed ? "collapsed" : ""}`}
+                onClick={handleSubMenuToggle}
               >
-                <i class="menu-icon tf-icons bx bx-detail"></i>
+                <i class="menu-icon tf-icons bx bx-cog"></i>
                 <div data-i18n="Form Elements">Vendor Utils</div>
               </Link>
               <ul class="menu-submenu">
