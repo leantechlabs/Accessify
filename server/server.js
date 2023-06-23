@@ -30,20 +30,20 @@ const upload = multer({storage:storage});
 //database
 const db = mysql.createConnection({
 
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'accesify'
+    // host: 'localhost',
+    // user: 'root',
+    // password: '',
+    // database: 'accessify'
 
     // host: 'sql.freedb.tech',
     // user: 'freedb_accessify',
     // password: '!AzjRVUJA@Y&Q3e',
     // database: 'freedb_accessify'
 
-    // host: 'srv984.hstgr.io',
-    // user: 'u734900206_accessify',
-    // password: 'LeantechLabs@8861',
-    // database: 'u734900206_accessify'
+    host: 'srv984.hstgr.io',
+    user: 'u734900206_accessify',
+    password: 'LeantechLabs@8861',
+    database: 'u734900206_accessify'
 })
 
 
@@ -744,3 +744,4 @@ app.listen(3001, () => {
     console.log("running server port 3001");
 });
 
+//examplessss
