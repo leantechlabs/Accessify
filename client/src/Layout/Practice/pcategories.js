@@ -2,10 +2,46 @@ import Sidebar from "../includes/sidebar";
 import Header from "../includes/header";
 import Footer from "../includes/footer";
 import { Link } from "react-router-dom";
+import axios from 'axios';
+import React,{useState,useEffect} from "react"
+import {  useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 export default function Pcategories() {
+  const [values, setValues] = useState({
+    name:'',
+    description:'',
+    tags:'',
+    accessType:'',
+    accessPlan:''
+
+}); 
+  const [data, setData] = useState([])
+useEffect(()=>{
+  axios.get('http://localhost:3001/pcategories')
+  .then(res => setData(res.data))
+  .catch(err => console.log(err));
+},[])
+  const navigate = useNavigate()
+const handleSubmit = (e) => {
+  e.preventDefault();
+  console.log(values);
+  axios.post('http://localhost:3001/pcategories', values)
+    .then((res) => {
+      if (res.data.Status === 'Success') {
+        toast.success('pcategories created successfully');
+        navigate('/pcategories')
+
+      } else {
+        alert('Error');
+      }
+    })
+    .catch((err) => console.log(err));
+};
     return(
         <>
-              
+                            <ToastContainer />
       <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
           <Sidebar />
@@ -41,37 +77,47 @@ export default function Pcategories() {
                             id="name"
                             class="form-control"
                             placeholder="Enter Name"
+                            onChange={(e)=>setValues({...values, name:e.target.value})}
+
                           />
                     <div className="form-group">
                         <label> Description <sup className="text-danger"> * </sup>
                         </label>
-                        <textarea  rows={4} type="text" required placeholder name="description" className="form-control w-100 pl-2 ng-pristine ng-invalid ng-touched" style={{ height: 109 }}/>
+                        <textarea  rows={4} type="text" required placeholder name="description" className="form-control w-100 pl-2 ng-pristine ng-invalid ng-touched" style={{ height: 109 }}
+                        onChange={(e)=>setValues({...values, description:e.target.value})}
+                         />
                         </div>
                     <div class="form-group">
                         <div class="col mb-0">
                         <label> Tags <sup className="text-danger"> * </sup>
                         </label>
                         <select name="tags" id="" formcontrolname="access_type" 
-                         class="form-control ng-pristine ng-invalid ng-touched">
-                            <option value="Aplitude" selected="">Aplitude</option>
-                            <option value="Reasoning">Reasoning</option>
+                         class="form-control ng-pristine ng-invalid ng-touched"
+                         onChange={(e)=>setValues({...values, tags:e.target.value})}
+                         >
+                            <option  >Aplitude</option>
+                            <option >Reasoning</option>
                             </select>
                           </div>
                           <div className="form-group">
                         <label> Access Type <sup className="text-danger"> * </sup>
                         </label>
                         <select name="access_plan" id="" formcontrolname="access_type" 
-                         class="form-control ng-pristine ng-invalid ng-touched">
-                            <option value="all" selected="">All</option>
-                            <option value="restricted">Restricted</option>
+                         class="form-control ng-pristine ng-invalid ng-touched"
+                         onChange={(e)=>setValues({...values, accessType:e.target.value})}
+                         >
+                            <option  >All</option>
+                            <option >Restricted</option>
                             </select></div>
                             <div className="form-group">
                         <label> Access Plan <sup className="text-danger"> * </sup>
                         </label>
                         <select name="access_plan" id="" formcontrolname="access_type" 
-                         class="form-control ng-pristine ng-invalid ng-touched">
-                            <option value="free" selected="">Free</option>
-                            <option value="retail">Retail</option>
+                         class="form-control ng-pristine ng-invalid ng-touched"
+                         onChange={(e)=>setValues({...values, accessPlan:e.target.value})}
+                         >
+                            <option  >Free</option>
+                            <option >Retail</option>
                             </select></div>
                           </div></div>
                       </div>
@@ -85,6 +131,8 @@ export default function Pcategories() {
                         Close
                       </button>
                       <button type="button" class="btn btn-primary" id="Submit"
+                                                 onClick={handleSubmit}
+
                        >
                         Submit
                       </button>
@@ -127,12 +175,14 @@ export default function Pcategories() {
                                                      <th  scope="col" className="sorting" tabIndex={0} aria-controls="DataTables_Table_0" rowSpan={1} colSpan={1} aria-label="Actions: activate to sort column ascending" style={{width: '185.729px'}}>Actions</th>
                                                  </tr>
                                              </thead>
-                                             <tbody  className="text-center"><tr  className="odd">
-                                                     <td  className="sorting_1">1</td>
-                                                     <td >accessify_DAILY PRACTICE_TECHNICAL_VIEW</td>
-                                                     <td ><span  className="badge badge-primary mx-1">Programming</span></td>
-                                                     <td >Free</td>
-                                                     <td ><a  target="_blank" className="btn btn-secondary text-white mb-1 mb-md-0 btn-sm mx-1" href="vendor/practice-category/l8kli3ip/access">Access</a>
+                                             <tbody  className="text-center">
+                                             {Array.isArray(data) && data.map((Pcategories, index)=>{
+                                      return <tr key={index}>
+                                          <td>{index + 1}</td>
+                                          <td>{Pcategories.name}</td>
+                                          <td ><span  className="badge badge-primary mx-1">{Pcategories.tags}</span></td>
+                                          <td>{Pcategories.accessPlan}</td>
+                                          <td ><a  target="_blank" className="btn btn-secondary text-white mb-1 mb-md-0 btn-sm mx-1" href="vendor/practice-category/l8kli3ip/access">Access</a>
                                                      <a
                                                       target="_blank"
                                                       className="btn btn-dark text-white mb-1 mb-md-0 btn-xs mx-1"
@@ -145,180 +195,10 @@ export default function Pcategories() {
                                                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
                                                     <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
                                                     </svg> </a>
-                                                    </td>                                                 </tr>
-                                                 <tr  className="even">
-                                                     <td  className="sorting_1">2</td>
-                                                     <td >accessify_DAILY PRACTICE_TECHNICAL_AU</td>
-                                                     <td ><span  className="badge badge-primary mx-1">Programming</span></td>
-                                                     <td >Free</td>
-                                                     <td ><a  target="_blank" className="btn btn-secondary text-white mb-1 mb-md-0 btn-sm mx-1" href="vendor/practice-category/l8kli3ip/access">Access</a>
-                                                     <a
-                                                      target="_blank"
-                                                      className="btn btn-dark text-white mb-1 mb-md-0 btn-xs mx-1"
-                                                      href="/vendor/assessment/l8a72vu5/edit">
-                                                      <svg xmlns="http://www.w3.org/2000/svg" width="10" height="26" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                                                      <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-                                                      </svg>
-                                                    </a>
-                                                    <a data-toggle="modal" data-target="#deleteAdmin" className="btn btn-danger text-white mb-1 mb-md-0 btn-xs mx-1"> <svg xmlns="http://www.w3.org/2000/svg" width="10" height="26" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
-                                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
-                                                    </svg> </a>
-                                                    </td></tr>
-                                                 <tr  className="odd">
-                                                     <td  className="sorting_1">3</td>
-                                                     <td >accessify_DAILY PRACTICE_APTITUDE_AITS</td>
-                                                     <td ><span  className="badge badge-primary mx-1">Aptitude</span></td>
-                                                     <td >Free</td>
-                                                     <td ><a  target="_blank" className="btn btn-secondary text-white mb-1 mb-md-0 btn-sm mx-1" href="vendor/practice-category/l8kli3ip/access">Access</a>
-                                                     <a
-                                                      target="_blank"
-                                                      className="btn btn-dark text-white mb-1 mb-md-0 btn-xs mx-1"
-                                                      href="/vendor/assessment/l8a72vu5/edit">
-                                                      <svg xmlns="http://www.w3.org/2000/svg" width="10" height="26" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                                                      <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-                                                      </svg>
-                                                    </a>
-                                                    <a data-toggle="modal" data-target="#deleteAdmin" className="btn btn-danger text-white mb-1 mb-md-0 btn-xs mx-1"> <svg xmlns="http://www.w3.org/2000/svg" width="10" height="26" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
-                                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
-                                                    </svg> </a>
-                                                      
-                                                      </td>
-                                                 </tr>
-                                                 <tr  className="even">
-                                                     <td  className="sorting_1">4</td>
-                                                     <td >accessify_DAILY PRACTICE_VERBAL_AITS</td>
-                                                     <td ><span  className="badge badge-primary mx-1">Verbal and Communication</span></td>
-                                                     <td >Free</td>
-                                                     <td ><a  target="_blank" className="btn btn-secondary text-white mb-1 mb-md-0 btn-sm mx-1" href="vendor/practice-category/l8kli3ip/access">Access</a>
-                                                     <a
-                                                      target="_blank"
-                                                      className="btn btn-dark text-white mb-1 mb-md-0 btn-xs mx-1"
-                                                      href="/vendor/assessment/l8a72vu5/edit">
-                                                      <svg xmlns="http://www.w3.org/2000/svg" width="10" height="26" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                                                      <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-                                                      </svg>
-                                                    </a>
-                                                    <a data-toggle="modal" data-target="#deleteAdmin" className="btn btn-danger text-white mb-1 mb-md-0 btn-xs mx-1"> <svg xmlns="http://www.w3.org/2000/svg" width="10" height="26" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
-                                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
-                                                    </svg> </a>
-                                                    </td>                                                 </tr>
-                                                 <tr  className="odd">
-                                                     <td  className="sorting_1">5</td>
-                                                     <td >accessify_DAILY PRACTICE_TECHNICAL_AITST</td>
-                                                     <td ><span  className="badge badge-primary mx-1">Programming</span></td>
-                                                     <td >Free</td>
-                                                     <td ><a  target="_blank" className="btn btn-secondary text-white mb-1 mb-md-0 btn-sm mx-1" href="vendor/practice-category/l8kli3ip/access">Access</a>
-                                                     <a
-                                                      target="_blank"
-                                                      className="btn btn-dark text-white mb-1 mb-md-0 btn-xs mx-1"
-                                                      href="/vendor/assessment/l8a72vu5/edit">
-                                                      <svg xmlns="http://www.w3.org/2000/svg" width="10" height="26" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                                                      <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-                                                      </svg>
-                                                    </a>
-                                                    <a data-toggle="modal" data-target="#deleteAdmin" className="btn btn-danger text-white mb-1 mb-md-0 btn-xs mx-1"> <svg xmlns="http://www.w3.org/2000/svg" width="10" height="26" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
-                                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
-                                                    </svg> </a>
-                                                    </td>                                                 </tr>
-                                                 <tr  className="even">
-                                                     <td  className="sorting_1">6</td>
-                                                     <td >Testing for Verbal_Trainer</td>
-                                                     <td ><span  className="badge badge-primary mx-1">Verbal and Communication</span></td>
-                                                     <td >Free</td>
-                                                     <td ><a  target="_blank" className="btn btn-secondary text-white mb-1 mb-md-0 btn-sm mx-1" href="vendor/practice-category/l8kli3ip/access">Access</a>
-                                                     <a
-                                                      target="_blank"
-                                                      className="btn btn-dark text-white mb-1 mb-md-0 btn-xs mx-1"
-                                                      href="/vendor/assessment/l8a72vu5/edit">
-                                                      <svg xmlns="http://www.w3.org/2000/svg" width="10" height="26" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                                                      <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-                                                      </svg>
-                                                    </a>
-                                                    <a data-toggle="modal" data-target="#deleteAdmin" className="btn btn-danger text-white mb-1 mb-md-0 btn-xs mx-1"> <svg xmlns="http://www.w3.org/2000/svg" width="10" height="26" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
-                                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
-                                                    </svg> </a>
-                                                    </td>                                                 </tr>
-                                                 <tr  className="odd">
-                                                     <td  className="sorting_1">7</td>
-                                                     <td >Testing for Tech MCQ's_Trainers</td>
-                                                     <td ><span  className="badge badge-primary mx-1">Programming</span></td>
-                                                     <td >Free</td>
-                                                     <td ><a  target="_blank" className="btn btn-secondary text-white mb-1 mb-md-0 btn-sm mx-1" href="vendor/practice-category/l8kli3ip/access">Access</a>
-                                                     <a
-                                                      target="_blank"
-                                                      className="btn btn-dark text-white mb-1 mb-md-0 btn-xs mx-1"
-                                                      href="/vendor/assessment/l8a72vu5/edit">
-                                                      <svg xmlns="http://www.w3.org/2000/svg" width="10" height="26" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                                                      <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-                                                      </svg>
-                                                    </a>
-                                                    <a data-toggle="modal" data-target="#deleteAdmin" className="btn btn-danger text-white mb-1 mb-md-0 btn-xs mx-1"> <svg xmlns="http://www.w3.org/2000/svg" width="10" height="26" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
-                                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
-                                                    </svg> </a>
-                                                    </td>                                                 </tr>
-                                                 <tr  className="even">
-                                                     <td  className="sorting_1">8</td>
-                                                     <td >accessify_Daily Practice_Aptitude_KITS</td>
-                                                     <td ><span  className="badge badge-primary mx-1">Aptitude</span></td>
-                                                     <td >Free</td>
-                                                     <td ><a  target="_blank" className="btn btn-secondary text-white mb-1 mb-md-0 btn-sm mx-1" href="vendor/practice-category/l8kli3ip/access">Access</a>
-                                                     <a
-                                                      target="_blank"
-                                                      className="btn btn-dark text-white mb-1 mb-md-0 btn-xs mx-1"
-                                                      href="/vendor/assessment/l8a72vu5/edit">
-                                                      <svg xmlns="http://www.w3.org/2000/svg" width="10" height="26" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                                                      <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-                                                      </svg>
-                                                    </a>
-                                                    <a data-toggle="modal" data-target="#deleteAdmin" className="btn btn-danger text-white mb-1 mb-md-0 btn-xs mx-1"> <svg xmlns="http://www.w3.org/2000/svg" width="10" height="26" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
-                                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
-                                                    </svg> </a>
-                                                    </td>                                                 </tr>
-                                                 <tr  className="odd">
-                                                     <td  className="sorting_1">9</td>
-                                                     <td >accessify_Daily Practice_Verbal_KITS</td>
-                                                     <td ><span  className="badge badge-primary mx-1">Verbal and Communication</span></td>
-                                                     <td >Free</td>
-                                                     <td ><a  target="_blank" className="btn btn-secondary text-white mb-1 mb-md-0 btn-sm mx-1" href="vendor/practice-category/l8kli3ip/access">Access</a>
-                                                     <a
-                                                      target="_blank"
-                                                      className="btn btn-dark text-white mb-1 mb-md-0 btn-xs mx-1"
-                                                      href="/vendor/assessment/l8a72vu5/edit">
-                                                      <svg xmlns="http://www.w3.org/2000/svg" width="10" height="26" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                                                      <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-                                                      </svg>
-                                                    </a>
-                                                    <a data-toggle="modal" data-target="#deleteAdmin" className="btn btn-danger text-white mb-1 mb-md-0 btn-xs mx-1"> <svg xmlns="http://www.w3.org/2000/svg" width="10" height="26" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
-                                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
-                                                    </svg> </a>
-                                                    </td>                                                 </tr>
-                                                 <tr  className="even">
-                                                     <td  className="sorting_1">10</td>
-                                                     <td >accessify_Daily Practice_Technical_KITS</td>
-                                                     <td ><span  className="badge badge-primary mx-1">Programming</span></td>
-                                                     <td >Free</td>
-                                                     <td ><a  target="_blank" className="btn btn-secondary text-white mb-1 mb-md-0 btn-sm mx-1" href="vendor/practice-category/l8kli3ip/access">Access</a>
-                                                     <a
-                                                      target="_blank"
-                                                      className="btn btn-dark text-white mb-1 mb-md-0 btn-xs mx-1"
-                                                      href="/vendor/assessment/l8a72vu5/edit">
-                                                      <svg xmlns="http://www.w3.org/2000/svg" width="10" height="26" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                                                      <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-                                                      </svg>
-                                                    </a>
-                                                    <a data-toggle="modal" data-target="#deleteAdmin" className="btn btn-danger text-white mb-1 mb-md-0 btn-xs mx-1"> <svg xmlns="http://www.w3.org/2000/svg" width="10" height="26" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
-                                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
-                                                    </svg> </a>
-                                                    </td>                                                 </tr>
+                                                    </td> 
+                                          
+                                      </tr>
+                                    })} 
                                              </tbody>
                                          </table>
                                          </div>

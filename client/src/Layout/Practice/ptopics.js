@@ -2,10 +2,45 @@ import Sidebar from "../includes/sidebar";
 import Header from "../includes/header";
 import Footer from "../includes/footer";
 import { Link } from "react-router-dom";
+import axios from 'axios';
+import React,{useState,useEffect} from "react"
+import {  useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 export default function Ptopics() {
+  const [values, setValues] = useState({
+    categories:'',
+    name:'',
+    description:''
+
+}); 
+const [data, setData] = useState([])
+useEffect(()=>{
+  axios.get('http://localhost:3001/ptopics')
+  .then(res => setData(res.data))
+  .catch(err => console.log(err));
+},[])
+
+  const navigate = useNavigate()
+const handleSubmit = (e) => {
+  e.preventDefault();
+  console.log(values);
+  axios.post('http://localhost:3001/ptopics', values)
+    .then((res) => {
+      if (res.data.Status === 'Success') {
+        toast.success('ptopics created successfully');
+        navigate('/ptopics')
+
+      } else {
+        alert('Error');
+      }
+    })
+    .catch((err) => console.log(err));
+};
     return(
         <>
-              
+                   <ToastContainer />
       <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
           <Sidebar />
@@ -38,7 +73,9 @@ export default function Ptopics() {
                         <label> Category <sup className="text-danger"> * </sup>
                         </label>
                         <select name="category" id="" formcontrolname="category_type" 
-                         class="form-control ng-pristine ng-invalid ng-touched">
+                         class="form-control ng-pristine ng-invalid ng-touched"
+                         onChange={(e)=>setValues({...values, categories:e.target.value})}
+                         >
                             <option value="Access_Daily" selected="">accessify_DAILY</option>
                             <option value="accessify_yearly">accessify_YEARLY</option>
                             </select>
@@ -51,13 +88,17 @@ export default function Ptopics() {
                             id="name"
                             class="form-control"
                             placeholder="Name"
+                            onChange={(e)=>setValues({...values, name:e.target.value})}
+
                           />
                           </div>
                           <br></br>
                     <div className="form-group">
                         <label> Description <sup className="text-danger"> * </sup>
                         </label>
-                        <textarea  rows={4} type="text" required placeholder name="description" className="form-control w-100 pl-2 ng-pristine ng-invalid ng-touched" style={{ height: 109 }}/>
+                        <textarea  rows={4} type="text" required placeholder name="description" className="form-control w-100 pl-2 ng-pristine ng-invalid ng-touched" style={{ height: 109 }}
+                        onChange={(e)=>setValues({...values, description:e.target.value})}
+                         />
                         </div>
                         </div>
                       
@@ -71,6 +112,7 @@ export default function Ptopics() {
                         Close
                       </button>
                       <button type="button" class="btn btn-primary" id="Submit"
+                       onClick={handleSubmit}
                        >
                         Submit
                       </button>
@@ -113,11 +155,12 @@ export default function Ptopics() {
                                                  </tr>
                                              </thead>
                                              <tbody  className="text-center">
-                                                <tr  className="odd">
-                                                     <td  className="sorting_1">1</td>
-                                                     <td >accessify_DAILY PRACTICE_TECHNICAL_VIEW</td>
-                                                     <td >Bit Manipulations</td>
-                                                     <td ><a  target="_blank" className="btn btn-secondary text-white mb-1 mb-md-0 btn-sm mx-1" href="vendor/practice-category/l8kli3ip/access">Access</a>
+                                             {Array.isArray(data) && data.map((Pcategories, index)=>{
+                                      return <tr key={index}>
+                                          <td>{index + 1}</td>
+                                          <td>{Pcategories.categories}</td>
+                                          <td>{Pcategories.name}</td>
+                                          <td ><a  target="_blank" className="btn btn-secondary text-white mb-1 mb-md-0 btn-sm mx-1" href="vendor/practice-category/l8kli3ip/access">Access</a>
                                                      <a
                                                       target="_blank"
                                                       className="btn btn-dark text-white mb-1 mb-md-0 btn-xs mx-1"
@@ -130,27 +173,10 @@ export default function Ptopics() {
                                                     <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
                                                     <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
                                                     </svg> </a>
-                                                    </td>    </tr> 
-                                                <tr  className="even">
-                                                     <td  className="sorting_1">1</td>
-                                                     <td >accessify_YEARLY PRACTICE_TECHNICAL_VIEW</td>
-                                                     <td >React JS</td>
-                                                     <td ><a  target="_blank" className="btn btn-secondary text-white mb-1 mb-md-0 btn-sm mx-1" href="vendor/practice-category/l8kli3ip/access">Access</a>
-                                                     <a
-                                                      target="_blank"
-                                                      className="btn btn-dark text-white mb-1 mb-md-0 btn-xs mx-1"
-                                                      href="/vendor/assessment/l8a72vu5/edit">
-                                                      <svg xmlns="http://www.w3.org/2000/svg" width="10" height="26" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
-                                                      <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-                                                      </svg>
-                                                    </a>
-                                                    <a data-toggle="modal" data-target="#deleteAdmin" className="btn btn-danger text-white mb-1 mb-md-0 btn-xs mx-1"> <svg xmlns="http://www.w3.org/2000/svg" width="10" height="26" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
-                                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
-                                                    </svg> </a>
-                                                    </td>                                     </tr>
-                                                 
-        
+                                                    </td> 
+                                          
+                                      </tr>
+                                    })} 
                                              </tbody>
                                          </table>
                                          </div>
