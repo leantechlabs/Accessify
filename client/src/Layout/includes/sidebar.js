@@ -304,6 +304,11 @@ const [collapsed, setCollapsed] = useState(false);
                   </Link>
                 </li>
                 <li class="menu-item">
+                  <Link class="menu-link" to="/AssignedQB">
+                    <div data-i18n="QuestionBank/AssignedQB.js">AssignedQB</div>
+                  </Link>
+                </li>
+                <li class="menu-item">
                   <Link class="menu-link" to="/PCreate">
                     <div data-i18n="QuestionBank/pcreate.js">Paragraph MCQ Create</div>
                   </Link>
