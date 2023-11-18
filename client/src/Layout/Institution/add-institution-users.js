@@ -80,7 +80,7 @@ const handleSubmit = (e) => {
   console.log(singleCreateValues);
   axios.post('http://localhost:3001/institution-single-user', singleCreateValues)
     .then((res) => {
-      if (res.data.Status === 'Success') {
+      if (res.data.status === 'Success') {
         toast.success('single user created successfully');
         navigate('/institution')
 
